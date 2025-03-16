@@ -101,8 +101,12 @@ export function Pricing() {
     });
   };
   return (
-    <div id="pricing" ref={pricingRef} className="py-12 px-4 bg-gray-800">
-      <div className="max-w-7xl mx-auto pt-10">
+    <div
+      id="pricing"
+      ref={pricingRef}
+      className="py-12 px-4 bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100 border-b-[1px]"
+    >
+      <div className="max-w-7xl mx-auto pt-10 ">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-2">Choose Your Plan</h2>
 
@@ -130,14 +134,14 @@ export function Pricing() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9  ">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9  bg-white dark:border-b-slate-700 dark:bg-background">
           {pricingPlans.map((plan, index) => (
             <div
               key={index}
               onMouseEnter={() => setHoveredPlan(index)}
               onMouseLeave={() => setHoveredPlan(null)}
-              className={`relative bg-gray-900 rounded-2xl p-6 h-full flex flex-col
-                  transition-all duration-300 transform 
+              className={`relative rounded-2xl p-6 h-full flex flex-col
+                  transition-all duration-300 transform bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100
                   ${
                     hoveredPlan === index
                       ? "scale-105 ring-2 ring-red-500 shadow-2xl shadow-red-500/20"
@@ -153,7 +157,7 @@ export function Pricing() {
                 </div>
               )}
 
-              <div className="text-center mb-6">
+              <div className="text-center mb-6 bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100">
                 {plan.icon}
                 <h3 className="text-2xl font-bold mt-4 mb-2">{plan.name}</h3>
                 <p className="text-gray-400 mb-4">{plan.description}</p>
@@ -177,7 +181,7 @@ export function Pricing() {
                 )}
               </div>
 
-              <div className="flex-grow space-y-3">
+              <div className="flex-grow space-y-3 bg-white dark:border-b-slate-700 dark:bg-background">
                 {plan.features.map((feature, featureIndex) => (
                   <div key={featureIndex} className="flex items-center">
                     <Check

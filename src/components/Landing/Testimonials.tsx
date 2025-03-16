@@ -24,12 +24,12 @@ const testimonials = [
 export function Testimonials() {
   return (
     <div>
-      <div className="py-20 px-4 bg-gray-800 mb-4">
+      <div className="py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold mb-12">What Our Users Say</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-900 p-6 rounded-xl">
+              <div key={index} className="p-6 rounded-xl">
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star

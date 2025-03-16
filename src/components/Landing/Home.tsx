@@ -4,6 +4,7 @@ import { Pricing } from "./Pricing";
 import { AiFeatures } from "./AiFeatures";
 import { Product } from "./Product";
 import { Hero } from "./Hero";
+import { Footer } from "./Footer";
 function Home() {
   return (
     <div>
@@ -19,6 +20,8 @@ function Home() {
         {/* Testimonials */}
         <Testimonials />
         {/* CTA Footer */}
+        <Footer />
+        {/* Footer */}
         <CtaFooter />
       </div>
     </div>

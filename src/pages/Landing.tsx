@@ -1,10 +1,10 @@
-import { Nav } from "@/components/Landing/Nav";
+import { Navbar } from "@/components/Landing/Navbar";
 import Home from "@/components/Landing/Home";
 
 function Landing() {
   return (
     <div>
-      <Nav />
+      <Navbar />
       <Home />
     </div>
   );

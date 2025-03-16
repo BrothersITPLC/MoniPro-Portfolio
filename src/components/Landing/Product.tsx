@@ -34,7 +34,10 @@ const monitoringCards = [
 ];
 export function Product() {
   return (
-    <div id="solutions" className="py-20 px-4 bg-gray-800">
+    <div
+      id="solutions"
+      className="py-20 px-4 border-b-[1px] bg-gray-100 dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100"
+    >
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-bold mb-12 text-center">
           Monitoring Solutions
@@ -43,7 +46,7 @@ export function Product() {
           {monitoringCards.map((card, index) => (
             <div
               key={index}
-              className="bg-gray-900 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
+              className="bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
             >
               <div className="h-48 overflow-hidden">
                 <img

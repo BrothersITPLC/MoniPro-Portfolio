@@ -1,86 +1,3 @@
-// import { useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { useNavigate } from "react-router-dom";
-// import { useLoginMutation } from "../api";
-// import { loginState } from "../AutSlice";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { Label } from "@/components/ui/label";
-// import { Alert, AlertDescription } from "@/components/ui/alert";
-
-// export function Login() {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [error, setError] = useState("");
-
-//   const dispatch = useDispatch();
-//   const navigate = useNavigate();
-//   const [login, { isLoading }] = useLoginMutation();
-
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     try {
-//       const userData = await login({ email, password }).unwrap();
-//       dispatch(loginState(userData));
-//       navigate("/dashboard");
-//     } catch (err) {
-//       setError("Invalid login credentials");
-//     }
-//   };
-
-//   return (
-//     <div className="flex justify-center items-center min-h-screen">
-//       <Card className="w-full max-w-md">
-//         <CardHeader>
-//           <CardTitle className="text-center">Sign in</CardTitle>
-//         </CardHeader>
-//         <CardContent>
-//           <form onSubmit={handleSubmit} className="space-y-4">
-//             {error && (
-//               <Alert variant="destructive">
-//                 <AlertDescription>{error}</AlertDescription>
-//               </Alert>
-//             )}
-//             <div className="space-y-2">
-//               <Label htmlFor="email">Email Address</Label>
-//               <Input
-//                 id="email"
-//                 type="email"
-//                 name="email"
-//                 autoComplete="email"
-//                 required
-//                 autoFocus
-//                 value={email}
-//                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-//                   setEmail(e.target.value)
-//                 }
-//               />
-//             </div>
-//             <div className="space-y-2">
-//               <Label htmlFor="password">Password</Label>
-//               <Input
-//                 id="password"
-//                 type="password"
-//                 name="password"
-//                 autoComplete="current-password"
-//                 required
-//                 value={password}
-//                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-//                   setPassword(e.target.value)
-//                 }
-//               />
-//             </div>
-//             <Button type="submit" className="w-full" disabled={isLoading}>
-//               {isLoading ? "Signing in..." : "Sign In"}
-//             </Button>
-//           </form>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   );
-// }
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
@@ -92,13 +9,50 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "sonner";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { House } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useLoginMutation } from "../api";
 
 export function Login({ className, ...props }: React.ComponentProps<"div">) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [login, { isLoading }] = useLoginMutation();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await login(formData).unwrap();
+
+      if (response.status === "success") {
+        toast.success(response.message || "Login successful");
+        // Store auth token or user info if needed
+        localStorage.setItem("isAuthenticated", "true");
+        navigate("/home/dashboard");
+      } else {
+        toast.error(response.message || "Login failed");
+      }
+    } catch (error: any) {
+      toast.error(error.data?.message || "Failed to login. Please try again.");
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -110,10 +64,10 @@ export function Login({ className, ...props }: React.ComponentProps<"div">) {
           <CardDescription>Login with your Google account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="grid gap-6">
               <div className="flex flex-col gap-4">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full" type="button">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
@@ -136,6 +90,8 @@ export function Login({ className, ...props }: React.ComponentProps<"div">) {
                     type="email"
                     placeholder="m@example.com"
                     required
+                    value={formData.email}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="grid gap-3">
@@ -148,15 +104,22 @@ export function Login({ className, ...props }: React.ComponentProps<"div">) {
                       Forgot your password?
                     </a>
                   </div>
-                  <Input id="password" type="password" required />
+                  <Input
+                    id="password"
+                    type="password"
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
                 </div>
-                <Button type="submit" className="w-full">
-                  Login
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? "Logging in..." : "Login"}
                 </Button>
               </div>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
                 <button
+                  type="button"
                   className="underline underline-offset-4 cursor-pointer"
                   onClick={() => dispatch(setIsSignup(true))}
                 >
@@ -168,7 +131,7 @@ export function Login({ className, ...props }: React.ComponentProps<"div">) {
         </CardContent>
       </Card>
       <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
-        By Singing up , you agree to our <a href="#">Terms of Service</a> and{" "}
+        By signing in, you agree to our <a href="#">Terms of Service</a> and{" "}
         <a href="#">Privacy Policy</a>.
       </div>
     </div>

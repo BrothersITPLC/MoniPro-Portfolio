@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+export type Theme = "light" | "dark" | "system";
 
 interface GlobalState {
   is_signup: boolean;
-  is_dark: boolean;
+  theme: Theme;
+  isAuthenticated: boolean;
 }
 
 const initialState: GlobalState = {
   is_signup: false,
-  is_dark: false,
+  theme: "system",
+  isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
 };
 
 const globalSlice = createSlice({
@@ -17,11 +20,21 @@ const globalSlice = createSlice({
     setIsSignup: (state, action: PayloadAction<boolean>) => {
       state.is_signup = action.payload;
     },
-    setIsDark: (state, action: PayloadAction<boolean>) => {
-      state.is_dark = action.payload;
+
+    setTheme: (state, action: PayloadAction<Theme>) => {
+      state.theme = action.payload;
+    },
+
+    setIsAuthenticated: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
+      localStorage.setItem(
+        "isAuthenticated",
+        action.payload ? "true" : "false"
+      );
     },
   },
 });
 
-export const { setIsSignup, setIsDark } = globalSlice.actions;
+export const { setIsSignup, setTheme, setIsAuthenticated } =
+  globalSlice.actions;
 export default globalSlice.reducer;
