@@ -1,4 +1,4 @@
-import { TeamTable } from "@/components/Home/components/team/TeamTable";
+import  TeamTable  from "@/components/Home/components/team/TeamTable";
 export function TeamWrapper() {
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">

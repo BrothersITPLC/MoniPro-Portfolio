@@ -33,6 +33,7 @@ function App() {
               <Route path="dashboard" element={<LandingWrapper />} />
               <Route path="comp-info" element={<CompanyInfo />} />
               <Route path="team" element={<TeamWrapper />} />
+              {/* <Route path="users" element={<TeamWrapper />} /> */}
               <Route index element={<Navigate to="dashboard" replace />} />
             </Route>
           </Route>

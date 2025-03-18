@@ -28,7 +28,7 @@ export function Nav() {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <Activity className="h-8 w-8 text-red-500" />
-              <span className="ml-2 text-xl font-bold">MonitorPro</span>
+              <span className="ml-2 text-xl font-bold">MoniPro</span>
             </Link>
           </div>
 
