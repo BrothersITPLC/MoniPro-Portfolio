@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Pricing } from "@/components/Landing/Pricing";
+import { Pricing } from "@/components/Landing/components/Pricing";
 
 // Fix the duplicate field name in the schema
 const formSchema = z.object({

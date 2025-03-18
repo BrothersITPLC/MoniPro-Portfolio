@@ -1,5 +1,5 @@
-import { Navbar } from "@/components/Landing/Navbar";
-import Home from "@/components/Landing/Home";
+import { Navbar } from "@/components/Landing/components/Navbar";
+import Home from "@/components/Landing/components/Home";
 
 function Landing() {
   return (
