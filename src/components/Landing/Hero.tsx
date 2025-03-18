@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export function Hero() {
   return (
     <div
@@ -13,9 +15,13 @@ export function Hero() {
           Intelligent monitoring for your entire infrastructure. Get real-time
           insights and predictive analytics powered by advanced AI.
         </p>
-        <button className="bg-red-500 px-8 py-4 rounded-lg text-xl font-semibold hover:bg-red-600 transition-all transform hover:scale-105">
+
+        <Link
+          to="/auth"
+          className="bg-red-500 px-8 py-4 rounded-lg text-xl font-semibold hover:bg-red-600 transition-all transform hover:scale-105"
+        >
           Start Monitoring Now
-        </button>
+        </Link>
       </div>
     </div>
   );

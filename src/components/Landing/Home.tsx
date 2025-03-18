@@ -22,7 +22,7 @@ function Home() {
         {/* CTA Footer */}
         <Footer />
         {/* Footer */}
-        <CtaFooter />
+        {/* <CtaFooter /> */}
       </div>
     </div>
   );

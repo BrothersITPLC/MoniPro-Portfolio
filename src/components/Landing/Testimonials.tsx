@@ -23,7 +23,7 @@ const testimonials = [
 ];
 export function Testimonials() {
   return (
-    <div>
+    <div id="testimonials">
       <div className="py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold mb-12">What Our Users Say</h2>

@@ -35,7 +35,7 @@ const monitoringCards = [
 export function Product() {
   return (
     <div
-      id="solutions"
+      id="products"
       className="py-20 px-4 border-b-[1px] bg-gray-100 dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100"
     >
       <div className="max-w-7xl mx-auto">

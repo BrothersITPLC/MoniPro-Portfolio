@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { House } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLoginMutation } from "../api";
+import { loginState } from "../AutSlice";
 
 export function Login({ className, ...props }: React.ComponentProps<"div">) {
   const dispatch = useDispatch();
@@ -34,17 +35,23 @@ export function Login({ className, ...props }: React.ComponentProps<"div">) {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
+  // Inside handleSubmit function
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       const response = await login(formData).unwrap();
-
       if (response.status === "success") {
         toast.success(response.message || "Login successful");
-        // Store auth token or user info if needed
         localStorage.setItem("isAuthenticated", "true");
-        navigate("/home/dashboard");
+        localStorage.setItem("userData", JSON.stringify(response.user_data));
+        dispatch(loginState({ user: response.user_data }));
+
+        if (!response.user_data.organization_info_completed) {
+          navigate("/home/comp-info");
+        } else {
+          navigate("/home/dashboard");
+        }
       } else {
         toast.error(response.message || "Login failed");
       }
@@ -112,7 +119,11 @@ export function Login({ className, ...props }: React.ComponentProps<"div">) {
                     onChange={handleChange}
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={isLoading}
+                >
                   {isLoading ? "Logging in..." : "Login"}
                 </Button>
               </div>

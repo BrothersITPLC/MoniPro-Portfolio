@@ -150,7 +150,11 @@ export function Signup({ className, ...props }: React.ComponentProps<"div">) {
                     onChange={handleChange}
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={isLoading}
+                >
                   {isLoading ? "Signing up..." : "Signup"}
                 </Button>
               </div>
