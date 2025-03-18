@@ -1,8 +1,6 @@
 import { useState, useRef } from "react";
 import { Shield, Zap, Database, Check } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setSelectedPlan } from "@/app/global";
 
 const icons = [
   {
@@ -11,7 +9,6 @@ const icons = [
   },
   {
     icon: <Zap className="w-12 h-12 text-red-500" />,
-
     color: "red",
   },
   {
@@ -19,6 +16,7 @@ const icons = [
     color: "purple",
   },
 ];
+
 const pricingPlans = [
   {
     name: "Basic Plan",
@@ -36,7 +34,6 @@ const pricingPlans = [
     color: "blue",
     popular: false,
   },
-
   {
     name: "Premium Plan",
     price: 99,
@@ -74,15 +71,22 @@ const pricingPlans = [
   },
 ];
 
-export function Pricing() {
+interface PricingProps {
+  onSubscriptionSelect: () => void;
+  setSelectedPlan: (plan: {
+    name: string;
+    price: number;
+    description: string;
+    duration: string;
+  }) => void;
+}
+
+export function Pricing({ onSubscriptionSelect, setSelectedPlan }: PricingProps) {
   const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-  const dispatch = useDispatch();
   const [isYearly, setIsYearly] = useState(false);
   const pricingRef = useRef<HTMLDivElement>(null);
   const [hoveredPlan, setHoveredPlan] = useState<number | null>(null);
-  const getOriginalPrice = (monthlyPrice: number) => {
-    return isYearly ? monthlyPrice * 12 : monthlyPrice;
-  };
+
   const calculatePrice = (monthlyPrice: number, planName: string) => {
     if (isYearly) {
       let discountRate = 0.05; // Default 5% for Basic plan
@@ -97,6 +101,7 @@ export function Pricing() {
     }
     return monthlyPrice;
   };
+
   const getSavingsPercentage = (planName: string) => {
     if (planName === "Premium Plan") {
       return 8;
@@ -105,20 +110,18 @@ export function Pricing() {
     }
     return 5; // Basic plan
   };
+
   const getPriceLabel = () => (isYearly ? "/year" : "/month");
 
-  const handleGetStarted = () => {
-    const selected = hoveredPlan !== null ? pricingPlans[hoveredPlan] : null;
-    if (selected) {
-      dispatch(
-        setSelectedPlan({
-          name: selected.name,
-          price: calculatePrice(selected.price, selected.name),
-          description: selected.description,
-          duration: isYearly ? "yearly" : "monthly",
-        })
-      );
-    }
+  const handlePlanSelect = (planIndex: number) => {
+    const selected = pricingPlans[planIndex];
+    setSelectedPlan({
+      name: selected.name,
+      price: calculatePrice(selected.price, selected.name),
+      description: selected.description,
+      duration: isYearly ? "yearly" : "monthly",
+    });
+    onSubscriptionSelect(); // Trigger the next step
   };
 
   return (
@@ -127,11 +130,10 @@ export function Pricing() {
       ref={pricingRef}
       className="py-12 px-4 bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100 border-b-[1px]"
     >
-      <div className="max-w-7xl mx-auto pt-10 ">
+      <div className="max-w-7xl mx-auto pt-10">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-2">Choose Your Plan</h2>
-
-          <div className="inline-flex items-center bg-gray-800/50 backdrop-blur-sm p-1.5 rounded-full mt-4   border border-gray-700/50">
+          <div className="inline-flex items-center bg-gray-800/50 backdrop-blur-sm p-1.5 rounded-full mt-4 border border-gray-700/50">
             <button
               onClick={() => setIsYearly(false)}
               className={`px-6 py-2 rounded-full transition-all duration-300 ${
@@ -155,20 +157,17 @@ export function Pricing() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9  bg-white dark:border-b-slate-700 dark:bg-background">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9 bg-white dark:border-b-slate-700 dark:bg-background">
           {pricingPlans.map((plan, index) => (
             <div
               key={index}
               onMouseEnter={() => setHoveredPlan(index)}
               onMouseLeave={() => setHoveredPlan(null)}
-              className={`relative rounded-2xl p-6 h-full flex flex-col
-                  transition-all duration-300 transform bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100
-                  ${
-                    hoveredPlan === index
-                      ? "scale-105 ring-2 ring-red-500 shadow-2xl shadow-red-500/20"
-                      : ""
-                  }
-                `}
+              className={`relative rounded-2xl p-6 h-full flex flex-col transition-all duration-300 transform bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100 ${
+                hoveredPlan === index
+                  ? "scale-105 ring-2 ring-red-500 shadow-2xl shadow-red-500/20"
+                  : ""
+              }`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -177,14 +176,14 @@ export function Pricing() {
                   </span>
                 </div>
               )}
-              <div className="text-center mb-6 bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100">
+              <div className="text-center mb-6">
                 {icons[index].icon}
                 <h3 className="text-2xl font-bold mt-4 mb-2">{plan.name}</h3>
                 <p className="text-gray-400 mb-4">{plan.description}</p>
                 <div className="flex items-baseline justify-center">
                   {isYearly && (
                     <span className="text-lg line-through text-gray-500 mr-2">
-                      ${getOriginalPrice(plan.price)}
+                      ${plan.price * 12}
                     </span>
                   )}
                   <span className="text-4xl font-bold">
@@ -200,7 +199,7 @@ export function Pricing() {
                   </div>
                 )}
               </div>
-              <div className="flex-grow space-y-3 bg-white dark:border-b-slate-700 dark:bg-background">
+              <div className="flex-grow space-y-3">
                 {plan.features.map((feature, featureIndex) => (
                   <div key={featureIndex} className="flex items-center">
                     <Check
@@ -210,30 +209,23 @@ export function Pricing() {
                   </div>
                 ))}
               </div>
-              {/* Replace the Link component with a button */}
               {isAuthenticated ? (
                 <button
-                  onClick={handleGetStarted}
-                  className={`w-full mt-6 bg-gray-800 text-white py-2.5 px-6 rounded-lg font-semibold 
-                    text-center transition-all duration-300 transform hover:scale-105
-                    hover:bg-red-500 hover:shadow-lg hover:shadow-red-500/20
-                    ${
-                      hoveredPlan === index ? "bg-red-500 hover:bg-red-600" : ""
-                    }`}
+                  onClick={() => handlePlanSelect(index)}
+                  className={`w-full mt-6 bg-gray-800 text-white py-2.5 px-6 rounded-lg font-semibold text-center transition-all duration-300 transform hover:scale-105 hover:bg-red-500 hover:shadow-lg hover:shadow-red-500/20 ${
+                    hoveredPlan === index ? "bg-red-500 hover:bg-red-600" : ""
+                  }`}
                 >
                   Next Step
                 </button>
               ) : (
                 <Link
                   to="/auth"
-                  className={`w-full mt-6 bg-gray-800 text-white py-2.5 px-6 rounded-lg font-semibold 
-                    text-center transition-all duration-300 transform hover:scale-105
-                    hover:bg-red-500 hover:shadow-lg hover:shadow-red-500/20
-                    ${
-                      hoveredPlan === index ? "bg-red-500 hover:bg-red-600" : ""
-                    }`}
+                  className={`w-full mt-6 bg-gray-800 text-white py-2.5 px-6 rounded-lg font-semibold text-center transition-all duration-300 transform hover:scale-105 hover:bg-red-500 hover:shadow-lg hover:shadow-red-500/20 ${
+                    hoveredPlan === index ? "bg-red-500 hover:bg-red-600" : ""
+                  }`}
                 >
-                  Get Started{" "}
+                  Get Started
                 </Link>
               )}
             </div>

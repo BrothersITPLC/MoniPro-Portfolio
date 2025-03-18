@@ -30,6 +30,8 @@ import {
 } from '@/components/ui/select';
 import { Laptop2, Network, Wifi, Shield, Router } from 'lucide-react';
 import { cn } from '@/lib/utils';
+// import { useDeviceinfoMutation } from "@/redux/deviceinfoapi";
+
 
 interface VMFormData {
   domainName: string;
@@ -49,7 +51,10 @@ interface NetworkFormData {
   status: 'active' | 'inactive' | 'maintenance';
 }
 
-function TeamTable() {
+function App() {
+
+//   const [submitDeviceInfo, { isLoading }] = useDeviceinfoMutation();
+    
   const [showVMConfirm, setShowVMConfirm] = useState(false);
   const [showNetworkConfirm, setShowNetworkConfirm] = useState(false);
   const [vmFormData, setVMFormData] = useState<VMFormData>({
@@ -82,10 +87,33 @@ function TeamTable() {
     }
   };
 
-  const handleVMSubmit = (e: React.FormEvent) => {
+  const handleVMSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setShowVMConfirm(true);
+  
+    // Log the form data to the console
+    const formData = new FormData(e.currentTarget);
+    const formObject: Record<string, string> = {};
+  
+    formData.forEach((value, key) => {
+      formObject[key] = value.toString();
+    });
+    console.log("Submitted Form Data:", formObject);
+  
+    // try {
+    //   // **Post Data to API**
+    //   const response = await submitDeviceInfo(formObject).unwrap();
+  
+    //   // Check if the response was successful, you can modify this check based on your response structure
+    //   if (response.success) {
+    //     setShowVMConfirm(true);
+    //   } else {
+    //     console.error("Error submitting form:", response.error);
+    //   }
+    // } catch (error) {
+    //   console.error("API Request failed:", error);
+    // }
   };
+  
 
   const handleNetworkSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -401,4 +429,4 @@ function TeamTable() {
   );
 }
 
-export default TeamTable;
+export default App;

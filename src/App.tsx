@@ -3,6 +3,7 @@ import { Home } from "./pages/Home";
 import Landing from "./pages/Landing";
 import { LandingWrapper } from "./components/Home/wrapper/LandingWrapper";
 import { TeamWrapper } from "./components/Home/wrapper/TeamWrapper";
+import { UserWrapper } from "./components/Home/wrapper/UserWrapper";
 
 import { Verfication } from "./pages/Verfication";
 import {
@@ -33,6 +34,8 @@ function App() {
               <Route path="dashboard" element={<LandingWrapper />} />
               <Route path="comp-info" element={<CompanyInfo />} />
               <Route path="team" element={<TeamWrapper />} />
+          
+              <Route path="users" element={<UserWrapper />} />
               <Route index element={<Navigate to="dashboard" replace />} />
             </Route>
           </Route>

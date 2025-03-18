@@ -6,6 +6,7 @@ import { combineReducers } from "redux";
 import globalReducer from "./global";
 import { authApi } from "@/components/Auth/api";
 import { VerficationApi } from "@/components/Verfication/api";
+
 const persistConfig = {
   key: "root",
   storage,
