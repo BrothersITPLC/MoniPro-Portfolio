@@ -1,6 +1,6 @@
 "use client";
 
-import { Activity, TrendingUp } from "lucide-react";
+import { Network, TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 
 import {
@@ -18,19 +18,19 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { month: "January", network: 186 },
+  { month: "February", network: 305 },
+  { month: "March", network: 237 },
+  { month: "April", network: 73 },
+  { month: "May", network: 209 },
+  { month: "June", network: 214 },
 ];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  network: {
+    label: "Network Traffic (Mbps)",
     color: "hsl(var(--chart-1))",
-    icon: Activity,
+    icon: Network,
   },
 } satisfies ChartConfig;
 
@@ -38,9 +38,9 @@ export function AreaChartStep() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Area Chart - Step</CardTitle>
+        <CardTitle>VM Network Traffic</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Average network throughput over 6 months
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -66,11 +66,11 @@ export function AreaChartStep() {
               content={<ChartTooltipContent hideLabel />}
             />
             <Area
-              dataKey="desktop"
+              dataKey="network"
               type="step"
-              fill="var(--color-desktop)"
+              fill="var(--color-network)"
               fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              stroke="var(--color-network)"
             />
           </AreaChart>
         </ChartContainer>
@@ -79,10 +79,11 @@ export function AreaChartStep() {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Network traffic increased by 5.2%{" "}
+              <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
+              Average network utilization monitoring
             </div>
           </div>
         </div>

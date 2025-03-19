@@ -1,7 +1,7 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { Power } from "lucide-react";
+import { RadialBarChart, RadialBar, Legend } from "recharts";
 
 import {
   Card,
@@ -17,18 +17,18 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  {
+    name: "Current Uptime",
+    uptime: 99.8,
+    fill: "var(--color-uptime)",
+  },
 ];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  uptime: {
+    label: "Uptime (%)",
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
@@ -37,47 +37,48 @@ export function LineChart1() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Line Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>VM Availability Monitor</CardTitle>
+        <CardDescription>Current Uptime Status</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <LineChart
-            accessibilityLayer
+          <RadialBarChart
+            width={300}
+            height={300}
+            cx={150}
+            cy={150}
+            innerRadius={80}
+            outerRadius={140}
             data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
+            startAngle={90}
+            endAngle={-270}
           >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+            <RadialBar
+              label={{ fill: "#666", position: "insideStart" }}
+              background
+              dataKey="uptime"
+              cornerRadius={5}
             />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+            <Legend
+              iconSize={10}
+              layout="vertical"
+              verticalAlign="middle"
+              wrapperStyle={{
+                top: "50%",
+                right: 0,
+                transform: "translate(0, -50%)",
+              }}
             />
-            <Line
-              dataKey="desktop"
-              type="natural"
-              stroke="var(--color-desktop)"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
+            <ChartTooltip content={<ChartTooltipContent />} />
+          </RadialBarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Current Uptime: 99.8% <Power className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          VM availability status
         </div>
       </CardFooter>
     </Card>

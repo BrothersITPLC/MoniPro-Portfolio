@@ -18,9 +18,9 @@ export const ProtectedRoute = () => {
   }
 
   // Redirect to comp-info if organization info is not completed
-  // if (!userData.organization_info_completed) {
-  //   return <Navigate to="/home/comp-info" replace />;
-  // }
+  if (!userData.organization_info_completed) {
+    return <Navigate to="/home/comp-info" replace />;
+  }
 
   return <Outlet />;
 };

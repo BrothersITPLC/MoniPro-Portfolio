@@ -16,21 +16,21 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
+  { month: "January", reads: 186, writes: 80 },
+  { month: "February", reads: 305, writes: 200 },
+  { month: "March", reads: 237, writes: 120 },
+  { month: "April", reads: 73, writes: 190 },
+  { month: "May", reads: 209, writes: 130 },
+  { month: "June", reads: 214, writes: 140 },
 ];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  reads: {
+    label: "Read IOPS",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  writes: {
+    label: "Write IOPS",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
@@ -39,8 +39,8 @@ export function BarChart1() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart - Multiple</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>VM Disk I/O Performance</CardTitle>
+        <CardDescription>IOPS Monitoring (Jan - June 2024)</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -57,17 +57,18 @@ export function BarChart1() {
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <Bar dataKey="reads" fill="var(--color-reads)" radius={4} />
+            <Bar dataKey="writes" fill="var(--color-writes)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Disk I/O performance increased by 5.2%{" "}
+          <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          Average read/write operations per second (IOPS)
         </div>
       </CardFooter>
     </Card>

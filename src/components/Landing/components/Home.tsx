@@ -1,5 +1,4 @@
 import { Testimonials } from "./Testimonials";
-import { CtaFooter } from "./CtaFooter";
 import { Pricing } from "./Pricing";
 import { AiFeatures } from "./AiFeatures";
 import { Product } from "./Product";

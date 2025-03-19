@@ -26,109 +26,109 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 const chartData = [
-  { date: "2024-04-01", desktop: 222, mobile: 150 },
-  { date: "2024-04-02", desktop: 97, mobile: 180 },
-  { date: "2024-04-03", desktop: 167, mobile: 120 },
-  { date: "2024-04-04", desktop: 242, mobile: 260 },
-  { date: "2024-04-05", desktop: 373, mobile: 290 },
-  { date: "2024-04-06", desktop: 301, mobile: 340 },
-  { date: "2024-04-07", desktop: 245, mobile: 180 },
-  { date: "2024-04-08", desktop: 409, mobile: 320 },
-  { date: "2024-04-09", desktop: 59, mobile: 110 },
-  { date: "2024-04-10", desktop: 261, mobile: 190 },
-  { date: "2024-04-11", desktop: 327, mobile: 350 },
-  { date: "2024-04-12", desktop: 292, mobile: 210 },
-  { date: "2024-04-13", desktop: 342, mobile: 380 },
-  { date: "2024-04-14", desktop: 137, mobile: 220 },
-  { date: "2024-04-15", desktop: 120, mobile: 170 },
-  { date: "2024-04-16", desktop: 138, mobile: 190 },
-  { date: "2024-04-17", desktop: 446, mobile: 360 },
-  { date: "2024-04-18", desktop: 364, mobile: 410 },
-  { date: "2024-04-19", desktop: 243, mobile: 180 },
-  { date: "2024-04-20", desktop: 89, mobile: 150 },
-  { date: "2024-04-21", desktop: 137, mobile: 200 },
-  { date: "2024-04-22", desktop: 224, mobile: 170 },
-  { date: "2024-04-23", desktop: 138, mobile: 230 },
-  { date: "2024-04-24", desktop: 387, mobile: 290 },
-  { date: "2024-04-25", desktop: 215, mobile: 250 },
-  { date: "2024-04-26", desktop: 75, mobile: 130 },
-  { date: "2024-04-27", desktop: 383, mobile: 420 },
-  { date: "2024-04-28", desktop: 122, mobile: 180 },
-  { date: "2024-04-29", desktop: 315, mobile: 240 },
-  { date: "2024-04-30", desktop: 454, mobile: 380 },
-  { date: "2024-05-01", desktop: 165, mobile: 220 },
-  { date: "2024-05-02", desktop: 293, mobile: 310 },
-  { date: "2024-05-03", desktop: 247, mobile: 190 },
-  { date: "2024-05-04", desktop: 385, mobile: 420 },
-  { date: "2024-05-05", desktop: 481, mobile: 390 },
-  { date: "2024-05-06", desktop: 498, mobile: 520 },
-  { date: "2024-05-07", desktop: 388, mobile: 300 },
-  { date: "2024-05-08", desktop: 149, mobile: 210 },
-  { date: "2024-05-09", desktop: 227, mobile: 180 },
-  { date: "2024-05-10", desktop: 293, mobile: 330 },
-  { date: "2024-05-11", desktop: 335, mobile: 270 },
-  { date: "2024-05-12", desktop: 197, mobile: 240 },
-  { date: "2024-05-13", desktop: 197, mobile: 160 },
-  { date: "2024-05-14", desktop: 448, mobile: 490 },
-  { date: "2024-05-15", desktop: 473, mobile: 380 },
-  { date: "2024-05-16", desktop: 338, mobile: 400 },
-  { date: "2024-05-17", desktop: 499, mobile: 420 },
-  { date: "2024-05-18", desktop: 315, mobile: 350 },
-  { date: "2024-05-19", desktop: 235, mobile: 180 },
-  { date: "2024-05-20", desktop: 177, mobile: 230 },
-  { date: "2024-05-21", desktop: 82, mobile: 140 },
-  { date: "2024-05-22", desktop: 81, mobile: 120 },
-  { date: "2024-05-23", desktop: 252, mobile: 290 },
-  { date: "2024-05-24", desktop: 294, mobile: 220 },
-  { date: "2024-05-25", desktop: 201, mobile: 250 },
-  { date: "2024-05-26", desktop: 213, mobile: 170 },
-  { date: "2024-05-27", desktop: 420, mobile: 460 },
-  { date: "2024-05-28", desktop: 233, mobile: 190 },
-  { date: "2024-05-29", desktop: 78, mobile: 130 },
-  { date: "2024-05-30", desktop: 340, mobile: 280 },
-  { date: "2024-05-31", desktop: 178, mobile: 230 },
-  { date: "2024-06-01", desktop: 178, mobile: 200 },
-  { date: "2024-06-02", desktop: 470, mobile: 410 },
-  { date: "2024-06-03", desktop: 103, mobile: 160 },
-  { date: "2024-06-04", desktop: 439, mobile: 380 },
-  { date: "2024-06-05", desktop: 88, mobile: 140 },
-  { date: "2024-06-06", desktop: 294, mobile: 250 },
-  { date: "2024-06-07", desktop: 323, mobile: 370 },
-  { date: "2024-06-08", desktop: 385, mobile: 320 },
-  { date: "2024-06-09", desktop: 438, mobile: 480 },
-  { date: "2024-06-10", desktop: 155, mobile: 200 },
-  { date: "2024-06-11", desktop: 92, mobile: 150 },
-  { date: "2024-06-12", desktop: 492, mobile: 420 },
-  { date: "2024-06-13", desktop: 81, mobile: 130 },
-  { date: "2024-06-14", desktop: 426, mobile: 380 },
-  { date: "2024-06-15", desktop: 307, mobile: 350 },
-  { date: "2024-06-16", desktop: 371, mobile: 310 },
-  { date: "2024-06-17", desktop: 475, mobile: 520 },
-  { date: "2024-06-18", desktop: 107, mobile: 170 },
-  { date: "2024-06-19", desktop: 341, mobile: 290 },
-  { date: "2024-06-20", desktop: 408, mobile: 450 },
-  { date: "2024-06-21", desktop: 169, mobile: 210 },
-  { date: "2024-06-22", desktop: 317, mobile: 270 },
-  { date: "2024-06-23", desktop: 480, mobile: 530 },
-  { date: "2024-06-24", desktop: 132, mobile: 180 },
-  { date: "2024-06-25", desktop: 141, mobile: 190 },
-  { date: "2024-06-26", desktop: 434, mobile: 380 },
-  { date: "2024-06-27", desktop: 448, mobile: 490 },
-  { date: "2024-06-28", desktop: 149, mobile: 200 },
-  { date: "2024-06-29", desktop: 103, mobile: 160 },
-  { date: "2024-06-30", desktop: 446, mobile: 400 },
+  { date: "2024-04-01", cpu: 65, memory: 45 },
+  { date: "2024-04-02", cpu: 72, memory: 52 },
+  { date: "2024-04-03", cpu: 58, memory: 48 },
+  { date: "2024-04-04", cpu: 242, memory: 260 },
+  { date: "2024-04-05", cpu: 373, memory: 290 },
+  { date: "2024-04-06", cpu: 301, memory: 340 },
+  { date: "2024-04-07", cpu: 245, memory: 180 },
+  { date: "2024-04-08", cpu: 409, memory: 320 },
+  { date: "2024-04-09", cpu: 59, memory: 110 },
+  { date: "2024-04-10", cpu: 261, memory: 190 },
+  { date: "2024-04-11", cpu: 327, memory: 350 },
+  { date: "2024-04-12", cpu: 292, memory: 210 },
+  { date: "2024-04-13", cpu: 342, memory: 380 },
+  { date: "2024-04-14", cpu: 137, memory: 220 },
+  { date: "2024-04-15", cpu: 120, memory: 170 },
+  { date: "2024-04-16", cpu: 138, memory: 190 },
+  { date: "2024-04-17", cpu: 446, memory: 360 },
+  { date: "2024-04-18", cpu: 364, memory: 410 },
+  { date: "2024-04-19", cpu: 243, memory: 180 },
+  { date: "2024-04-20", cpu: 89, memory: 150 },
+  { date: "2024-04-21", cpu: 137, memory: 200 },
+  { date: "2024-04-22", cpu: 224, memory: 170 },
+  { date: "2024-04-23", cpu: 138, memory: 230 },
+  { date: "2024-04-24", cpu: 387, memory: 290 },
+  { date: "2024-04-25", cpu: 215, memory: 250 },
+  { date: "2024-04-26", cpu: 75, memory: 130 },
+  { date: "2024-04-27", cpu: 383, memory: 420 },
+  { date: "2024-04-28", cpu: 122, memory: 180 },
+  { date: "2024-04-29", cpu: 315, memory: 240 },
+  { date: "2024-04-30", cpu: 454, memory: 380 },
+  { date: "2024-05-01", cpu: 165, memory: 220 },
+  { date: "2024-05-02", cpu: 293, memory: 310 },
+  { date: "2024-05-03", cpu: 247, memory: 190 },
+  { date: "2024-05-04", cpu: 385, memory: 420 },
+  { date: "2024-05-05", cpu: 481, memory: 390 },
+  { date: "2024-05-06", cpu: 498, memory: 520 },
+  { date: "2024-05-07", cpu: 388, memory: 300 },
+  { date: "2024-05-08", cpu: 149, memory: 210 },
+  { date: "2024-05-09", cpu: 227, memory: 180 },
+  { date: "2024-05-10", cpu: 293, memory: 330 },
+  { date: "2024-05-11", cpu: 335, memory: 270 },
+  { date: "2024-05-12", cpu: 197, memory: 240 },
+  { date: "2024-05-13", cpu: 197, memory: 160 },
+  { date: "2024-05-14", cpu: 448, memory: 490 },
+  { date: "2024-05-15", cpu: 473, memory: 380 },
+  { date: "2024-05-16", cpu: 338, memory: 400 },
+  { date: "2024-05-17", cpu: 499, memory: 420 },
+  { date: "2024-05-18", cpu: 315, memory: 350 },
+  { date: "2024-05-19", cpu: 235, memory: 180 },
+  { date: "2024-05-20", cpu: 177, memory: 230 },
+  { date: "2024-05-21", cpu: 82, memory: 140 },
+  { date: "2024-05-22", cpu: 81, memory: 120 },
+  { date: "2024-05-23", cpu: 252, memory: 290 },
+  { date: "2024-05-24", cpu: 294, memory: 220 },
+  { date: "2024-05-25", cpu: 201, memory: 250 },
+  { date: "2024-05-26", cpu: 213, memory: 170 },
+  { date: "2024-05-27", cpu: 420, memory: 460 },
+  { date: "2024-05-28", cpu: 233, memory: 190 },
+  { date: "2024-05-29", cpu: 78, memory: 130 },
+  { date: "2024-05-30", cpu: 340, memory: 280 },
+  { date: "2024-05-31", cpu: 178, memory: 230 },
+  { date: "2024-06-01", cpu: 178, memory: 200 },
+  { date: "2024-06-02", cpu: 470, memory: 410 },
+  { date: "2024-06-03", cpu: 103, memory: 160 },
+  { date: "2024-06-04", cpu: 439, memory: 380 },
+  { date: "2024-06-05", cpu: 88, memory: 140 },
+  { date: "2024-06-06", cpu: 294, memory: 250 },
+  { date: "2024-06-07", cpu: 323, memory: 370 },
+  { date: "2024-06-08", cpu: 385, memory: 320 },
+  { date: "2024-06-09", cpu: 438, memory: 480 },
+  { date: "2024-06-10", cpu: 155, memory: 200 },
+  { date: "2024-06-11", cpu: 92, memory: 150 },
+  { date: "2024-06-12", cpu: 492, memory: 420 },
+  { date: "2024-06-13", cpu: 81, memory: 130 },
+  { date: "2024-06-14", cpu: 426, memory: 380 },
+  { date: "2024-06-15", cpu: 307, memory: 350 },
+  { date: "2024-06-16", cpu: 371, memory: 310 },
+  { date: "2024-06-17", cpu: 475, memory: 520 },
+  { date: "2024-06-18", cpu: 107, memory: 170 },
+  { date: "2024-06-19", cpu: 341, memory: 290 },
+  { date: "2024-06-20", cpu: 408, memory: 450 },
+  { date: "2024-06-21", cpu: 169, memory: 210 },
+  { date: "2024-06-22", cpu: 317, memory: 270 },
+  { date: "2024-06-23", cpu: 480, memory: 530 },
+  { date: "2024-06-24", cpu: 132, memory: 180 },
+  { date: "2024-06-25", cpu: 141, memory: 190 },
+  { date: "2024-06-26", cpu: 434, memory: 380 },
+  { date: "2024-06-27", cpu: 448, memory: 490 },
+  { date: "2024-06-28", cpu: 149, memory: 200 },
+  { date: "2024-06-29", cpu: 103, memory: 160 },
+  { date: "2024-06-30", cpu: 446, memory: 400 },
 ];
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  resources: {
+    label: "Resource Usage",
   },
-  desktop: {
-    label: "Desktop",
+  cpu: {
+    label: "CPU Usage (%)",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  memory: {
+    label: "Memory Usage (%)",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
@@ -154,10 +154,8 @@ export function AreaChart1() {
     <Card>
       <CardHeader className="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div className="grid flex-1 gap-1 text-center sm:text-left">
-          <CardTitle>Area Chart - Interactive</CardTitle>
-          <CardDescription>
-            Showing total visitors for the last 3 months
-          </CardDescription>
+          <CardTitle>VM Resource Monitoring</CardTitle>
+          <CardDescription>Showing resource utilization trends</CardDescription>
         </div>
         <Select value={timeRange} onValueChange={setTimeRange}>
           <SelectTrigger
@@ -186,27 +184,27 @@ export function AreaChart1() {
         >
           <AreaChart data={filteredData}>
             <defs>
-              <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="fillCPU" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-desktop)"
+                  stopColor="var(--color-cpu)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-desktop)"
+                  stopColor="var(--color-cpu)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
-              <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="fillMemory" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-mobile)"
+                  stopColor="var(--color-memory)"
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-mobile)"
+                  stopColor="var(--color-memory)"
                   stopOpacity={0.1}
                 />
               </linearGradient>
@@ -241,17 +239,17 @@ export function AreaChart1() {
               }
             />
             <Area
-              dataKey="mobile"
+              dataKey="memory"
               type="natural"
-              fill="url(#fillMobile)"
-              stroke="var(--color-mobile)"
+              fill="url(#fillMemory)"
+              stroke="var(--color-memory)"
               stackId="a"
             />
             <Area
-              dataKey="desktop"
+              dataKey="cpu"
               type="natural"
-              fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
+              fill="url(#fillCPU)"
+              stroke="var(--color-cpu)"
               stackId="a"
             />
             <ChartLegend content={<ChartLegendContent />} />

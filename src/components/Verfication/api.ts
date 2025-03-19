@@ -12,7 +12,15 @@ export const VerficationApi = createApi({
         body: credentials,
       }),
     }),
+    organizationInfo: builder.mutation({
+      query: (data) => ({
+        url: "/organization/",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useOtpVerficationMutation } = VerficationApi;
+export const { useOtpVerficationMutation, useOrganizationInfoMutation } =
+  VerficationApi;

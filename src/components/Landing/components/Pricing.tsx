@@ -1,6 +1,12 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Shield, Zap, Database, Check } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import {
+  setSelectedPlane,
+  setSelectedPlanType,
+} from "@/components/Landing/LandingSlice";
 
 const icons = [
   {
@@ -17,113 +23,59 @@ const icons = [
   },
 ];
 
-const pricingPlans = [
-  {
-    name: "Basic Plan",
-    price: 29,
-    description: "Perfect for small teams and startups",
-    icon: <Shield className="w-12 h-12 text-blue-400" />,
-    features: [
-      "Up to 10 servers monitoring",
-      "Basic AI insights",
-      "Email notifications",
-      "5 team members",
-      "12-hour data retention",
-      "Community support",
-    ],
-    color: "blue",
-    popular: false,
-  },
-  {
-    name: "Premium Plan",
-    price: 99,
-    description: "Ideal for growing businesses",
-    icon: <Zap className="w-12 h-12 text-red-500" />,
-    features: [
-      "Up to 50 servers monitoring",
-      "Advanced AI predictions",
-      "Multi-channel alerts",
-      "15 team members",
-      "30-day data retention",
-      "24/7 priority support",
-      "Custom dashboards",
-    ],
-    color: "red",
-    popular: true,
-  },
-  {
-    name: "Enterprise Plan",
-    price: 299,
-    description: "For large-scale operations",
-    icon: <Database className="w-12 h-12 text-purple-500" />,
-    features: [
-      "Unlimited servers monitoring",
-      "Custom AI models",
-      "Advanced integrations",
-      "Unlimited team members",
-      "90-day data retention",
-      "Dedicated support manager",
-      "Custom feature development",
-      "On-premise deployment",
-    ],
-    color: "purple",
-    popular: false,
-  },
-];
-
-interface PricingProps {
-  onSubscriptionSelect: () => void;
-  setSelectedPlan: (plan: {
-    name: string;
-    price: number;
-    description: string;
-    duration: string;
-  }) => void;
-}
-
-export function Pricing({ onSubscriptionSelect, setSelectedPlan }: PricingProps) {
+export function Pricing() {
+  const dispatch = useDispatch();
+  const planeData = useSelector((state: RootState) => state.landing.plans);
+  const selectedPlanType = useSelector(
+    (state: RootState) => state.landing.selectedPlanType
+  );
+  const selectedPlan = useSelector(
+    (state: RootState) => state.landing.SelectedPlane
+  );
   const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+
   const [isYearly, setIsYearly] = useState(false);
   const pricingRef = useRef<HTMLDivElement>(null);
   const [hoveredPlan, setHoveredPlan] = useState<number | null>(null);
 
-  const calculatePrice = (monthlyPrice: number, planName: string) => {
-    if (isYearly) {
-      let discountRate = 0.05; // Default 5% for Basic plan
+  useEffect(() => {
+    dispatch(setSelectedPlanType(isYearly ? "yearly" : "monthly"));
+  }, [isYearly, dispatch]);
 
-      if (planName === "Premium Plan") {
-        discountRate = 0.08; // 8% for Premium plan
-      } else if (planName === "Enterprise Plan") {
-        discountRate = 0.1; // 10% for Enterprise plan
+  const handlePlanSelect = (planIndex: number) => {
+    if (planeData) {
+      const selectedPlans = planeData[selectedPlanType];
+      if (selectedPlans && selectedPlans[planIndex]) {
+        const id: number = selectedPlans[planIndex].id;
+        dispatch(setSelectedPlane(id));
       }
-
-      return Math.floor(monthlyPrice * 12 * (1 - discountRate));
     }
-    return monthlyPrice;
+  };
+
+  const calculatePrice = (price: number, planName: string) => {
+    if (isYearly) {
+      return price;
+    }
+    return price;
+  };
+
+  const getPriceLabel = () => {
+    return isYearly ? "/year" : "/month";
   };
 
   const getSavingsPercentage = (planName: string) => {
-    if (planName === "Premium Plan") {
-      return 8;
-    } else if (planName === "Enterprise Plan") {
-      return 10;
-    }
-    return 5; // Basic plan
+    if (planName === "Basic Plan") return 15;
+    if (planName === "Premium Plan") return 20;
+    if (planName === "Enterprise Plan") return 25;
+    return 0;
   };
 
-  const getPriceLabel = () => (isYearly ? "/year" : "/month");
+  if (!planeData || !planeData[selectedPlanType]) {
+    return <div className="text-center py-12">Loading plans...</div>;
+  }
 
-  const handlePlanSelect = (planIndex: number) => {
-    const selected = pricingPlans[planIndex];
-    setSelectedPlan({
-      name: selected.name,
-      price: calculatePrice(selected.price, selected.name),
-      description: selected.description,
-      duration: isYearly ? "yearly" : "monthly",
-    });
-    onSubscriptionSelect(); // Trigger the next step
-  };
-
+  const currentPlans = planeData[selectedPlanType];
+  console.log(selectedPlan);
   return (
     <div
       id="pricing"
@@ -158,7 +110,7 @@ export function Pricing({ onSubscriptionSelect, setSelectedPlan }: PricingProps)
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9 bg-white dark:border-b-slate-700 dark:bg-background">
-          {pricingPlans.map((plan, index) => (
+          {currentPlans.map((plan, index) => (
             <div
               key={index}
               onMouseEnter={() => setHoveredPlan(index)}
@@ -177,7 +129,7 @@ export function Pricing({ onSubscriptionSelect, setSelectedPlan }: PricingProps)
                 </div>
               )}
               <div className="text-center mb-6">
-                {icons[index].icon}
+                {icons[index % icons.length].icon}
                 <h3 className="text-2xl font-bold mt-4 mb-2">{plan.name}</h3>
                 <p className="text-gray-400 mb-4">{plan.description}</p>
                 <div className="flex items-baseline justify-center">
@@ -203,7 +155,9 @@ export function Pricing({ onSubscriptionSelect, setSelectedPlan }: PricingProps)
                 {plan.features.map((feature, featureIndex) => (
                   <div key={featureIndex} className="flex items-center">
                     <Check
-                      className={`w-5 h-5 text-${icons[index].color}-500 mr-3 flex-shrink-0`}
+                      className={`w-5 h-5 text-${
+                        icons[index % icons.length].color
+                      }-500 mr-3 flex-shrink-0`}
                     />
                     <span className="text-gray-300 text-sm">{feature}</span>
                   </div>
