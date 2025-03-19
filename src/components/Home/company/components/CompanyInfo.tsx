@@ -45,7 +45,6 @@ const steps = [
 export function CompanyInfo() {
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   console.log(userData);
-  const dispatch = useDispatch();
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
   const selectedPlan = useSelector(
     (state: RootState) => state.landing.SelectedPlane

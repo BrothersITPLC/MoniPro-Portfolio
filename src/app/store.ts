@@ -6,9 +6,9 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import globalReducer from "./global";
 import { authApi } from "@/components/Auth/api";
-import { VerficationApi } from "@/components/Verfication/api";
-import { teamApi } from "@/components/Home/components/team/api";
-import teamSlice from "@/components/Home/components/team/teamSlice";
+import { VerficationApi } from "@/components/Home/company/api";
+import { teamApi } from "@/components/Home/team/api";
+import teamSlice from "@/components/Home/team/teamSlice";
 
 const persistConfig = {
   key: "root",
