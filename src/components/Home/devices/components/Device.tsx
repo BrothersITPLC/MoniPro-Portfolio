@@ -29,7 +29,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Laptop2, Network, Wifi, Shield, Router } from "lucide-react";
-// import { useDeviceinfoMutation } from "@/redux/deviceinfoapi";
 
 interface VMFormData {
   domainName: string;
@@ -49,9 +48,7 @@ interface NetworkFormData {
   status: "active" | "inactive" | "maintenance";
 }
 
-function App() {
-  //   const [submitDeviceInfo, { isLoading }] = useDeviceinfoMutation();
-
+function Device() {
   const [showVMConfirm, setShowVMConfirm] = useState(false);
   const [showNetworkConfirm, setShowNetworkConfirm] = useState(false);
   const [vmFormData, setVMFormData] = useState<VMFormData>({
@@ -71,44 +68,9 @@ function App() {
     status: "inactive",
   });
 
-  const getDeviceIcon = (type: string) => {
-    switch (type) {
-      case "switch":
-        return <Wifi className="h-5 w-5" />;
-      case "router":
-        return <Router className="h-5 w-5" />;
-      case "firewall":
-        return <Shield className="h-5 w-5" />;
-      default:
-        return <Network className="h-5 w-5" />;
-    }
-  };
-
-  const handleVMSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleVMSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Log the form data to the console
-    const formData = new FormData(e.currentTarget);
-    const formObject: Record<string, string> = {};
-
-    formData.forEach((value, key) => {
-      formObject[key] = value.toString();
-    });
-    console.log("Submitted Form Data:", formObject);
-
-    // try {
-    //   // **Post Data to API**
-    //   const response = await submitDeviceInfo(formObject).unwrap();
-
-    //   // Check if the response was successful, you can modify this check based on your response structure
-    //   if (response.success) {
-    //     setShowVMConfirm(true);
-    //   } else {
-    //     console.error("Error submitting form:", response.error);
-    //   }
-    // } catch (error) {
-    //   console.error("API Request failed:", error);
-    // }
+    setShowVMConfirm(true);
   };
 
   const handleNetworkSubmit = (e: React.FormEvent) => {
@@ -581,4 +543,4 @@ function App() {
   );
 }
 
-export default App;
+export default Device;

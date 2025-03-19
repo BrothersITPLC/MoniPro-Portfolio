@@ -28,7 +28,6 @@ import {
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "@/components/Auth/api";
-import { useDispatch } from "react-redux";
 
 export function NavUser() {
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");

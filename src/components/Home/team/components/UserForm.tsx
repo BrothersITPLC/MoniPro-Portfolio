@@ -1,6 +1,6 @@
-import React from 'react';
-import { Plus, X } from 'lucide-react';
-import type { UserFormData } from '../types';
+import React from "react";
+import { Plus, X } from "lucide-react";
+import type { UserFormData } from "../../../team/types";
 
 interface UserFormProps {
   onSubmit: (data: UserFormData) => void;
@@ -10,9 +10,9 @@ interface UserFormProps {
 
 export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
   const [formData, setFormData] = React.useState<UserFormData>({
-    email: initialData?.email || '',
-    firstName: initialData?.firstName || '',
-    lastName: initialData?.lastName || '',
+    email: initialData?.email || "",
+    firstName: initialData?.firstName || "",
+    lastName: initialData?.lastName || "",
     status: initialData?.status ?? true,
     permissions: {
       addVM: initialData?.permissions?.addVM || false,
@@ -25,7 +25,10 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
     },
   });
 
-  const [newVM, setNewVM] = React.useState({ name: '', type: 'Process' as const });
+  const [newVM, setNewVM] = React.useState({
+    name: "",
+    type: "Process" as const,
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +47,7 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
         ],
       },
     });
-    setNewVM({ name: '', type: 'Process' });
+    setNewVM({ name: "", type: "Process" });
   };
 
   const removeVM = (vmId: string) => {
@@ -52,7 +55,9 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
       ...formData,
       permissions: {
         ...formData.permissions,
-        controlVM: formData.permissions.controlVM.filter((vm) => vm.id !== vmId),
+        controlVM: formData.permissions.controlVM.filter(
+          (vm) => vm.id !== vmId
+        ),
       },
     });
   };
@@ -69,26 +74,34 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
       </div>
-      
+
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">First Name</label>
+          <label className="block text-sm font-medium text-gray-700">
+            First Name
+          </label>
           <input
             type="text"
             required
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             value={formData.firstName}
-            onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, firstName: e.target.value })
+            }
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Last Name</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Last Name
+          </label>
           <input
             type="text"
             required
             className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             value={formData.lastName}
-            onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, lastName: e.target.value })
+            }
           />
         </div>
       </div>
@@ -98,18 +111,22 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
           <input
             type="checkbox"
             checked={formData.status}
-            onChange={(e) => setFormData({ ...formData, status: e.target.checked })}
+            onChange={(e) =>
+              setFormData({ ...formData, status: e.target.checked })
+            }
             className="peer sr-only"
           />
           <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300"></div>
           <span className="ml-3 text-sm font-medium text-gray-700">
-            {formData.status ? 'Active' : 'Inactive'}
+            {formData.status ? "Active" : "Inactive"}
           </span>
         </label>
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Permissions</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Permissions
+        </label>
         <div className="space-y-2">
           <label className="flex items-center space-x-2">
             <input
@@ -119,7 +136,10 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  permissions: { ...formData.permissions, addVM: e.target.checked },
+                  permissions: {
+                    ...formData.permissions,
+                    addVM: e.target.checked,
+                  },
                 })
               }
             />
@@ -133,7 +153,10 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  permissions: { ...formData.permissions, addUser: e.target.checked },
+                  permissions: {
+                    ...formData.permissions,
+                    addUser: e.target.checked,
+                  },
                 })
               }
             />
@@ -143,7 +166,9 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
       </div>
 
       <div className="space-y-3">
-        <label className="block text-sm font-medium text-gray-700">Control VMs</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Control VMs
+        </label>
         <div className="flex gap-2">
           <input
             type="text"
@@ -154,7 +179,12 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
           />
           <select
             value={newVM.type}
-            onChange={(e) => setNewVM({ ...newVM, type: e.target.value as 'Process' | 'System' })}
+            onChange={(e) =>
+              setNewVM({
+                ...newVM,
+                type: e.target.value as "Process" | "System",
+              })
+            }
             className="rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
           >
             <option value="Process">Process VM</option>
@@ -176,7 +206,9 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
             >
               <div>
                 <span className="font-medium">{vm.name}</span>
-                <span className="ml-2 text-sm text-gray-500">({vm.type} VM)</span>
+                <span className="ml-2 text-sm text-gray-500">
+                  ({vm.type} VM)
+                </span>
               </div>
               <button
                 type="button"
@@ -191,7 +223,9 @@ export function UserForm({ onSubmit, initialData, onCancel }: UserFormProps) {
       </div>
 
       <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700">Media Types</label>
+        <label className="block text-sm font-medium text-gray-700">
+          Media Types
+        </label>
         <div className="space-y-2">
           <label className="flex items-center space-x-2">
             <input

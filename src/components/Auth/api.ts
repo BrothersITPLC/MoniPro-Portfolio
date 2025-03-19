@@ -25,8 +25,19 @@ export const authApi = createApi({
         method: "POST",
       }),
     }),
+    OtpVerfication: builder.mutation({
+      query: (credentials) => ({
+        url: "/verify/",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useLogoutMutation } =
-  authApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useLogoutMutation,
+  useOtpVerficationMutation,
+} = authApi;

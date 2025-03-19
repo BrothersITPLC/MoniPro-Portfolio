@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Settings2, SquareTerminal, Bell } from "lucide-react";
-import { NavMain } from "@/components/Home/components/nav-main";
-import { NavUser } from "@/components/Home/components/nav-user";
-import { TeamSwitcher } from "@/components/Home/components/team-switcher";
+import { NavMain } from "@/components/Home/nav-main";
+import { NavUser } from "@/components/Home/nav-user";
+import { TeamSwitcher } from "@/components/Home/team-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -53,29 +53,7 @@ const data = {
         },
       ],
     },
-    // {
-    //   title: "Documentation",
-    //   url: "#",
-    //   icon: BookOpen,
-    //   items: [
-    //     {
-    //       title: "Introduction",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Get Started",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Tutorials",
-    //       url: "#",
-    //     },
-    //     {
-    //       title: "Changelog",
-    //       url: "#",
-    //     },
-    //   ],
-    // },
+
     {
       title: "Settings",
       url: "/home",
@@ -87,11 +65,11 @@ const data = {
         },
         {
           title: "Team",
-          url: "/home/users",
+          url: "/home/team",
         },
         {
           title: "Manage Devices",
-          url: "/home/team",
+          url: "/home/device-mangment",
         },
       ],
     },

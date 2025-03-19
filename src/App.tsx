@@ -2,8 +2,8 @@ import { Auth } from "./pages/Auth";
 import { Home } from "./pages/Home";
 import Landing from "./pages/Landing";
 import { LandingWrapper } from "./components/Home/wrapper/LandingWrapper";
+import { DeviceWrapper } from "./components/Home/wrapper/DeviceWrapper";
 import { TeamWrapper } from "./components/Home/wrapper/TeamWrapper";
-import { UserWrapper } from "./components/Home/wrapper/UserWrapper";
 
 import { Verfication } from "./pages/Verfication";
 import {
@@ -12,14 +12,14 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { CompanyInfo } from "./components/Verfication/components/CompanyInfo";
+import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
 
-import { NotificationWrapper } from "./components/notification/NotificationWrapper";
-import { SecurityAlerts } from "./components/notification/components/SecurityAlerts";
-import { InsightSuggestion } from "./components/notification/components/InsightSuggestion";
-import { PerformanceAlerts } from "./components/notification/components/PerformanceAlerts";
+import { NotificationWrapper } from "./components/Home/wrapper/NotificationWrapper";
+import { SecurityAlerts } from "./components/Home/notification/components/SecurityAlerts";
+import { InsightSuggestion } from "./components/Home/notification/components/InsightSuggestion";
+import { PerformanceAlerts } from "./components/Home/notification/components/PerformanceAlerts";
 
 function App() {
   return (
@@ -38,7 +38,7 @@ function App() {
             <Route path="/home" element={<Home />}>
               <Route path="dashboard" element={<LandingWrapper />} />
               <Route path="comp-info" element={<CompanyInfo />} />
-              <Route path="team" element={<TeamWrapper />} />
+              <Route path="device-mangment" element={<DeviceWrapper />} />
               <Route path="notification" element={<NotificationWrapper />}>
                 <Route path="security" element={<SecurityAlerts />} />
                 <Route
@@ -47,7 +47,7 @@ function App() {
                 />
                 <Route path="performance" element={<PerformanceAlerts />} />
               </Route>
-              <Route path="users" element={<UserWrapper />} />
+              <Route path="team" element={<TeamWrapper />} />
               <Route index element={<Navigate to="dashboard" replace />} />
             </Route>
           </Route>
