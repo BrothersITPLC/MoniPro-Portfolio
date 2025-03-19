@@ -1,544 +1,308 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { PlusCircle } from "lucide-react";
+import { VMForm } from "./VMForm";
+import { NetworkDeviceForm } from "./NetworkDeviceForm";
+import { VMList } from "./VMList";
+import { NetworkDeviceList } from "./NetworkDeviceList";
+import { MonitoringConfirmationDialog } from "./MonitoringConfirmationDialog";
+import { VMFormData, NetworkFormData } from "../types";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Laptop2, Network, Wifi, Shield, Router } from "lucide-react";
 
-interface VMFormData {
-  domainName: string;
-  username: string;
-  password: string;
-  ipAddress: string;
-  networkType: string;
-}
+// Dummy data for VMs
+const dummyVMs: VMFormData[] = [
+  {
+    id: "vm-1",
+    domainName: "web-server-01.example.com",
+    username: "admin",
+    password: "securepass123",
+    ipAddress: "192.168.1.10",
+    networkType: "private",
+    status: "running",
+    resources: {
+      cpu: 65,
+      memory: 72,
+      storage: 48,
+    },
+  },
+  {
+    id: "vm-2",
+    domainName: "db-server-01.example.com",
+    username: "dbadmin",
+    password: "dbpass456",
+    ipAddress: "192.168.1.11",
+    networkType: "private",
+    status: "running",
+    resources: {
+      cpu: 82,
+      memory: 56,
+      storage: 75,
+    },
+  },
+  {
+    id: "vm-3",
+    domainName: "app-server-01.example.com",
+    username: "appuser",
+    password: "app789pass",
+    ipAddress: "192.168.1.12",
+    networkType: "hybrid",
+    status: "stopped",
+    resources: {
+      cpu: 0,
+      memory: 5,
+      storage: 62,
+    },
+  },
+];
 
-interface NetworkFormData {
-  deviceType: string;
-  ipAddress: string;
-  subnetMask: string;
-  gateway: string;
-  name: string;
-  location: string;
-  status: "active" | "inactive" | "maintenance";
-}
+// Dummy data for network devices
+const dummyNetworkDevices: NetworkFormData[] = [
+  {
+    id: "net-1",
+    name: "Core Router",
+    deviceType: "router",
+    ipAddress: "192.168.0.1",
+    subnetMask: "255.255.255.0",
+    gateway: "192.168.0.254",
+    location: "Server Room A",
+    status: "active",
+    metrics: {
+      bandwidth: 78,
+      latency: 5,
+      packetLoss: 0.2,
+    },
+  },
+  {
+    id: "net-2",
+    name: "Edge Firewall",
+    deviceType: "firewall",
+    ipAddress: "192.168.0.2",
+    subnetMask: "255.255.255.0",
+    gateway: "192.168.0.254",
+    location: "DMZ",
+    status: "active",
+    metrics: {
+      bandwidth: 45,
+      latency: 8,
+      packetLoss: 0.1,
+    },
+  },
+  {
+    id: "net-3",
+    name: "Distribution Switch",
+    deviceType: "switch",
+    ipAddress: "192.168.0.3",
+    subnetMask: "255.255.255.0",
+    gateway: "192.168.0.254",
+    location: "Floor 2",
+    status: "maintenance",
+    metrics: {
+      bandwidth: 30,
+      latency: 2,
+      packetLoss: 0.5,
+    },
+  },
+];
 
 function Device() {
-  const [showVMConfirm, setShowVMConfirm] = useState(false);
-  const [showNetworkConfirm, setShowNetworkConfirm] = useState(false);
-  const [vmFormData, setVMFormData] = useState<VMFormData>({
-    domainName: "",
-    username: "",
-    password: "",
-    ipAddress: "",
-    networkType: "",
-  });
-  const [networkFormData, setNetworkFormData] = useState<NetworkFormData>({
-    deviceType: "",
-    ipAddress: "",
-    subnetMask: "",
-    gateway: "",
-    name: "",
-    location: "",
-    status: "inactive",
-  });
+  const [vms, setVMs] = useState<VMFormData[]>([]);
+  const [networkDevices, setNetworkDevices] = useState<NetworkFormData[]>([]);
+  const [isVMFormOpen, setIsVMFormOpen] = useState(false);
+  const [isNetworkFormOpen, setIsNetworkFormOpen] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+  const [confirmationType, setConfirmationType] = useState<"vm" | "network">(
+    "vm"
+  );
+  const [pendingData, setPendingData] = useState<any>(null);
+  const [editingVM, setEditingVM] = useState<VMFormData | null>(null);
+  const [editingNetworkDevice, setEditingNetworkDevice] =
+    useState<NetworkFormData | null>(null);
 
-  const handleVMSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowVMConfirm(true);
+  // Load dummy data on component mount
+  useEffect(() => {
+    setVMs(dummyVMs);
+    setNetworkDevices(dummyNetworkDevices);
+  }, []);
+
+  // Handle VM form submission
+  const handleVMSubmit = (data: VMFormData) => {
+    setPendingData(data);
+    setConfirmationType("vm");
+    setIsConfirmationOpen(true);
+    setIsVMFormOpen(false);
   };
 
-  const handleNetworkSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateIPAddress(networkFormData.ipAddress)) {
-      alert("Please enter a valid IP address");
-      return;
+  // Handle Network Device form submission
+  const handleNetworkSubmit = (data: NetworkFormData) => {
+    setPendingData(data);
+    setConfirmationType("network");
+    setIsConfirmationOpen(true);
+    setIsNetworkFormOpen(false);
+  };
+
+  // Handle confirmation dialog confirmation
+  const handleConfirmation = () => {
+    if (confirmationType === "vm") {
+      if (editingVM) {
+        // Update existing VM
+        setVMs(vms.map((vm) => (vm.id === editingVM.id ? pendingData : vm)));
+        setEditingVM(null);
+      } else {
+        // Add new VM with simulated metrics
+        const newVM = {
+          ...pendingData,
+          id: crypto.randomUUID(),
+          resources: {
+            cpu: Math.floor(Math.random() * 60) + 10,
+            memory: Math.floor(Math.random() * 70) + 15,
+            storage: Math.floor(Math.random() * 50) + 20,
+          },
+          status: "running",
+        };
+        setVMs([...vms, newVM]);
+      }
+    } else {
+      if (editingNetworkDevice) {
+        // Update existing network device
+        setNetworkDevices((devices) =>
+          devices.map((device) =>
+            device.id === editingNetworkDevice.id ? pendingData : device
+          )
+        );
+        setEditingNetworkDevice(null);
+      } else {
+        // Add new network device with simulated metrics
+        const newDevice = {
+          ...pendingData,
+          id: crypto.randomUUID(),
+          metrics: {
+            bandwidth: Math.floor(Math.random() * 60) + 10,
+            latency: Math.floor(Math.random() * 100),
+            packetLoss: Math.random() * 2,
+          },
+          status: "active",
+        };
+        setNetworkDevices([...networkDevices, newDevice]);
+      }
     }
-    setShowNetworkConfirm(true);
+    setIsConfirmationOpen(false);
+    setPendingData(null);
   };
 
-  const validateIPAddress = (ip: string) => {
-    const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
-    if (!ipRegex.test(ip)) return false;
-    const parts = ip.split(".");
-    return parts.every((part) => parseInt(part) >= 0 && parseInt(part) <= 255);
+  // Handle VM edit
+  const handleEditVM = (vm: VMFormData) => {
+    setEditingVM(vm);
+    setIsVMFormOpen(true);
   };
 
-  const handleVMConfirm = () => {
-    console.log("VM Form submitted:", vmFormData);
-    setShowVMConfirm(false);
+  // Handle VM delete
+  const handleDeleteVM = (id: string) => {
+    setVMs(vms.filter((vm) => vm.id !== id));
   };
 
-  const handleNetworkConfirm = () => {
-    console.log("Network Form submitted:", networkFormData);
-    setShowNetworkConfirm(false);
+  // Handle Network Device edit
+  const handleEditNetworkDevice = (device: NetworkFormData) => {
+    setEditingNetworkDevice(device);
+    setIsNetworkFormOpen(true);
+  };
+
+  // Handle Network Device delete
+  const handleDeleteNetworkDevice = (id: string) => {
+    setNetworkDevices(networkDevices.filter((device) => device.id !== id));
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl font-bold text-center mb-12 bg-gradient-to-r from-red-500 via-red-400 to-red-500 bg-clip-text text-transparent drop-shadow-lg">
-          Infrastructure Management
-        </h1>
+    <div className="container mx-auto py-8">
+      <h1 className="text-4xl font-bold mb-8">Infrastructure Management</h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* VM Modal */}
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                className="w-full h-40 bg-gradient-to-br from-red-500 via-red-600 to-red-700 hover:from-red-600 hover:via-red-700 hover:to-red-800 border-2 border-red-400/50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-red-500/30"
-                variant="default"
-              >
-                <div className="flex flex-col items-center gap-4">
-                  <Laptop2 className="h-12 w-12" />
-                  <span className="text-xl font-semibold">Virtual Machine</span>
-                </div>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-gradient-to-b from-gray-900 to-black border-2 border-red-500/30 shadow-xl shadow-red-500/20">
-              <DialogHeader>
-                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
-                  Create Virtual Machine
-                </DialogTitle>
-                <DialogDescription className="text-gray-300">
-                  Configure your new virtual machine instance.
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleVMSubmit}>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="domain"
-                      className="text-white text-sm font-medium"
-                    >
-                      Domain Name (Optional)
-                    </Label>
-                    <Input
-                      id="domain"
-                      value={vmFormData.domainName}
-                      onChange={(e) =>
-                        setVMFormData({
-                          ...vmFormData,
-                          domainName: e.target.value,
-                        })
-                      }
-                      placeholder="example.com"
-                      className="bg-gray-800/50 border-red-500/30 text-white placeholder:text-gray-400 focus:ring-red-500/50 focus:border-red-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="username"
-                      className="text-white text-sm font-medium"
-                    >
-                      Username
-                    </Label>
-                    <Input
-                      id="username"
-                      required
-                      value={vmFormData.username}
-                      onChange={(e) =>
-                        setVMFormData({
-                          ...vmFormData,
-                          username: e.target.value,
-                        })
-                      }
-                      className="bg-gray-800/50 border-red-500/30 text-white placeholder:text-gray-400 focus:ring-red-500/50 focus:border-red-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="password"
-                      className="text-white text-sm font-medium"
-                    >
-                      Password
-                    </Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      required
-                      value={vmFormData.password}
-                      onChange={(e) =>
-                        setVMFormData({
-                          ...vmFormData,
-                          password: e.target.value,
-                        })
-                      }
-                      className="bg-gray-800/50 border-red-500/30 text-white placeholder:text-gray-400 focus:ring-red-500/50 focus:border-red-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="ip"
-                      className="text-white text-sm font-medium"
-                    >
-                      IP Address
-                    </Label>
-                    <Input
-                      id="ip"
-                      required
-                      value={vmFormData.ipAddress}
-                      onChange={(e) =>
-                        setVMFormData({
-                          ...vmFormData,
-                          ipAddress: e.target.value,
-                        })
-                      }
-                      placeholder="192.168.1.1"
-                      className="bg-gray-800/50 border-red-500/30 text-white placeholder:text-gray-400 focus:ring-red-500/50 focus:border-red-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="network-type"
-                      className="text-white text-sm font-medium"
-                    >
-                      Network Type
-                    </Label>
-                    <Select
-                      value={vmFormData.networkType}
-                      onValueChange={(value) =>
-                        setVMFormData({ ...vmFormData, networkType: value })
-                      }
-                    >
-                      <SelectTrigger className="bg-gray-800/50 border-red-500/30 text-white focus:ring-red-500/50 focus:border-red-500/50">
-                        <SelectValue placeholder="Select network type" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-800 border-red-500/30 text-white">
-                        <SelectItem
-                          value="vpn"
-                          className="hover:bg-red-500/20 focus:bg-red-500/20 cursor-pointer"
-                        >
-                          VPN
-                        </SelectItem>
-                        <SelectItem
-                          value="internet"
-                          className="hover:bg-red-500/20 focus:bg-red-500/20 cursor-pointer"
-                        >
-                          INTERNET
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    type="submit"
-                    className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-red-500/30"
-                  >
-                    Create VM
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-
-          {/* Network Device Modal */}
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                className="w-full h-40 bg-gradient-to-br from-red-500 via-red-600 to-red-700 hover:from-red-600 hover:via-red-700 hover:to-red-800 border-2 border-red-400/50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-red-500/30"
-                variant="default"
-              >
-                <div className="flex flex-col items-center gap-4">
-                  <Network className="h-12 w-12" />
-                  <span className="text-xl font-semibold">Network Device</span>
-                </div>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-gradient-to-b from-gray-900 to-black border-2 border-red-500/30 shadow-xl shadow-red-500/20">
-              <DialogHeader>
-                <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
-                  Add Network Device
-                </DialogTitle>
-                <DialogDescription className="text-gray-300">
-                  Configure your new network device.
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleNetworkSubmit}>
-                <div className="grid gap-4 py-4">
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="device-name"
-                      className="text-white text-sm font-medium"
-                    >
-                      Device Name
-                    </Label>
-                    <Input
-                      id="device-name"
-                      required
-                      value={networkFormData.name}
-                      onChange={(e) =>
-                        setNetworkFormData({
-                          ...networkFormData,
-                          name: e.target.value,
-                        })
-                      }
-                      placeholder="Core-Switch-01"
-                      className="bg-gray-800/50 border-red-500/30 text-white placeholder:text-gray-400 focus:ring-red-500/50 focus:border-red-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="device-type"
-                      className="text-white text-sm font-medium"
-                    >
-                      Device Type
-                    </Label>
-                    <Select
-                      value={networkFormData.deviceType}
-                      onValueChange={(value) =>
-                        setNetworkFormData({
-                          ...networkFormData,
-                          deviceType: value,
-                        })
-                      }
-                    >
-                      <SelectTrigger className="bg-gray-800/50 border-red-500/30 text-white focus:ring-red-500/50 focus:border-red-500/50">
-                        <SelectValue placeholder="Select device type" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-800 border-red-500/30 text-white">
-                        <SelectItem
-                          value="switch"
-                          className="hover:bg-red-500/20 focus:bg-red-500/20 cursor-pointer flex items-center gap-2"
-                        >
-                          <Wifi className="h-4 w-4" /> Switch
-                        </SelectItem>
-                        <SelectItem
-                          value="router"
-                          className="hover:bg-red-500/20 focus:bg-red-500/20 cursor-pointer flex items-center gap-2"
-                        >
-                          <Router className="h-4 w-4" /> Router
-                        </SelectItem>
-                        <SelectItem
-                          value="firewall"
-                          className="hover:bg-red-500/20 focus:bg-red-500/20 cursor-pointer flex items-center gap-2"
-                        >
-                          <Shield className="h-4 w-4" /> Firewall
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="device-ip"
-                      className="text-white text-sm font-medium"
-                    >
-                      IP Address
-                    </Label>
-                    <Input
-                      id="device-ip"
-                      required
-                      value={networkFormData.ipAddress}
-                      onChange={(e) =>
-                        setNetworkFormData({
-                          ...networkFormData,
-                          ipAddress: e.target.value,
-                        })
-                      }
-                      placeholder="192.168.1.1"
-                      className="bg-gray-800/50 border-red-500/30 text-white placeholder:text-gray-400 focus:ring-red-500/50 focus:border-red-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="subnet-mask"
-                      className="text-white text-sm font-medium"
-                    >
-                      Subnet Mask
-                    </Label>
-                    <Input
-                      id="subnet-mask"
-                      required
-                      value={networkFormData.subnetMask}
-                      onChange={(e) =>
-                        setNetworkFormData({
-                          ...networkFormData,
-                          subnetMask: e.target.value,
-                        })
-                      }
-                      placeholder="255.255.255.0"
-                      className="bg-gray-800/50 border-red-500/30 text-white placeholder:text-gray-400 focus:ring-red-500/50 focus:border-red-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="gateway"
-                      className="text-white text-sm font-medium"
-                    >
-                      Gateway
-                    </Label>
-                    <Input
-                      id="gateway"
-                      required
-                      value={networkFormData.gateway}
-                      onChange={(e) =>
-                        setNetworkFormData({
-                          ...networkFormData,
-                          gateway: e.target.value,
-                        })
-                      }
-                      placeholder="192.168.1.254"
-                      className="bg-gray-800/50 border-red-500/30 text-white placeholder:text-gray-400 focus:ring-red-500/50 focus:border-red-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="location"
-                      className="text-white text-sm font-medium"
-                    >
-                      Location
-                    </Label>
-                    <Input
-                      id="location"
-                      value={networkFormData.location}
-                      onChange={(e) =>
-                        setNetworkFormData({
-                          ...networkFormData,
-                          location: e.target.value,
-                        })
-                      }
-                      placeholder="Data Center A"
-                      className="bg-gray-800/50 border-red-500/30 text-white placeholder:text-gray-400 focus:ring-red-500/50 focus:border-red-500/50 transition-colors"
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label
-                      htmlFor="status"
-                      className="text-white text-sm font-medium"
-                    >
-                      Initial Status
-                    </Label>
-                    <Select
-                      value={networkFormData.status}
-                      onValueChange={(
-                        value: "active" | "inactive" | "maintenance"
-                      ) =>
-                        setNetworkFormData({
-                          ...networkFormData,
-                          status: value,
-                        })
-                      }
-                    >
-                      <SelectTrigger className="bg-gray-800/50 border-red-500/30 text-white focus:ring-red-500/50 focus:border-red-500/50">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-800 border-red-500/30 text-white">
-                        <SelectItem
-                          value="active"
-                          className="hover:bg-red-500/20 focus:bg-red-500/20 cursor-pointer"
-                        >
-                          Active
-                        </SelectItem>
-                        <SelectItem
-                          value="inactive"
-                          className="hover:bg-red-500/20 focus:bg-red-500/20 cursor-pointer"
-                        >
-                          Inactive
-                        </SelectItem>
-                        <SelectItem
-                          value="maintenance"
-                          className="hover:bg-red-500/20 focus:bg-red-500/20 cursor-pointer"
-                        >
-                          Maintenance
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    type="submit"
-                    className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium px-6 py-2 rounded-lg transition-all duration-300 shadow-lg hover:shadow-red-500/30"
-                  >
-                    Add Device
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+      <Tabs defaultValue="vm" className="mt-8">
+        <div className="flex justify-between items-center mb-4">
+          <TabsList>
+            <TabsTrigger value="vm">Virtual Machines</TabsTrigger>
+            <TabsTrigger value="network">Network Devices</TabsTrigger>
+          </TabsList>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                setEditingVM(null);
+                setIsVMFormOpen(true);
+              }}
+            >
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Add VM
+            </Button>
+            <Button
+              onClick={() => {
+                setEditingNetworkDevice(null);
+                setIsNetworkFormOpen(true);
+              }}
+            >
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Add Network Device
+            </Button>
+          </div>
         </div>
 
-        {/* VM Confirmation Dialog */}
-        <AlertDialog open={showVMConfirm} onOpenChange={setShowVMConfirm}>
-          <AlertDialogContent className="bg-gradient-to-b from-gray-900 to-black border-2 border-red-500/30 shadow-xl shadow-red-500/20">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-2xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
-                Confirm VM Creation
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-gray-300">
-                Are you sure you want to create this virtual machine? This
-                action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="bg-gray-800 text-white hover:bg-gray-700 border-red-500/30">
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg hover:shadow-red-500/30"
-                onClick={handleVMConfirm}
-              >
-                Create VM
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <TabsContent value="vm" className="mt-6">
+          <VMList vms={vms} onEdit={handleEditVM} onDelete={handleDeleteVM} />
+        </TabsContent>
 
-        {/* Network Device Confirmation Dialog */}
-        <AlertDialog
-          open={showNetworkConfirm}
-          onOpenChange={setShowNetworkConfirm}
-        >
-          <AlertDialogContent className="bg-gradient-to-b from-gray-900 to-black border-2 border-red-500/30 shadow-xl shadow-red-500/20">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-2xl font-bold bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
-                Confirm Device Addition
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-gray-300">
-                Are you sure you want to add this network device? This action
-                cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="bg-gray-800 text-white hover:bg-gray-700 border-red-500/30">
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg hover:shadow-red-500/30"
-                onClick={handleNetworkConfirm}
-              >
-                Add Device
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
+        <TabsContent value="network" className="mt-6">
+          <NetworkDeviceList
+            devices={networkDevices}
+            onEdit={handleEditNetworkDevice}
+            onDelete={handleDeleteNetworkDevice}
+          />
+        </TabsContent>
+      </Tabs>
+
+      {/* VM Form Dialog */}
+      <Dialog open={isVMFormOpen} onOpenChange={setIsVMFormOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>
+              {editingVM ? "Edit Virtual Machine" : "Add Virtual Machine"}
+            </DialogTitle>
+          </DialogHeader>
+          <VMForm
+            onSubmit={handleVMSubmit}
+            initialData={editingVM || undefined}
+            isEditing={!!editingVM}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Network Device Form Dialog */}
+      <Dialog open={isNetworkFormOpen} onOpenChange={setIsNetworkFormOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>
+              {editingNetworkDevice
+                ? "Edit Network Device"
+                : "Add Network Device"}
+            </DialogTitle>
+          </DialogHeader>
+          <NetworkDeviceForm
+            onSubmit={handleNetworkSubmit}
+            initialData={editingNetworkDevice || undefined}
+            isEditing={!!editingNetworkDevice}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Monitoring Confirmation Dialog */}
+      <MonitoringConfirmationDialog
+        open={isConfirmationOpen}
+        onOpenChange={setIsConfirmationOpen}
+        onConfirm={handleConfirmation}
+        deviceType={confirmationType}
+      />
     </div>
   );
 }
