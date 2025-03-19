@@ -1,10 +1,8 @@
-import { Activity } from "lucide-react";
-
 export const Footer = () => {
   return (
     <footer
       id="footer"
-      className="bg-white dark:border-b-slate-700 dark:bg-background dark:text-gray-300 text-gray-900 m-auto"
+      className="py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100"
     >
       <hr className="w-11/12 mx-auto" />
 

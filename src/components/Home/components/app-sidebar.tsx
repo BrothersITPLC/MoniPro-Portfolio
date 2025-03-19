@@ -1,17 +1,5 @@
 import * as React from "react";
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
-
+import { Settings2, SquareTerminal, Bell } from "lucide-react";
 import { NavMain } from "@/components/Home/components/nav-main";
 import { NavUser } from "@/components/Home/components/nav-user";
 import { TeamSwitcher } from "@/components/Home/components/team-switcher";
@@ -27,87 +15,83 @@ import {
 const data = {
   navMain: [
     {
-      title: "Playground",
+      title: "Devices",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Uemis",
+          url: "/home/dashboard",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Orc",
+          url: "/home/dashboard",
         },
         {
-          title: "Settings",
-          url: "#",
+          title: "OSTA-vm-1",
+          url: "/home/dashboard",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Notfication",
       url: "#",
-      icon: Bot,
+      icon: Bell,
       items: [
         {
-          title: "Genesis",
-          url: "#",
+          title: "Security Alerts",
+          url: "/home/notification/security",
         },
         {
-          title: "Explorer",
-          url: "#",
+          title: "Performance Alerts",
+          url: "/home/notification/performance",
         },
         {
-          title: "Quantum",
-          url: "#",
+          title: "Insight and suggestion",
+          url: "/home/notification/insight-suggestion",
         },
       ],
     },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "Documentation",
+    //   url: "#",
+    //   icon: BookOpen,
+    //   items: [
+    //     {
+    //       title: "Introduction",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Get Started",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Tutorials",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Changelog",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
     {
       title: "Settings",
-      url: "#",
+      url: "/home",
       icon: Settings2,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: "Information",
+          url: "/home/comp-info",
         },
         {
           title: "Team",
-          url: "#",
+          url: "/home/users",
         },
         {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          title: "Manage Devices",
+          url: "/home/team",
         },
       ],
     },

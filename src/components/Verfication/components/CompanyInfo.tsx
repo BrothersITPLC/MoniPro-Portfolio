@@ -13,18 +13,27 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import { Pricing } from "@/components/Landing/Pricing";
+import { useState, useEffect } from "react";
+import { Pricing } from "@/components/Landing/components/Pricing";
 import { useNavigate } from "react-router-dom";
-// import { useComponyinfoMutation } from "@/redux/ComponyinfoApi";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import { useOrganizationInfoMutation } from "../api";
 
 const formSchema = z.object({
-  name_7811949518: z.string().min(1, "Username is required"),
-  name_0426901616: z.string().min(1, "First Name is required"),
-  name_0426901617: z.string().min(1, "Last Name is required"),
-  name_0340965101: z.string().min(1, "Company Name is required"),
-  name_9879081346: z.string().min(1, "Company Description is required"),
-  name_4244877314: z.string().optional(),
+  organization_name: z.string().min(1, "Organization Name is required"),
+  organization_phone: z
+    .string()
+    .min(1, "Organization Phone Number is required"),
+  organization_website: z
+    .string()
+    .min(1, "Organization Website Url is required"),
+  organization_description: z
+    .string()
+    .min(1, "Company Description is required"),
+  payment_provider: z.number().optional(),
+  organization_payment_plane: z.number().optional(),
+  user_id: z.number().optional(),
 });
 
 const steps = [
@@ -34,27 +43,37 @@ const steps = [
 ];
 
 export function CompanyInfo() {
-  // const [submitComponyInfo, { isLoading }] = useComponyinfoMutation();
-
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  console.log(userData);
+  const dispatch = useDispatch();
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
+  const selectedPlan = useSelector(
+    (state: RootState) => state.landing.SelectedPlane
+  );
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedPlan, setSelectedPlan] = useState(null);
   const navigate = useNavigate();
+
+  // Add the API mutation hook
+  const [submitOrganizationInfo, { isLoading }] = useOrganizationInfoMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name_7811949518: "",
-      name_0426901616: "",
-      name_0426901617: "",
-      name_0340965101: "",
-      name_9879081346: "",
-      name_4244877314: "",
+      organization_name: userData.user_name || "",
+      organization_phone: userData.organization_phone || "",
+      organization_website: userData.organization_website || "",
+      organization_description: userData.organization_description || "",
+      payment_provider: 1,
+      user_id: userData.user_id,
+      organization_payment_plane: selectedPlan,
     },
   });
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<
-    string | null
-  >(null);
+  // Update form values when selectedPlan or selectedPaymentMethod changes
+  useEffect(() => {
+    form.setValue("organization_payment_plane", selectedPlan);
+    form.setValue("payment_provider", selectedPaymentMethod);
+  }, [selectedPlan, selectedPaymentMethod, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -66,20 +85,18 @@ export function CompanyInfo() {
 
         const finalSubmission = {
           ...values,
-          selectedPlan,
-          selectedPaymentMethod,
+          payment_provider: selectedPaymentMethod,
+          organization_payment_plane: selectedPlan,
         };
+
         console.log("Final Submission:", finalSubmission);
 
-        // **Post Data to API**
-        // const response = await submitComponyInfo(finalSubmission).unwrap();
+        // Make the API call
+        const response = await submitOrganizationInfo(finalSubmission).unwrap();
+        console.log("API Response:", response);
 
-        // Handle successful API response
-        toast.success("Form submitted successfully!");
-        // console.log("API Response:", response);
-
-        // Navigate to success page
-        navigate("/home/team", { state: finalSubmission });
+        toast.success("Organization information submitted successfully!");
+        navigate("/home/team");
       } else {
         setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length));
       }
@@ -111,12 +128,12 @@ export function CompanyInfo() {
                   <div className="col-span-6">
                     <FormField
                       control={form.control}
-                      name="name_7811949518"
+                      name="organization_name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Username</FormLabel>
+                          <FormLabel>Company Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="shadcn" {...field} />
+                            <Input placeholder="Organization Name" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -126,12 +143,12 @@ export function CompanyInfo() {
                   <div className="col-span-6">
                     <FormField
                       control={form.control}
-                      name="name_0426901616"
+                      name="organization_phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>First Name</FormLabel>
+                          <FormLabel>Company Fhone</FormLabel>
                           <FormControl>
-                            <Input placeholder="John" {...field} />
+                            <Input placeholder="09123456789" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -144,28 +161,12 @@ export function CompanyInfo() {
                   <div className="col-span-6">
                     <FormField
                       control={form.control}
-                      name="name_0426901617"
+                      name="organization_website"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Last Name</FormLabel>
+                          <FormLabel>Company Website</FormLabel>
                           <FormControl>
-                            <Input placeholder="Doe" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="col-span-6">
-                    <FormField
-                      control={form.control}
-                      name="name_0340965101"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Company Name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Acme Inc." {...field} />
+                            <Input placeholder="Company Url" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -176,7 +177,7 @@ export function CompanyInfo() {
 
                 <FormField
                   control={form.control}
-                  name="name_9879081346"
+                  name="organization_description"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Company Description</FormLabel>
@@ -200,10 +201,7 @@ export function CompanyInfo() {
       case 2:
         return (
           <div>
-            <Pricing
-              onSubscriptionSelect={handleNext}
-              setSelectedPlan={setSelectedPlan}
-            />
+            <Pricing />
             <div className="flex justify-between mt-8">
               <Button variant="outline" onClick={handlePrevious}>
                 Previous Step
@@ -222,12 +220,10 @@ export function CompanyInfo() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <button
-                onClick={() => {
-                  setSelectedPaymentMethod("TelleBirr");
-                  toast.success("TelleBirr selected!");
-                }}
+                type="button"
+                onClick={() => setSelectedPaymentMethod(1)}
                 className={`p-6 border rounded-lg transition-all ${
-                  selectedPaymentMethod === "TelleBirr"
+                  selectedPaymentMethod === 1
                     ? "border-red-500"
                     : "hover:border-red-500"
                 }`}
@@ -239,12 +235,10 @@ export function CompanyInfo() {
               </button>
 
               <button
-                onClick={() => {
-                  setSelectedPaymentMethod("Chapa");
-                  toast.success("Chapa selected!");
-                }}
+                type="button"
+                onClick={() => setSelectedPaymentMethod(2)}
                 className={`p-6 border rounded-lg transition-all ${
-                  selectedPaymentMethod === "Chapa"
+                  selectedPaymentMethod === 2
                     ? "border-red-500"
                     : "hover:border-red-500"
                 }`}
@@ -260,18 +254,11 @@ export function CompanyInfo() {
               </Button>
 
               <Button
-                variant="outline"
-                onClick={() => {
-                  if (!selectedPaymentMethod) {
-                    toast.error(
-                      "Please select a payment method before submitting."
-                    );
-                    return;
-                  }
-                  onSubmit(form.getValues()); // Ensure form values are passed
-                }}
+                type="submit"
+                disabled={isLoading}
+                onClick={form.handleSubmit(onSubmit)}
               >
-                Submit
+                {isLoading ? "Submitting..." : "Submit"}
               </Button>
             </div>
           </div>

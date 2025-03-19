@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
-import { PlusCircle, Edit2, Trash2, ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
-import { Modal } from './components/Modal';
-import { UserForm } from './components/UserForm';
-import type { User, UserFormData } from './types';
+import React, { useState, useEffect } from "react";
+import {
+  PlusCircle,
+  Edit2,
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+  Plus,
+  X,
+} from "lucide-react";
+import { Modal } from "./Modal";
+import { UserForm } from "./UserForm";
+import type { User, UserFormData } from "../types";
+import { useSelector } from "react-redux";
+import { useCreatTeamMutation } from "../api";
+import { RootState } from "@/app/store";
 
 function UserTable() {
   const [users, setUsers] = useState<User[]>([]);
@@ -10,7 +21,42 @@ function UserTable() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-  const [newVM, setNewVM] = useState({ name: '', type: 'Process' as const });
+  const [newVM, setNewVM] = useState({ name: "", type: "Process" as const });
+
+  // Get team members from Redux store
+  const teamMembers = useSelector((state: RootState) => state.team.members);
+
+  // API mutation hook for creating a team member
+  const [createTeam, { isLoading: isCreating }] = useCreatTeamMutation();
+
+  // Update local users state when team members change
+  useEffect(() => {
+    if (teamMembers && teamMembers.length > 0) {
+      // Map API data to our User type
+      const mappedUsers = teamMembers.map((member) => ({
+        id: member.id,
+        email: member.email,
+        firstName: member.first_name,
+        lastName: member.last_name,
+        status: true, // Default status
+        permissions: {
+          addVM: false,
+          addUser: false,
+          mediaTypes: {
+            email: false,
+            telegram: false,
+          },
+          controlVM: [],
+        },
+      }));
+      setUsers(
+        mappedUsers.map((user) => ({
+          ...user,
+          id: String(user.id),
+        }))
+      );
+    }
+  }, [teamMembers]);
 
   const toggleRow = (userId: string) => {
     const newExpandedRows = new Set(expandedRows);
@@ -22,13 +68,38 @@ function UserTable() {
     setExpandedRows(newExpandedRows);
   };
 
-  const handleAddUser = (data: UserFormData) => {
-    const newUser: User = {
-      id: crypto.randomUUID(),
-      ...data,
-    };
-    setUsers([...users, newUser]);
-    setIsAddModalOpen(false);
+  const handleAddUser = async (data: UserFormData) => {
+    try {
+      // Get organization ID from localStorage
+      const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+      const organizationId = userData?.user_id;
+
+      if (!organizationId) {
+        console.error("Organization ID not found");
+        return;
+      }
+
+      // Prepare data for API
+      const newUserData = {
+        email: data.email,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        organization: organizationId,
+        // Add any other required fields for your API
+      };
+
+      // Make API call to create user
+      const response = await createTeam(newUserData).unwrap();
+      console.log("User created successfully:", response);
+
+      // Close modal
+      setIsAddModalOpen(false);
+
+      // Note: No need to manually update users state as it will be updated via the Redux store
+    } catch (error) {
+      console.error("Failed to create user:", error);
+      // Handle error (show notification, etc.)
+    }
   };
 
   const handleEditUser = (data: UserFormData) => {
@@ -46,73 +117,93 @@ function UserTable() {
   };
 
   const toggleUserStatus = (userId: string) => {
-    setUsers(users.map((user) =>
-      user.id === userId ? { ...user, status: !user.status } : user
-    ));
+    setUsers(
+      users.map((user) =>
+        user.id === userId ? { ...user, status: !user.status } : user
+      )
+    );
   };
 
-  const updateUserPermission = (userId: string, permission: keyof User['permissions'], value: boolean) => {
-    setUsers(users.map((user) =>
-      user.id === userId
-        ? {
-            ...user,
-            permissions: {
-              ...user.permissions,
-              [permission]: value,
-            },
-          }
-        : user
-    ));
-  };
-
-  const updateUserMediaType = (userId: string, mediaType: keyof User['permissions']['mediaTypes'], value: boolean) => {
-    setUsers(users.map((user) =>
-      user.id === userId
-        ? {
-            ...user,
-            permissions: {
-              ...user.permissions,
-              mediaTypes: {
-                ...user.permissions.mediaTypes,
-                [mediaType]: value,
+  const updateUserPermission = (
+    userId: string,
+    permission: keyof User["permissions"],
+    value: boolean
+  ) => {
+    setUsers(
+      users.map((user) =>
+        user.id === userId
+          ? {
+              ...user,
+              permissions: {
+                ...user.permissions,
+                [permission]: value,
               },
-            },
-          }
-        : user
-    ));
+            }
+          : user
+      )
+    );
+  };
+
+  const updateUserMediaType = (
+    userId: string,
+    mediaType: keyof User["permissions"]["mediaTypes"],
+    value: boolean
+  ) => {
+    setUsers(
+      users.map((user) =>
+        user.id === userId
+          ? {
+              ...user,
+              permissions: {
+                ...user.permissions,
+                mediaTypes: {
+                  ...user.permissions.mediaTypes,
+                  [mediaType]: value,
+                },
+              },
+            }
+          : user
+      )
+    );
   };
 
   const addVMToUser = (userId: string) => {
     if (!newVM.name) return;
-    setUsers(users.map((user) =>
-      user.id === userId
-        ? {
-            ...user,
-            permissions: {
-              ...user.permissions,
-              controlVM: [
-                ...user.permissions.controlVM,
-                { id: crypto.randomUUID(), ...newVM },
-              ],
-            },
-          }
-        : user
-    ));
-    setNewVM({ name: '', type: 'Process' });
+    setUsers(
+      users.map((user) =>
+        user.id === userId
+          ? {
+              ...user,
+              permissions: {
+                ...user.permissions,
+                controlVM: [
+                  ...user.permissions.controlVM,
+                  { id: crypto.randomUUID(), ...newVM },
+                ],
+              },
+            }
+          : user
+      )
+    );
+    setNewVM({ name: "", type: "Process" });
   };
 
   const removeVMFromUser = (userId: string, vmId: string) => {
-    setUsers(users.map((user) =>
-      user.id === userId
-        ? {
-            ...user,
-            permissions: {
-              ...user.permissions,
-              controlVM: user.permissions.controlVM.filter((vm) => vm.id !== vmId),
-            },
-          }
-        : user
-    ));
+    setUsers(
+      users.map((user) =>
+        user.id === userId
+          ? {
+              ...user,
+              permissions: {
+                ...user.permissions,
+                controlVM: user.permissions.controlVM.filter(
+                  (vm) => vm.id !== vmId
+                ),
+              },
+            }
+          : user
+      )
+    );
   };
 
   return (
@@ -123,9 +214,16 @@ function UserTable() {
           <button
             onClick={() => setIsAddModalOpen(true)}
             className="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white transition-all duration-200 hover:bg-blue-700 hover:shadow-lg"
+            disabled={isCreating}
           >
-            <PlusCircle size={20} />
-            Add User
+            {isCreating ? (
+              "Adding..."
+            ) : (
+              <>
+                <PlusCircle size={20} />
+                Add User
+              </>
+            )}
           </button>
         </div>
 
@@ -216,7 +314,12 @@ function UserTable() {
                                     type="text"
                                     placeholder="Add new VM..."
                                     value={newVM.name}
-                                    onChange={(e) => setNewVM({ ...newVM, name: e.target.value })}
+                                    onChange={(e) =>
+                                      setNewVM({
+                                        ...newVM,
+                                        name: e.target.value,
+                                      })
+                                    }
                                     className="rounded-md border border-gray-300 px-3 py-1.5 text-sm shadow-sm transition-colors duration-150 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                   />
                                   <button
@@ -236,17 +339,23 @@ function UserTable() {
                                   >
                                     <div className="flex items-center gap-3">
                                       <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                                        <span className="text-xs font-medium">VM</span>
+                                        <span className="text-xs font-medium">
+                                          VM
+                                        </span>
                                       </div>
                                       <div>
-                                        <span className="font-medium text-gray-900">{vm.name}</span>
+                                        <span className="font-medium text-gray-900">
+                                          {vm.name}
+                                        </span>
                                         <span className="ml-2 text-sm text-gray-500">
                                           ({vm.type} VM)
                                         </span>
                                       </div>
                                     </div>
                                     <button
-                                      onClick={() => removeVMFromUser(user.id, vm.id)}
+                                      onClick={() =>
+                                        removeVMFromUser(user.id, vm.id)
+                                      }
                                       className="rounded-full p-1 text-gray-400 transition-colors duration-150 hover:bg-red-50 hover:text-red-600"
                                     >
                                       <X size={18} />
@@ -269,19 +378,35 @@ function UserTable() {
                                   <input
                                     type="checkbox"
                                     checked={user.permissions.addVM}
-                                    onChange={(e) => updateUserPermission(user.id, 'addVM', e.target.checked)}
+                                    onChange={(e) =>
+                                      updateUserPermission(
+                                        user.id,
+                                        "addVM",
+                                        e.target.checked
+                                      )
+                                    }
                                     className="h-4 w-4 rounded border-gray-300 text-blue-600 transition-colors duration-150 focus:ring-blue-500"
                                   />
-                                  <span className="text-sm font-medium text-gray-700">Add VM</span>
+                                  <span className="text-sm font-medium text-gray-700">
+                                    Add VM
+                                  </span>
                                 </label>
                                 <label className="flex items-center space-x-3 rounded-md p-2 transition-colors duration-150 hover:bg-gray-100">
                                   <input
                                     type="checkbox"
                                     checked={user.permissions.addUser}
-                                    onChange={(e) => updateUserPermission(user.id, 'addUser', e.target.checked)}
+                                    onChange={(e) =>
+                                      updateUserPermission(
+                                        user.id,
+                                        "addUser",
+                                        e.target.checked
+                                      )
+                                    }
                                     className="h-4 w-4 rounded border-gray-300 text-blue-600 transition-colors duration-150 focus:ring-blue-500"
                                   />
-                                  <span className="text-sm font-medium text-gray-700">Add User</span>
+                                  <span className="text-sm font-medium text-gray-700">
+                                    Add User
+                                  </span>
                                 </label>
                               </div>
                             </div>
@@ -295,19 +420,35 @@ function UserTable() {
                                 <input
                                   type="checkbox"
                                   checked={user.permissions.mediaTypes.email}
-                                  onChange={(e) => updateUserMediaType(user.id, 'email', e.target.checked)}
+                                  onChange={(e) =>
+                                    updateUserMediaType(
+                                      user.id,
+                                      "email",
+                                      e.target.checked
+                                    )
+                                  }
                                   className="h-4 w-4 rounded border-gray-300 text-blue-600 transition-colors duration-150 focus:ring-blue-500"
                                 />
-                                <span className="text-sm font-medium text-gray-700">Email</span>
+                                <span className="text-sm font-medium text-gray-700">
+                                  Email
+                                </span>
                               </label>
                               <label className="flex items-center space-x-3 rounded-md p-2 transition-colors duration-150 hover:bg-gray-100">
                                 <input
                                   type="checkbox"
                                   checked={user.permissions.mediaTypes.telegram}
-                                  onChange={(e) => updateUserMediaType(user.id, 'telegram', e.target.checked)}
+                                  onChange={(e) =>
+                                    updateUserMediaType(
+                                      user.id,
+                                      "telegram",
+                                      e.target.checked
+                                    )
+                                  }
                                   className="h-4 w-4 rounded border-gray-300 text-blue-600 transition-colors duration-150 focus:ring-blue-500"
                                 />
-                                <span className="text-sm font-medium text-gray-700">Telegram</span>
+                                <span className="text-sm font-medium text-gray-700">
+                                  Telegram
+                                </span>
                               </label>
                             </div>
                           </div>
@@ -329,7 +470,10 @@ function UserTable() {
           />
         </Modal>
 
-        <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+        <Modal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+        >
           <h2 className="mb-4 text-xl font-bold text-gray-900">Edit User</h2>
           <UserForm
             initialData={selectedUser || undefined}

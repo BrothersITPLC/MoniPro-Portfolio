@@ -16,6 +16,11 @@ import { CompanyInfo } from "./components/Verfication/components/CompanyInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
 
+import { NotificationWrapper } from "./components/notification/NotificationWrapper";
+import { SecurityAlerts } from "./components/notification/components/SecurityAlerts";
+import { InsightSuggestion } from "./components/notification/components/InsightSuggestion";
+import { PerformanceAlerts } from "./components/notification/components/PerformanceAlerts";
+
 function App() {
   return (
     <Router>
@@ -34,7 +39,14 @@ function App() {
               <Route path="dashboard" element={<LandingWrapper />} />
               <Route path="comp-info" element={<CompanyInfo />} />
               <Route path="team" element={<TeamWrapper />} />
-          
+              <Route path="notification" element={<NotificationWrapper />}>
+                <Route path="security" element={<SecurityAlerts />} />
+                <Route
+                  path="insight-suggestion"
+                  element={<InsightSuggestion />}
+                />
+                <Route path="performance" element={<PerformanceAlerts />} />
+              </Route>
               <Route path="users" element={<UserWrapper />} />
               <Route index element={<Navigate to="dashboard" replace />} />
             </Route>

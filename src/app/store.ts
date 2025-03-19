@@ -1,11 +1,14 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authSlice from "@/components/Auth/AutSlice";
+import LandingSlice from "@/components/Landing/LandingSlice";
+import { landingApi } from "@/components/Landing/api";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
-import { combineReducers } from "redux";
 import globalReducer from "./global";
 import { authApi } from "@/components/Auth/api";
 import { VerficationApi } from "@/components/Verfication/api";
+import { teamApi } from "@/components/Home/components/team/api";
+import teamSlice from "@/components/Home/components/team/teamSlice";
 
 const persistConfig = {
   key: "root",
@@ -15,8 +18,12 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authSlice,
   global: globalReducer,
+  landing: LandingSlice,
+  team: teamSlice,
   [authApi.reducerPath]: authApi.reducer,
   [VerficationApi.reducerPath]: VerficationApi.reducer,
+  [landingApi.reducerPath]: landingApi.reducer,
+  [teamApi.reducerPath]: teamApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -27,6 +34,8 @@ export const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }).concat([
       authApi.middleware,
       VerficationApi.middleware,
+      landingApi.middleware,
+      teamApi.middleware,
     ]),
 });
 

@@ -42,15 +42,15 @@ const globalSlice = createSlice({
       );
     },
 
-    setSelectedPlan: (
-      state,
-      action: PayloadAction<SubscriptionPlan | null>
-    ) => {
-      state.selectedPlan = action.payload;
-    },
+    // setSelectedPlan: (
+    //   state,
+    //   action: PayloadAction<SubscriptionPlan | null>
+    // ) => {
+    //   state.selectedPlan = action.payload;
+    // },
   },
 });
 
-export const { setIsSignup, setTheme, setIsAuthenticated, setSelectedPlan } =
+export const { setIsSignup, setTheme, setIsAuthenticated } =
   globalSlice.actions;
 export default globalSlice.reducer;
