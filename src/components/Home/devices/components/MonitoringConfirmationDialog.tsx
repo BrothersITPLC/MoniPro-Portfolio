@@ -54,20 +54,17 @@ export function MonitoringConfirmationDialog({
                 </>
               )}
             </ul>
-            <p className="mt-4">
-              Do you want to proceed with these configurations?
-            </p>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className="bg-gray-800 text-white hover:bg-gray-700 border-blue-500/30">
+          <AlertDialogCancel className="bg-gray-700 hover:bg-gray-600 text-white border-0">
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-blue-500/30"
             onClick={onConfirm}
+            className="bg-blue-600 hover:bg-blue-500 text-white"
           >
-            Proceed with Setup
+            Confirm Setup
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

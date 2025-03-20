@@ -1,7 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { User } from "../../../team/types";
+import { User } from "../types";
 
 interface UserPermissionsProps {
   user: User;

@@ -1,4 +1,4 @@
-import { NetworkFormData } from "../types";
+import { Network } from "../types";
 import {
   Card,
   CardContent,
@@ -8,12 +8,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, Network } from "lucide-react";
+import { Edit, Trash2, Network as NetworkIcon } from "lucide-react";
 
 interface NetworkDeviceListProps {
-  devices: NetworkFormData[];
-  onEdit: (device: NetworkFormData) => void;
+  devices: Network[];
+  onEdit: (device: Network) => void;
   onDelete: (id: string) => void;
 }
 
@@ -22,19 +21,6 @@ export function NetworkDeviceList({
   onEdit,
   onDelete,
 }: NetworkDeviceListProps) {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-green-500";
-      case "inactive":
-        return "bg-gray-500";
-      case "maintenance":
-        return "bg-yellow-500";
-      default:
-        return "bg-blue-500";
-    }
-  };
-
   const getDeviceIcon = (type: string) => {
     switch (type) {
       case "router":
@@ -54,7 +40,7 @@ export function NetworkDeviceList({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {devices.length === 0 ? (
         <div className="col-span-full text-center p-8 border border-dashed rounded-lg">
-          <Network className="mx-auto h-12 w-12 text-gray-400" />
+          <NetworkIcon className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-lg font-medium">No Network Devices Added</h3>
           <p className="mt-1 text-sm text-gray-500">
             Add a network device to start monitoring
@@ -74,9 +60,6 @@ export function NetworkDeviceList({
                   </CardTitle>
                   <CardDescription>{device.ipAddress}</CardDescription>
                 </div>
-                <Badge className={getStatusColor(device.status)}>
-                  {device.status}
-                </Badge>
               </div>
             </CardHeader>
             <CardContent className="pb-2">
@@ -87,8 +70,8 @@ export function NetworkDeviceList({
                     {device.deviceType}
                   </div>
                   <div className="text-sm">
-                    <span className="text-muted-foreground">Location:</span>{" "}
-                    {device.location}
+                    <span className="text-muted-foreground">Network:</span>{" "}
+                    {device.networkType}
                   </div>
                 </div>
                 <div className="text-sm">
@@ -113,7 +96,7 @@ export function NetworkDeviceList({
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={() => onDelete(device.id!)}
+                onClick={() => onDelete(device.id)}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete

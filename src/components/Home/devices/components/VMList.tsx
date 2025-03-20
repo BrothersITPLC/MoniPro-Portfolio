@@ -1,4 +1,4 @@
-import { VMFormData } from "../types";
+import { VM } from "../types";
 import {
   Card,
   CardContent,
@@ -8,29 +8,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Edit, Trash2, Server } from "lucide-react";
 
 interface VMListProps {
-  vms: VMFormData[];
-  onEdit: (vm: VMFormData) => void;
+  vms: VM[];
+  onEdit: (vm: VM) => void;
   onDelete: (id: string) => void;
 }
 
 export function VMList({ vms, onEdit, onDelete }: VMListProps) {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "running":
-        return "bg-green-500";
-      case "stopped":
-        return "bg-gray-500";
-      case "error":
-        return "bg-red-500";
-      default:
-        return "bg-blue-500";
-    }
-  };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {vms.length === 0 ? (
@@ -50,27 +36,16 @@ export function VMList({ vms, onEdit, onDelete }: VMListProps) {
                   <CardTitle>{vm.domainName || vm.ipAddress}</CardTitle>
                   <CardDescription>{vm.ipAddress}</CardDescription>
                 </div>
-                <Badge className={getStatusColor(vm.status)}>{vm.status}</Badge>
               </div>
             </CardHeader>
             <CardContent className="pb-2">
               <div className="space-y-2">
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="text-sm">
-                    <span className="text-muted-foreground">CPU:</span>{" "}
-                    {vm.resources.cpu}%
-                  </div>
-                  <div className="text-sm">
-                    <span className="text-muted-foreground">Memory:</span>{" "}
-                    {vm.resources.memory}%
-                  </div>
+                <div className="text-sm">
+                  <span className="text-muted-foreground">Username:</span>{" "}
+                  {vm.username}
                 </div>
                 <div className="text-sm">
-                  <span className="text-muted-foreground">Storage:</span>{" "}
-                  {vm.resources.storage}%
-                </div>
-                <div className="text-sm">
-                  <span className="text-muted-foreground">Network:</span>{" "}
+                  <span className="text-muted-foreground">Network Type:</span>{" "}
                   {vm.networkType}
                 </div>
               </div>
@@ -83,7 +58,7 @@ export function VMList({ vms, onEdit, onDelete }: VMListProps) {
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={() => onDelete(vm.id!)}
+                onClick={() => onDelete(vm.id)}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete

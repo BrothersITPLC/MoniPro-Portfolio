@@ -9,6 +9,7 @@ import { authApi } from "@/components/Auth/api";
 import { VerficationApi } from "@/components/Home/company/api";
 import { teamApi } from "@/components/Home/team/api";
 import teamSlice from "@/components/Home/team/teamSlice";
+import { deviceApi } from "@/components/Home/devices/api";
 
 const persistConfig = {
   key: "root",
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   [VerficationApi.reducerPath]: VerficationApi.reducer,
   [landingApi.reducerPath]: landingApi.reducer,
   [teamApi.reducerPath]: teamApi.reducer,
+  [deviceApi.reducerPath]: deviceApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -36,6 +38,7 @@ export const store = configureStore({
       VerficationApi.middleware,
       landingApi.middleware,
       teamApi.middleware,
+      deviceApi.middleware,
     ]),
 });
 

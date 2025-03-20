@@ -7,112 +7,28 @@ import { NetworkDeviceForm } from "./NetworkDeviceForm";
 import { VMList } from "./VMList";
 import { NetworkDeviceList } from "./NetworkDeviceList";
 import { MonitoringConfirmationDialog } from "./MonitoringConfirmationDialog";
-import { VMFormData, NetworkFormData } from "../types";
+import { VM, Network, VMFormData, NetworkFormData } from "../types";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
-// Dummy data for VMs
-const dummyVMs: VMFormData[] = [
-  {
-    id: "vm-1",
-    domainName: "web-server-01.example.com",
-    username: "admin",
-    password: "securepass123",
-    ipAddress: "192.168.1.10",
-    networkType: "private",
-    status: "running",
-    resources: {
-      cpu: 65,
-      memory: 72,
-      storage: 48,
-    },
-  },
-  {
-    id: "vm-2",
-    domainName: "db-server-01.example.com",
-    username: "dbadmin",
-    password: "dbpass456",
-    ipAddress: "192.168.1.11",
-    networkType: "private",
-    status: "running",
-    resources: {
-      cpu: 82,
-      memory: 56,
-      storage: 75,
-    },
-  },
-  {
-    id: "vm-3",
-    domainName: "app-server-01.example.com",
-    username: "appuser",
-    password: "app789pass",
-    ipAddress: "192.168.1.12",
-    networkType: "hybrid",
-    status: "stopped",
-    resources: {
-      cpu: 0,
-      memory: 5,
-      storage: 62,
-    },
-  },
-];
-
-// Dummy data for network devices
-const dummyNetworkDevices: NetworkFormData[] = [
-  {
-    id: "net-1",
-    name: "Core Router",
-    deviceType: "router",
-    ipAddress: "192.168.0.1",
-    subnetMask: "255.255.255.0",
-    gateway: "192.168.0.254",
-    location: "Server Room A",
-    status: "active",
-    metrics: {
-      bandwidth: 78,
-      latency: 5,
-      packetLoss: 0.2,
-    },
-  },
-  {
-    id: "net-2",
-    name: "Edge Firewall",
-    deviceType: "firewall",
-    ipAddress: "192.168.0.2",
-    subnetMask: "255.255.255.0",
-    gateway: "192.168.0.254",
-    location: "DMZ",
-    status: "active",
-    metrics: {
-      bandwidth: 45,
-      latency: 8,
-      packetLoss: 0.1,
-    },
-  },
-  {
-    id: "net-3",
-    name: "Distribution Switch",
-    deviceType: "switch",
-    ipAddress: "192.168.0.3",
-    subnetMask: "255.255.255.0",
-    gateway: "192.168.0.254",
-    location: "Floor 2",
-    status: "maintenance",
-    metrics: {
-      bandwidth: 30,
-      latency: 2,
-      packetLoss: 0.5,
-    },
-  },
-];
+import { toast } from "sonner";
+import {
+  useGetVmsQuery,
+  useCreateVmMutation,
+  useUpdateVmMutation,
+  useDeleteVmMutation,
+  useGetNetworksQuery,
+  useCreateNetworkMutation,
+  useUpdateNetworkMutation,
+  useDeleteNetworkMutation,
+} from "../api";
 
 function Device() {
-  const [vms, setVMs] = useState<VMFormData[]>([]);
-  const [networkDevices, setNetworkDevices] = useState<NetworkFormData[]>([]);
+  // State for dialogs
   const [isVMFormOpen, setIsVMFormOpen] = useState(false);
   const [isNetworkFormOpen, setIsNetworkFormOpen] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -120,15 +36,46 @@ function Device() {
     "vm"
   );
   const [pendingData, setPendingData] = useState<any>(null);
-  const [editingVM, setEditingVM] = useState<VMFormData | null>(null);
+  const [editingVM, setEditingVM] = useState<VM | null>(null);
   const [editingNetworkDevice, setEditingNetworkDevice] =
-    useState<NetworkFormData | null>(null);
+    useState<Network | null>(null);
 
-  // Load dummy data on component mount
+  // RTK Query hooks
+  const {
+    data: vmsData,
+    isLoading: isLoadingVMs,
+    error: vmsError,
+  } = useGetVmsQuery({});
+  const {
+    data: networksData,
+    isLoading: isLoadingNetworks,
+    error: networksError,
+  } = useGetNetworksQuery({});
+
+  const [createVm, { isLoading: isCreatingVM }] = useCreateVmMutation();
+  const [updateVm, { isLoading: isUpdatingVM }] = useUpdateVmMutation();
+  const [deleteVm, { isLoading: isDeletingVM }] = useDeleteVmMutation();
+
+  const [createNetwork, { isLoading: isCreatingNetwork }] =
+    useCreateNetworkMutation();
+  const [updateNetwork, { isLoading: isUpdatingNetwork }] =
+    useUpdateNetworkMutation();
+  const [deleteNetwork, { isLoading: isDeletingNetwork }] =
+    useDeleteNetworkMutation();
+
+  // Extract data from query results
+  const vms: VM[] = vmsData?.data || [];
+  const networks: Network[] = networksData?.data || [];
+
+  // Show errors if any
   useEffect(() => {
-    setVMs(dummyVMs);
-    setNetworkDevices(dummyNetworkDevices);
-  }, []);
+    if (vmsError) {
+      toast.error("Failed to load virtual machines");
+    }
+    if (networksError) {
+      toast.error("Failed to load network devices");
+    }
+  }, [vmsError, networksError]);
 
   // Handle VM form submission
   const handleVMSubmit = (data: VMFormData) => {
@@ -147,74 +94,82 @@ function Device() {
   };
 
   // Handle confirmation dialog confirmation
-  const handleConfirmation = () => {
-    if (confirmationType === "vm") {
-      if (editingVM) {
-        // Update existing VM
-        setVMs(vms.map((vm) => (vm.id === editingVM.id ? pendingData : vm)));
-        setEditingVM(null);
+  const handleConfirmation = async () => {
+    try {
+      if (confirmationType === "vm") {
+        if (editingVM) {
+          // Update existing VM
+          const response = await updateVm({
+            id: editingVM.id,
+            ...pendingData,
+          }).unwrap();
+          toast.success("Virtual machine updated successfully");
+          setEditingVM(null);
+        } else {
+          // Add new VM
+          const response = await createVm({
+            ...pendingData,
+            belong_to: pendingData.belong_to.toString(),
+          }).unwrap();
+          toast.success("Virtual machine added successfully");
+        }
       } else {
-        // Add new VM with simulated metrics
-        const newVM = {
-          ...pendingData,
-          id: crypto.randomUUID(),
-          resources: {
-            cpu: Math.floor(Math.random() * 60) + 10,
-            memory: Math.floor(Math.random() * 70) + 15,
-            storage: Math.floor(Math.random() * 50) + 20,
-          },
-          status: "running",
-        };
-        setVMs([...vms, newVM]);
+        if (editingNetworkDevice) {
+          // Update existing network device
+          const response = await updateNetwork({
+            id: editingNetworkDevice.id,
+            ...pendingData,
+          }).unwrap();
+          toast.success("Network device updated successfully");
+          setEditingNetworkDevice(null);
+        } else {
+          // Add new network device
+          const response = await createNetwork(pendingData).unwrap();
+          toast.success("Network device added successfully");
+        }
       }
-    } else {
-      if (editingNetworkDevice) {
-        // Update existing network device
-        setNetworkDevices((devices) =>
-          devices.map((device) =>
-            device.id === editingNetworkDevice.id ? pendingData : device
-          )
-        );
-        setEditingNetworkDevice(null);
-      } else {
-        // Add new network device with simulated metrics
-        const newDevice = {
-          ...pendingData,
-          id: crypto.randomUUID(),
-          metrics: {
-            bandwidth: Math.floor(Math.random() * 60) + 10,
-            latency: Math.floor(Math.random() * 100),
-            packetLoss: Math.random() * 2,
-          },
-          status: "active",
-        };
-        setNetworkDevices([...networkDevices, newDevice]);
-      }
+    } catch (error) {
+      toast.error(
+        `Failed to ${editingVM || editingNetworkDevice ? "update" : "add"} ${
+          confirmationType === "vm" ? "virtual machine" : "network device"
+        }`
+      );
+    } finally {
+      setIsConfirmationOpen(false);
+      setPendingData(null);
     }
-    setIsConfirmationOpen(false);
-    setPendingData(null);
   };
 
   // Handle VM edit
-  const handleEditVM = (vm: VMFormData) => {
+  const handleEditVM = (vm: VM) => {
     setEditingVM(vm);
     setIsVMFormOpen(true);
   };
 
   // Handle VM delete
-  const handleDeleteVM = (id: string) => {
-    setVMs(vms.filter((vm) => vm.id !== id));
+  const handleDeleteVM = async (id: string) => {
+    try {
+      await deleteVm(id).unwrap();
+      toast.success("Virtual machine deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete virtual machine");
+    }
   };
 
   // Handle Network Device edit
-  const handleEditNetworkDevice = (device: NetworkFormData) => {
+  const handleEditNetworkDevice = (device: Network) => {
     setEditingNetworkDevice(device);
     setIsNetworkFormOpen(true);
   };
 
   // Handle Network Device delete
-  const handleDeleteNetworkDevice = (id: string) => {
-    setNetworkDevices(networkDevices.filter((device) => device.id !== id));
+  const handleDeleteNetworkDevice = async (id: string) => {
+    try {
+      await deleteNetwork(id).unwrap();
+      toast.success("Network device deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete network device");
+    }
   };
 
   return (
@@ -233,6 +188,7 @@ function Device() {
                 setEditingVM(null);
                 setIsVMFormOpen(true);
               }}
+              disabled={isCreatingVM || isUpdatingVM}
             >
               <PlusCircle className="h-4 w-4 mr-2" />
               Add VM
@@ -242,6 +198,7 @@ function Device() {
                 setEditingNetworkDevice(null);
                 setIsNetworkFormOpen(true);
               }}
+              disabled={isCreatingNetwork || isUpdatingNetwork}
             >
               <PlusCircle className="h-4 w-4 mr-2" />
               Add Network Device
@@ -250,15 +207,23 @@ function Device() {
         </div>
 
         <TabsContent value="vm" className="mt-6">
-          <VMList vms={vms} onEdit={handleEditVM} onDelete={handleDeleteVM} />
+          {isLoadingVMs ? (
+            <div className="text-center py-8">Loading virtual machines...</div>
+          ) : (
+            <VMList vms={vms} onEdit={handleEditVM} onDelete={handleDeleteVM} />
+          )}
         </TabsContent>
 
         <TabsContent value="network" className="mt-6">
-          <NetworkDeviceList
-            devices={networkDevices}
-            onEdit={handleEditNetworkDevice}
-            onDelete={handleDeleteNetworkDevice}
-          />
+          {isLoadingNetworks ? (
+            <div className="text-center py-8">Loading network devices...</div>
+          ) : (
+            <NetworkDeviceList
+              devices={networks}
+              onEdit={handleEditNetworkDevice}
+              onDelete={handleDeleteNetworkDevice}
+            />
+          )}
         </TabsContent>
       </Tabs>
 
@@ -269,6 +234,11 @@ function Device() {
             <DialogTitle>
               {editingVM ? "Edit Virtual Machine" : "Add Virtual Machine"}
             </DialogTitle>
+            <DialogDescription>
+              {editingVM
+                ? "Update the details of your virtual machine."
+                : "Fill in the details to add a new virtual machine."}
+            </DialogDescription>
           </DialogHeader>
           <VMForm
             onSubmit={handleVMSubmit}
@@ -287,6 +257,11 @@ function Device() {
                 ? "Edit Network Device"
                 : "Add Network Device"}
             </DialogTitle>
+            <DialogDescription>
+              {editingNetworkDevice
+                ? "Update the details of your network device."
+                : "Fill in the details to add a new network device."}
+            </DialogDescription>
           </DialogHeader>
           <NetworkDeviceForm
             onSubmit={handleNetworkSubmit}
