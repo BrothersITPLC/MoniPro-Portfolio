@@ -20,7 +20,10 @@ import { Link } from "react-router-dom";
 import { useLoginMutation } from "../api";
 import { loginState } from "../AutSlice";
 
-export function Login({ className, ...props }: React.ComponentProps<"div">) {
+interface LoginProps extends React.ComponentProps<"div"> {
+  onToggle: () => void;
+}
+export function Login({ className, onToggle, ...props }: LoginProps) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
@@ -132,7 +135,7 @@ export function Login({ className, ...props }: React.ComponentProps<"div">) {
                 <button
                   type="button"
                   className="underline underline-offset-4 cursor-pointer"
-                  onClick={() => dispatch(setIsSignup(true))}
+                  onClick={onToggle}
                 >
                   Sign up
                 </button>

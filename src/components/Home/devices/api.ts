@@ -7,12 +7,12 @@ export const deviceApi = createApi({
   tagTypes: ["VMs", "Networks"],
   endpoints: (builder) => ({
     getVms: builder.query({
-      query: () => "/api/vms/",
+      query: () => "/vms/",
       providesTags: ["VMs"],
     }),
     createVm: builder.mutation({
       query: (vmData) => ({
-        url: "/api/vms/",
+        url: "/vms/",
         method: "POST",
         body: vmData,
       }),
@@ -20,7 +20,7 @@ export const deviceApi = createApi({
     }),
     updateVm: builder.mutation({
       query: ({ id, ...patch }) => ({
-        url: `/api/vms/${id}/`,
+        url: `/vms/${id}/`,
         method: "PUT",
         body: patch,
       }),
@@ -28,18 +28,18 @@ export const deviceApi = createApi({
     }),
     deleteVm: builder.mutation({
       query: (id) => ({
-        url: `/api/vms/${id}/`,
+        url: `/vms/${id}/`,
         method: "DELETE",
       }),
       invalidatesTags: ["VMs"],
     }),
     getNetworks: builder.query({
-      query: () => "/api/networks/",
+      query: () => "/networks/",
       providesTags: ["Networks"],
     }),
     createNetwork: builder.mutation({
       query: (networkData) => ({
-        url: "/api/networks/",
+        url: "/networks/",
         method: "POST",
         body: networkData,
       }),
@@ -47,7 +47,7 @@ export const deviceApi = createApi({
     }),
     updateNetwork: builder.mutation({
       query: ({ id, ...patch }) => ({
-        url: `/api/networks/${id}/`,
+        url: `/networks/${id}/`,
         method: "PUT",
         body: patch,
       }),
@@ -55,7 +55,7 @@ export const deviceApi = createApi({
     }),
     deleteNetwork: builder.mutation({
       query: (id) => ({
-        url: `/api/networks/${id}/`,
+        url: `/networks/${id}/`,
         method: "DELETE",
       }),
       invalidatesTags: ["Networks"],
