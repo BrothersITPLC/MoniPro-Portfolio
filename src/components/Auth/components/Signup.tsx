@@ -20,7 +20,11 @@ import { Link } from "react-router-dom";
 
 import { useRegisterMutation } from "../api";
 
-export function Signup({ className, ...props }: React.ComponentProps<"div">) {
+interface SignupProps extends React.ComponentProps<"div"> {
+  onToggle: () => void;
+}
+
+export function Signup({ className, onToggle, ...props }: SignupProps) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [register, { isLoading }] = useRegisterMutation();
@@ -163,7 +167,7 @@ export function Signup({ className, ...props }: React.ComponentProps<"div">) {
                 <button
                   type="button"
                   className="underline underline-offset-4 cursor-pointer"
-                  onClick={() => dispatch(setIsSignup(false))}
+                  onClick={onToggle}
                 >
                   Login
                 </button>

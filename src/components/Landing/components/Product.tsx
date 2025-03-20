@@ -15,7 +15,7 @@ const monitoringCards = [
     description:
       "Comprehensive server health monitoring and predictive maintenance",
     image:
-      "https://unsplash.com/photos/empty-passageway-between-server-cabinets-in-a-room-of-data-retention-facility-iRaD7YgpWt",
+      "https://unsplash.com/a-stack-of-blue-boxes-with-red-lights-in-them-nUbcA9rGZSg",
   },
   {
     title: "Cloud Monitoring",
