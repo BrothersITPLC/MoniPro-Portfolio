@@ -21,11 +21,12 @@ import {
 import { VMFormData } from "../types";
 
 const formSchema = z.object({
-  domainName: z.string().optional(),
+  domainName: z.string().min(1, "Domain name is required"),
   username: z.string().min(2, "Username must be at least 2 characters"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   ipAddress: z.string().regex(/^(\d{1,3}\.){3}\d{1,3}$/, "Invalid IP address"),
   networkType: z.string().min(1, "Please select a network type"),
+  belong_to: z.number().min(1, "Owner is required"),
 });
 
 interface VMFormProps {
@@ -39,6 +40,8 @@ export function VMForm({
   initialData,
   isEditing = false,
 }: VMFormProps) {
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,23 +50,16 @@ export function VMForm({
       password: initialData?.password || "",
       ipAddress: initialData?.ipAddress || "",
       networkType: initialData?.networkType || "",
+      belong_to: initialData?.belong_to || userData?.user_id,
     },
   });
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    const completeData: VMFormData = {
+    const submissionData = {
       ...data,
-      id: initialData?.id,
-      domainName: data.domainName || "",
-      status: initialData?.status || "stopped",
-      resources: initialData?.resources || {
-        cpu: 0,
-        memory: 0,
-        storage: 0,
-      },
+      belong_to: userData?.user_id,
     };
-
-    onSubmit(completeData);
+    onSubmit(submissionData);
   };
 
   return (
@@ -74,7 +70,7 @@ export function VMForm({
           name="domainName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Domain Name (Optional)</FormLabel>
+              <FormLabel>Domain Name</FormLabel>
               <FormControl>
                 <Input placeholder="example.com" {...field} />
               </FormControl>
@@ -140,7 +136,6 @@ export function VMForm({
                 <SelectContent>
                   <SelectItem value="public">Public</SelectItem>
                   <SelectItem value="private">Private</SelectItem>
-                  <SelectItem value="hybrid">Hybrid</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

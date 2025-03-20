@@ -3,7 +3,7 @@ import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { User } from "../../../team/types";
+import { User } from "../types";
 
 interface UserVMControlProps {
   user: User;

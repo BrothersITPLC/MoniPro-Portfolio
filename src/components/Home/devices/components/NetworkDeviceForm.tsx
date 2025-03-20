@@ -23,13 +23,13 @@ import { NetworkFormData } from "../types";
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   deviceType: z.string().min(1, "Please select a device type"),
+  networkType: z.string().min(1, "Please select a network type"),
   ipAddress: z.string().regex(/^(\d{1,3}\.){3}\d{1,3}$/, "Invalid IP address"),
   subnetMask: z
     .string()
     .regex(/^(\d{1,3}\.){3}\d{1,3}$/, "Invalid subnet mask"),
   gateway: z.string().regex(/^(\d{1,3}\.){3}\d{1,3}$/, "Invalid gateway"),
-  location: z.string().min(2, "Location must be at least 2 characters"),
-  status: z.enum(["active", "inactive", "maintenance"]),
+  belong_to: z.number().min(1, "Owner is required"),
 });
 
 interface NetworkDeviceFormProps {
@@ -43,31 +43,23 @@ export function NetworkDeviceForm({
   initialData,
   isEditing = false,
 }: NetworkDeviceFormProps) {
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: initialData?.name || "",
       deviceType: initialData?.deviceType || "",
+      networkType: initialData?.networkType || "",
       ipAddress: initialData?.ipAddress || "",
       subnetMask: initialData?.subnetMask || "",
       gateway: initialData?.gateway || "",
-      location: initialData?.location || "",
-      status: initialData?.status || "inactive",
+      belong_to: initialData?.belong_to || userData?.user_id,
     },
   });
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    const completeData: NetworkFormData = {
-      ...data,
-      id: initialData?.id,
-      metrics: initialData?.metrics || {
-        bandwidth: 0,
-        latency: 0,
-        packetLoss: 0,
-      },
-    };
-
-    onSubmit(completeData);
+    onSubmit(data);
   };
 
   return (
@@ -113,6 +105,28 @@ export function NetworkDeviceForm({
 
         <FormField
           control={form.control}
+          name="networkType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Network Type</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select network type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="public">Public</SelectItem>
+                  <SelectItem value="private">Private</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="ipAddress"
           render={({ field }) => (
             <FormItem>
@@ -148,43 +162,6 @@ export function NetworkDeviceForm({
               <FormControl>
                 <Input placeholder="192.168.1.254" {...field} />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <Input placeholder="Server Room A" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="inactive">Inactive</SelectItem>
-                  <SelectItem value="maintenance">Maintenance</SelectItem>
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}

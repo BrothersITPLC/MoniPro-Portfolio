@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import type { ModalProps } from "../../../team/types";
+import type { ModalProps } from "../types";
 
 export function Modal({ isOpen, onClose, children }: ModalProps) {
   if (!isOpen) return null;

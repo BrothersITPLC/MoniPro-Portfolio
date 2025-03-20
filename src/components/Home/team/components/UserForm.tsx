@@ -1,6 +1,6 @@
 import React from "react";
 import { Plus, X } from "lucide-react";
-import type { UserFormData } from "../../../team/types";
+import type { UserFormData } from "../types";
 
 interface UserFormProps {
   onSubmit: (data: UserFormData) => void;
