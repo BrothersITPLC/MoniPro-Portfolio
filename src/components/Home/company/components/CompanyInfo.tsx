@@ -2,23 +2,18 @@ import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
-import { Pricing } from "@/components/Landing/components/Pricing";
+import { CompanyInfoStep } from "./CompanyInfoStep";
+import { SubscriptionStep } from "./SubscriptionStep";
+import { PaymentStep } from "./PaymentStep";
+import { Button } from "@/components/ui/button";
+
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import { useOrganizationInfoMutation } from "../api";
+import { Pricing } from "@/components/Landing/components/Pricing";
+import { Toaster } from "@/components/ui/sonner";
 
 const formSchema = z.object({
   organization_name: z.string().min(1, "Organization Name is required"),
@@ -33,6 +28,7 @@ const formSchema = z.object({
     .min(1, "Company Description is required"),
   payment_provider: z.number().optional(),
   organization_payment_plane: z.number().optional(),
+  organization_payment_duration: z.number().optional(), // Add this field
   user_id: z.number().optional(),
 });
 
@@ -42,15 +38,25 @@ const steps = [
   { id: 3, name: "Payment Method" },
 ];
 
+// Add this import
+import { useGetPlansQuery } from "@/components/Landing/api";
+
 export function CompanyInfo() {
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-  console.log(userData);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
   const selectedPlan = useSelector(
     (state: RootState) => state.landing.SelectedPlane
   );
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
+  const [showPricing, setShowPricing] = useState(false);
+
+  // Move the query hook to the top level
+  const {
+    data: plansData,
+    isLoading: isPlansLoading,
+    error: plansError,
+  } = useGetPlansQuery();
 
   // Add the API mutation hook
   const [submitOrganizationInfo, { isLoading }] = useOrganizationInfoMutation();
@@ -86,6 +92,8 @@ export function CompanyInfo() {
           ...values,
           payment_provider: selectedPaymentMethod,
           organization_payment_plane: selectedPlan,
+          organization_payment_duration: form.getValues("duration_id"),
+          user_id: userData.user_id,
         };
 
         console.log("Final Submission:", finalSubmission);
@@ -113,156 +121,79 @@ export function CompanyInfo() {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
+  const handleChangePlan = () => {
+    setShowPricing(true);
+  };
+
   const renderStepContent = () => {
+    if (showPricing) {
+      return (
+        <div>
+          <Pricing showSelectedPlan={true} />
+          <div className="flex justify-center mt-4">
+            <Button
+              variant="default"
+              onClick={() => setShowPricing(false)}
+              className="px-6"
+            >
+              Continue with Selected Plan
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
     switch (currentStep) {
       case 1:
-        return (
-          <div className="max-w-3xl mx-auto py-10">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8 w-full"
-              >
-                <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-6">
-                    <FormField
-                      control={form.control}
-                      name="organization_name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Company Name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Organization Name" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="col-span-6">
-                    <FormField
-                      control={form.control}
-                      name="organization_phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Company Fhone</FormLabel>
-                          <FormControl>
-                            <Input placeholder="09123456789" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-12 gap-4">
-                  <div className="col-span-6">
-                    <FormField
-                      control={form.control}
-                      name="organization_website"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Company Website</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Company Url" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="organization_description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Company Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Tell us about your company"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <Button type="submit">Next Step</Button>
-              </form>
-            </Form>
-          </div>
-        );
-
+        return <CompanyInfoStep form={form} onSubmit={onSubmit} />;
       case 2:
-        return (
-          <div>
-            <Pricing />
-            <div className="flex justify-between mt-8">
-              <Button variant="outline" onClick={handlePrevious}>
-                Previous Step
-              </Button>
-              <Button onClick={handleNext}>Next Step</Button>
+        if (isPlansLoading) {
+          return (
+            <div className="flex items-center justify-center py-10">
+              <div className="text-center">
+                <p>Loading subscription plans...</p>
+              </div>
             </div>
-          </div>
-        );
+          );
+        }
 
+        if (plansError) {
+          return (
+            <div className="flex items-center justify-center py-10">
+              <div className="text-center text-red-500">
+                <p>Error loading subscription plans. Please try again later.</p>
+                <Button
+                  variant="outline"
+                  onClick={handlePrevious}
+                  className="mt-4"
+                >
+                  Go Back
+                </Button>
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <SubscriptionStep
+            form={form}
+            selectedPlan={selectedPlan}
+            plansData={plansData}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            onChangePlan={handleChangePlan}
+          />
+        );
       case 3:
         return (
-          <div className="max-w-3xl mx-auto py-10">
-            <h2 className="text-2xl font-bold mb-6 text-center">
-              Choose Payment Method
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentMethod(1)}
-                className={`p-6 border rounded-lg transition-all ${
-                  selectedPaymentMethod === 1
-                    ? "border-red-500"
-                    : "hover:border-red-500"
-                }`}
-              >
-                <h3 className="text-xl font-semibold">TelleBirr</h3>
-                <p className="text-gray-500">
-                  Pay using TelleBirr mobile money
-                </p>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setSelectedPaymentMethod(2)}
-                className={`p-6 border rounded-lg transition-all ${
-                  selectedPaymentMethod === 2
-                    ? "border-red-500"
-                    : "hover:border-red-500"
-                }`}
-              >
-                <h3 className="text-xl font-semibold">Chapa</h3>
-                <p className="text-gray-500">Pay using Chapa payment gateway</p>
-              </button>
-            </div>
-
-            <div className="flex justify-between mt-8">
-              <Button variant="outline" onClick={handlePrevious}>
-                Previous Step
-              </Button>
-
-              <Button
-                type="submit"
-                disabled={isLoading}
-                onClick={form.handleSubmit(onSubmit)}
-              >
-                {isLoading ? "Submitting..." : "Submit"}
-              </Button>
-            </div>
-          </div>
+          <PaymentStep
+            selectedPaymentMethod={selectedPaymentMethod}
+            setSelectedPaymentMethod={setSelectedPaymentMethod}
+            onPrevious={handlePrevious}
+            onSubmit={form.handleSubmit(onSubmit)}
+            isLoading={isLoading}
+          />
         );
-
       default:
         return null;
     }
@@ -270,6 +201,7 @@ export function CompanyInfo() {
 
   return (
     <div className="container mx-auto px-4">
+      <Toaster />
       <div className="mb-8">
         <div className="flex items-center justify-center space-x-4">
           {steps.map((step) => (

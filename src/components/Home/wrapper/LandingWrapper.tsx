@@ -1,16 +1,20 @@
-import { BarChart1 } from "@/components/Dashbord/Chart/Bar";
-import { AreaChart1 } from "@/components/Dashbord/Chart/AreaChart";
-import { AreaChartStep } from "@/components/Dashbord/Chart/AreaChartStep";
-import { LineChart1 } from "@/components/Dashbord/Chart/LineChart1";
+import { Banner } from "../Banner";
+import { InfrastructureShowcase } from "@/components/Home/devices/components/InfrastructureShowcase";
+import { useGetVmsQuery, useGetNetworksQuery } from "../devices/api";
+
 export function LandingWrapper() {
+  const { data: vmsData } = useGetVmsQuery({});
+  const { data: networksData } = useGetNetworksQuery({});
+
+  const vms = vmsData?.data || [];
+  const networks = networksData?.data || [];
+
   return (
-    <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-      <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        <BarChart1 />
-        <AreaChartStep />
-        <LineChart1 />
+    <div className="w-full">
+      <Banner />
+      <div className="container mx-auto py-8">
+        <InfrastructureShowcase vms={vms} networks={networks} />
       </div>
-      <AreaChart1 />
     </div>
   );
 }

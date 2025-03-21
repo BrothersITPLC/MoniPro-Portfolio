@@ -12,7 +12,17 @@ export const VerficationApi = createApi({
         body: data,
       }),
     }),
+    updateOrganizationPayment: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `organization/${id}/update-payment/`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useOrganizationInfoMutation } = VerficationApi;
+export const {
+  useOrganizationInfoMutation,
+  useUpdateOrganizationPaymentMutation,
+} = VerficationApi;
