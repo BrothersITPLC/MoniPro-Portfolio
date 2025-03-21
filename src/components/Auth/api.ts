@@ -32,6 +32,12 @@ export const authApi = createApi({
         body: credentials,
       }),
     }),
+    getProfile: builder.query({
+      query: () => ({
+        url: "/profile/",
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -40,4 +46,5 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useOtpVerficationMutation,
+  useGetProfileQuery,
 } = authApi;

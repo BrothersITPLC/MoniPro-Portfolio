@@ -20,7 +20,7 @@ import { NotificationWrapper } from "./components/Home/wrapper/NotificationWrapp
 import { SecurityAlerts } from "./components/Home/notification/components/SecurityAlerts";
 import { InsightSuggestion } from "./components/Home/notification/components/InsightSuggestion";
 import { PerformanceAlerts } from "./components/Home/notification/components/PerformanceAlerts";
-
+import { UpdateSubscription } from "./components/Home/company/components/UpdateSubscription";
 function App() {
   return (
     <Router>
@@ -37,6 +37,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />}>
               <Route path="dashboard" element={<LandingWrapper />} />
+              <Route path="subscription" element={<UpdateSubscription />} />
               <Route path="comp-info" element={<CompanyInfo />} />
               <Route path="device-mangment" element={<DeviceWrapper />} />
               <Route path="notification" element={<NotificationWrapper />}>

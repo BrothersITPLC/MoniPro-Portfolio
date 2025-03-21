@@ -1,158 +1,119 @@
+import { Separator } from "@/components/ui/separator";
+import { Github, Twitter, Dribbble, Youtube, Twitch } from "lucide-react";
+
 export const Footer = () => {
   return (
-    <footer
-      id="footer"
-      className="py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100"
-    >
-      <hr className="w-11/12 mx-auto" />
+    <footer className="container mx-auto py-8 space-y-8 bg-gray-100 dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100">
+      <Separator className="my-4" />
 
-      <section className="container py-20 grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-x-12 gap-y-8">
-        <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Follow US</h3>
-          <div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8 px-4">
+        <div className="space-y-3">
+          <h3 className="font-semibold text-lg">Follow US</h3>
+          <div className="flex flex-col space-y-2">
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              Github
+              <Github className="h-4 w-4 mr-2" /> Github
             </a>
-          </div>
-
-          <div>
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              Twitter
+              <Twitter className="h-4 w-4 mr-2" /> Twitter
             </a>
-          </div>
-
-          <div>
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              Dribbble
+              <Dribbble className="h-4 w-4 mr-2" /> Dribbble
             </a>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Platforms</h3>
-          <div>
+        <div className="space-y-3">
+          <h3 className="font-semibold text-lg">Platforms</h3>
+          <div className="flex flex-col space-y-2">
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               Web
             </a>
-          </div>
-
-          <div>
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               Mobile
             </a>
-          </div>
-
-          <div>
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               Desktop
             </a>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">About</h3>
-          <div>
+        <div className="space-y-3">
+          <h3 className="font-semibold text-lg">About</h3>
+          <div className="flex flex-col space-y-2">
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               Features
             </a>
-          </div>
-
-          <div>
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               Pricing
             </a>
-          </div>
-
-          <div>
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
               FAQ
             </a>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <h3 className="font-bold text-lg">Community</h3>
-          <div>
+        <div className="space-y-3">
+          <h3 className="font-semibold text-lg">Community</h3>
+          <div className="flex flex-col space-y-2">
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              Youtube
+              <Youtube className="h-4 w-4 mr-2" /> Youtube
             </a>
-          </div>
 
-          <div>
             <a
-              rel="noreferrer noopener"
               href="#"
-              className="opacity-60 hover:opacity-100"
+              className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              Discord
-            </a>
-          </div>
-
-          <div>
-            <a
-              rel="noreferrer noopener"
-              href="#"
-              className="opacity-60 hover:opacity-100"
-            >
-              Twitch
+              <Twitch className="h-4 w-4 mr-2" /> Twitch
             </a>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="container pb-14 text-center">
-        <h3>
+      <Separator className="my-4" />
+
+      <div className="text-center text-sm text-muted-foreground">
+        <p>
           &copy; 2024 Landing page made by{" "}
           <a
-            rel="noreferrer noopener"
-            target="_blank"
             href="https://www.linkedin.com/in/leopoldo-miranda/"
-            className="text-primary transition-all border-primary hover:border-b-2"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="font-medium text-primary hover:underline"
           >
             Leo Miranda
           </a>
-        </h3>
-      </section>
+        </p>
+      </div>
     </footer>
   );
 };

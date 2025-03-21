@@ -7,7 +7,7 @@ import { Footer } from "./Footer";
 function Home() {
   return (
     <div>
-      <div className="min-h-screen bg-gray-900 text-white">
+      <div className="min-h-screen bg-gray-100 dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100 ">
         {/* Hero Section */}
         <Hero />
         {/* Product Showcase */}

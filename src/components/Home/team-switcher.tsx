@@ -88,18 +88,20 @@
 //   );
 // }
 import { AlignVerticalDistributeEnd } from "lucide-react";
-<AlignVerticalDistributeEnd />;
+import { Link } from "react-router-dom";
 export function TeamSwitcher() {
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   return (
     <div className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-      <div className="flex items-center gap-4">
-        <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-          <AlignVerticalDistributeEnd className="size-4" />
-        </div>
-        <div>{userData.user_name}</div>
-      </div>
+      <Link to="home/dashboard" className="hover-pointer">
+        <div className="flex items-center gap-4">
+          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+            <AlignVerticalDistributeEnd className="size-4" />
+          </div>
+          <div>{userData.user_name}</div>{" "}
+        </div>{" "}
+      </Link>
     </div>
   );
 }

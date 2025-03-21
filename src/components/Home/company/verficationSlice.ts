@@ -6,16 +6,20 @@ interface OrganizationData {
   organization_website: string;
   organization_description: string;
   organization_payment_plane: number;
+  organization_payment_duration: number;
   payment_provider: number;
   user_id: number;
+  duration_id?: number;
 }
 
 interface LandingState {
   organizationData: OrganizationData | null;
+  selectedDuration: number | null;
 }
 
 const initialState: LandingState = {
   organizationData: null,
+  selectedDuration: null,
 };
 
 const LandingSlice = createSlice({
@@ -25,8 +29,11 @@ const LandingSlice = createSlice({
     setOrganization: (state, action: PayloadAction<OrganizationData>) => {
       state.organizationData = action.payload;
     },
+    setSelectedDuration: (state, action: PayloadAction<number>) => {
+      state.selectedDuration = action.payload;
+    },
   },
 });
 
-export const { setOrganization } = LandingSlice.actions;
+export const { setOrganization, setSelectedDuration } = LandingSlice.actions;
 export default LandingSlice.reducer;
