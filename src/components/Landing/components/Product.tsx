@@ -3,7 +3,7 @@ import { Activity, Server, Cloud, Code } from "lucide-react";
 const monitoringCards = [
   {
     title: "Network Monitoring",
-    icon: <Activity className="w-6 h-6" />,
+    icon: <Activity className="w-8 h-8 text-red-500" />,
     description:
       "Real-time network performance monitoring with AI-powered insights",
     image:
@@ -11,7 +11,7 @@ const monitoringCards = [
   },
   {
     title: "Server Monitoring",
-    icon: <Server className="w-6 h-6" />,
+    icon: <Server className="w-8 h-8 text-red-500" />,
     description:
       "Comprehensive server health monitoring and predictive maintenance",
     image:
@@ -19,14 +19,14 @@ const monitoringCards = [
   },
   {
     title: "Cloud Monitoring",
-    icon: <Cloud className="w-6 h-6" />,
+    icon: <Cloud className="w-8 h-8 text-red-500" />,
     description: "Multi-cloud infrastructure monitoring and optimization",
     image:
       "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=2000",
   },
   {
     title: "Application Monitoring",
-    icon: <Code className="w-6 h-6" />,
+    icon: <Code className="w-8 h-8 text-red-500" />,
     description: "End-to-end application performance monitoring and debugging",
     image:
       "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=2000",
