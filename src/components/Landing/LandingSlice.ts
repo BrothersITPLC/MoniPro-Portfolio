@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface PlanFeature {
+export interface PlanFeature {
   id: number;
   name: string;
   price: number;

@@ -13,18 +13,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/app/store";
+
 const icons = [
   {
-    icon: <Shield className="w-12 h-12 text-blue-400" />,
-    color: "blue",
+    icon: <Shield className="w-12 h-12 text-red-500" />,
+    color: "red",
   },
   {
     icon: <Zap className="w-12 h-12 text-red-500" />,
     color: "red",
   },
   {
-    icon: <Database className="w-12 h-12 text-purple-500" />,
-    color: "purple",
+    icon: <Database className="w-12 h-12 text-red-500" />,
+    color: "red",
   },
 ];
 
@@ -45,25 +46,31 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
   };
 
   if (isLoading || !plansData) {
-    return <div className="text-center py-12">Loading plans...</div>;
+    return (
+      <div className="text-center py-12 text-gray-900 dark:text-gray-300">
+        Loading plans...
+      </div>
+    );
   }
 
   return (
-    <div className="py-20 px-4">
+    <div className="relative py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold">Choose Your Plan</h2>
-          <p className="text-muted-foreground mt-2">
-            Select a plan that best suits your needs
-          </p>
-        </div>
+        <h2 className="text-xl md:text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
+          Flexible Plans <br />
+          for Every Need
+        </h2>
+        <p className="text-xl text-gray-900 dark:text-gray-300 mb-12 max-w-2xl mx-auto text-center">
+          Choose the perfect plan that matches your monitoring requirements and
+          scale as you grow.
+        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {plansData.map((plan, index) => (
             <Card
               key={plan.id}
-              className={`relative transition-all duration-300 hover:scale-105 
-                ${plan.popular ? "border-primary shadow-lg scale-105" : ""} 
+              className={`relative bg-white dark:bg-background border-red-600 dark:border-gray-700 transition-all duration-300 hover:scale-105 
+                ${plan.popular ? "border-red-600 shadow-lg scale-105" : ""} 
                 ${
                   selectedPlan === plan.id && showSelectedPlan
                     ? "ring-2 ring-red-500"
@@ -74,7 +81,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
               {plan.popular && (
                 <Badge
                   variant="default"
-                  className="absolute -top-2 left-1/2 -translate-x-1/2"
+                  className="absolute -top-2 left-1/2 -translate-x-1/2 bg-red-500 hover:bg-red-600"
                 >
                   Most Popular
                 </Badge>
@@ -84,22 +91,26 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                 <div className="flex justify-center mb-4">
                   {icons[index % icons.length].icon}
                 </div>
-                <CardTitle>{plan.name}</CardTitle>
-                <CardDescription>{plan.description}</CardDescription>
+                <CardTitle className="text-gray-900 dark:text-gray-300">
+                  {plan.name}
+                </CardTitle>
+                <CardDescription className="text-gray-900 dark:text-gray-300">
+                  {plan.description}
+                </CardDescription>
               </CardHeader>
 
               <CardContent>
                 <div className="text-center mb-6">
-                  <div className="flex items-baseline justify-center">
+                  <div className="flex items-baseline justify-center text-gray-900 dark:text-gray-300">
                     <span className="text-4xl font-bold">${plan.price}</span>
-                    <span className="text-muted-foreground ml-2">/month</span>
+                    <span className="ml-2">/month</span>
                   </div>
                   <div className="space-y-2 mt-4">
                     {plan.deduction.map((discount) => (
                       <Badge
                         key={discount.duration}
                         variant="secondary"
-                        className="mr-2"
+                        className="mr-2 bg-red-100 text-red-500 dark:bg-red-900/30"
                       >
                         Save {discount.percentage}% on {discount.duration} plan
                       </Badge>
@@ -110,16 +121,18 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                 <div className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
                     <div key={featureIndex} className="flex items-center">
-                      <Check className="w-5 h-5 text-primary mr-3" />
-                      <span className="text-sm">{feature}</span>
+                      <Check className="w-5 h-5 text-red-500 mr-3" />
+                      <span className="text-sm text-gray-900 dark:text-gray-300">
+                        {feature}
+                      </span>
                     </div>
                   ))}
                 </div>
 
                 {showSelectedPlan ? (
                   <Button
-                    className={`w-full mt-6 ${
-                      selectedPlan === plan.id ? "bg-red-500" : ""
+                    className={`w-full mt-6 bg-red-500 hover:bg-red-600 transition-all transform hover:scale-105 ${
+                      selectedPlan === plan.id ? "bg-red-600" : ""
                     }`}
                     onClick={() => handlePlanSelect(plan.id)}
                   >
@@ -127,7 +140,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                   </Button>
                 ) : isAuthenticated ? (
                   <Button
-                    className="w-full mt-6"
+                    className="w-full mt-6 bg-red-500 hover:bg-red-600 transition-all transform hover:scale-105"
                     onClick={() => handlePlanSelect(plan.id)}
                   >
                     Select Plan
@@ -135,7 +148,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                 ) : (
                   <Button
                     onClick={() => handlePlanSelect(plan.id)}
-                    className="w-full mt-6"
+                    className="w-full mt-6 bg-red-500 hover:bg-red-600 transition-all transform hover:scale-105"
                     asChild
                   >
                     <Link to="/auth">Get Started</Link>

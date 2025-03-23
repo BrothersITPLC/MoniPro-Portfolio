@@ -6,6 +6,7 @@ export function Hero() {
       id="hero"
       className="relative min-h-screen flex items-center border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background"
     >
+      {/* Content */}
       <div className="relative z-10 text-center px-4">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-gray-900 dark:text-gray-300">
           AI-Powered Monitoring <br />

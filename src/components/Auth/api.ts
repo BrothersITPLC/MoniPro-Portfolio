@@ -1,15 +1,25 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BaseUrl } from "../../BaseUrl";
+import { loginState } from "./AutSlice";
+import { toast } from "sonner";
 
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({ baseUrl: BaseUrl, credentials: "include" }),
+  tagTypes: ["Profile", "Infrastructures"],
   endpoints: (builder) => ({
     register: builder.mutation({
       query: (user) => ({
         url: "/register/",
         method: "POST",
         body: user,
+      }),
+      invalidatesTags: ["Profile", "Infrastructures"],
+    }),
+    getProfile: builder.query({
+      query: () => ({
+        url: "/profile/",
+        method: "GET",
       }),
     }),
     login: builder.mutation({
@@ -18,12 +28,31 @@ export const authApi = createApi({
         method: "POST",
         body: user,
       }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
     }),
     logout: builder.mutation({
       query: (_: void) => ({
         url: "/logout/",
         method: "POST",
       }),
+      invalidatesTags: ["Profile"],
     }),
     OtpVerfication: builder.mutation({
       query: (credentials) => ({
@@ -31,12 +60,7 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
-    }),
-    getProfile: builder.query({
-      query: () => ({
-        url: "/profile/",
-        method: "GET",
-      }),
+      invalidatesTags: ["Profile"],
     }),
   }),
 });
