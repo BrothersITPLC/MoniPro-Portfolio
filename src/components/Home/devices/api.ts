@@ -4,7 +4,7 @@ import { BaseUrl } from "@/BaseUrl";
 export const deviceApi = createApi({
   reducerPath: "deviceApi",
   baseQuery: fetchBaseQuery({ baseUrl: BaseUrl, credentials: "include" }),
-  tagTypes: ["VMs", "Networks"],
+  tagTypes: ["VMs", "Networks", "Profile", "Infrastructures"],
   endpoints: (builder) => ({
     getVms: builder.query({
       query: () => "/vms/",
@@ -16,7 +16,7 @@ export const deviceApi = createApi({
         method: "POST",
         body: vmData,
       }),
-      invalidatesTags: ["VMs"],
+      invalidatesTags: ["VMs", "Profile", "Infrastructures"],
     }),
     updateVm: builder.mutation({
       query: ({ id, ...patch }) => ({
@@ -24,14 +24,14 @@ export const deviceApi = createApi({
         method: "PUT",
         body: patch,
       }),
-      invalidatesTags: ["VMs"],
+      invalidatesTags: ["VMs", "Profile", "Infrastructures"],
     }),
     deleteVm: builder.mutation({
       query: (id) => ({
         url: `/vms/${id}/`,
         method: "DELETE",
       }),
-      invalidatesTags: ["VMs"],
+      invalidatesTags: ["VMs", "Profile", "Infrastructures"],
     }),
     getNetworks: builder.query({
       query: () => "/networks/",
@@ -43,7 +43,7 @@ export const deviceApi = createApi({
         method: "POST",
         body: networkData,
       }),
-      invalidatesTags: ["Networks"],
+      invalidatesTags: ["Networks", "Profile", "Infrastructures"],
     }),
     updateNetwork: builder.mutation({
       query: ({ id, ...patch }) => ({
@@ -51,14 +51,14 @@ export const deviceApi = createApi({
         method: "PUT",
         body: patch,
       }),
-      invalidatesTags: ["Networks"],
+      invalidatesTags: ["Networks", "Profile", "Infrastructures"],
     }),
     deleteNetwork: builder.mutation({
       query: (id) => ({
         url: `/networks/${id}/`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Networks"],
+      invalidatesTags: ["Networks", "Profile", "Infrastructures"],
     }),
   }),
 });

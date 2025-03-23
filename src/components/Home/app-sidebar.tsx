@@ -10,29 +10,17 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { useGetInfrastructureListQuery } from "@/components/Landing/api";
 
 // This is sample data.
-const data = {
+const getDefaultNavData = () => ({
   navMain: [
     {
       title: "Devices",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
-      items: [
-        {
-          title: "Uemis",
-          url: "/home/dashboard",
-        },
-        {
-          title: "Orc",
-          url: "/home/dashboard",
-        },
-        {
-          title: "OSTA-vm-1",
-          url: "/home/dashboard",
-        },
-      ],
+      items: [],
     },
     {
       title: "Notfication",
@@ -74,16 +62,39 @@ const data = {
       ],
     },
   ],
-};
+});
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: infrastructureList, isLoading } =
+    useGetInfrastructureListQuery();
+  const [navData, setNavData] = React.useState(getDefaultNavData());
+
+  React.useEffect(() => {
+    if (infrastructureList && infrastructureList.length > 0) {
+      const updatedNavData = { ...getDefaultNavData() };
+
+      // Get the first infrastructure item
+      const infrastructure = infrastructureList[0];
+
+      // Update the Devices items with VM data from the API
+      if (infrastructure.vms && infrastructure.vms.length > 0) {
+        updatedNavData.navMain[0].items = infrastructure.vms.map((vm) => ({
+          title: vm.domainName,
+          url: "/home/dashboard",
+        }));
+      }
+
+      setNavData(updatedNavData);
+    }
+  }, [infrastructureList]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navData.navMain} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

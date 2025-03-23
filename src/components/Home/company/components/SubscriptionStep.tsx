@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UseFormReturn } from "react-hook-form";
-import { PlanFeature } from "@/components/Landing/api";
+import { PlanFeature } from "@/components/Landing/LandingSlice";
 import { useState } from "react";
 
 interface SubscriptionStepProps {

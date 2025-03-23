@@ -28,9 +28,11 @@ import {
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "@/components/Auth/api";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 export function NavUser() {
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
@@ -62,19 +64,14 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  src={userData.user_name}
-                  alt={userData.user_name}
-                />
+                <AvatarImage src={user?.user_name} alt={user?.user_name} />
                 <AvatarFallback className="rounded-lg">
                   <UserRoundCheck />
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">
-                  {userData.user_name}
-                </span>
-                <span className="truncate text-xs">{userData.user_email}</span>
+                <span className="truncate font-medium">{user?.user_name}</span>
+                <span className="truncate text-xs">{user?.user_email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -88,19 +85,14 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage
-                    src={userData.user_name}
-                    alt={userData.user_name}
-                  />
+                  <AvatarImage src={user?.user_name} alt={user?.user_name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {userData.user_name}
+                    {user?.user_name}
                   </span>
-                  <span className="truncate text-xs">
-                    {userData.user_email}
-                  </span>
+                  <span className="truncate text-xs">{user?.user_email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

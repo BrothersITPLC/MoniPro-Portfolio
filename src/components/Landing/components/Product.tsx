@@ -15,7 +15,7 @@ const monitoringCards = [
     description:
       "Comprehensive server health monitoring and predictive maintenance",
     image:
-      "https://unsplash.com/a-stack-of-blue-boxes-with-red-lights-in-them-nUbcA9rGZSg",
+      "https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&q=80&w=2000",
   },
   {
     title: "Cloud Monitoring",
@@ -36,17 +36,21 @@ export function Product() {
   return (
     <div
       id="products"
-      className="py-20 px-4 border-b-[1px] bg-gray-100 dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100"
+      className="relative py-20 px-4 border-b-[1px] bg-white dark:border-b-slate-700 dark:bg-background"
     >
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold mb-12 text-center">
+        <h4 className="text-3xl md:text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
           Monitoring Solutions
-        </h2>
+        </h4>
+        <p className="text-xl text-gray-900 dark:text-gray-300 mb-12 max-w-2xl mx-auto text-center">
+          Comprehensive monitoring solutions for your infrastructure needs,
+          powered by advanced AI technology.
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {monitoringCards.map((card, index) => (
             <div
               key={index}
-              className="bg-white dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
+              className="bg-white dark:bg-background text-gray-900 dark:text-gray-300 border border-red-600 dark:border-gray-700 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
             >
               <div className="h-48 overflow-hidden">
                 <img
@@ -60,7 +64,9 @@ export function Product() {
                   {card.icon}
                   <h3 className="text-xl font-semibold ml-2">{card.title}</h3>
                 </div>
-                <p className="text-gray-400">{card.description}</p>
+                <p className="text-gray-900 dark:text-gray-300">
+                  {card.description}
+                </p>
               </div>
             </div>
           ))}
