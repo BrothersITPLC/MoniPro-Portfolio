@@ -54,8 +54,11 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
   }
 
   return (
-    <div className="relative py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background">
-      <div className="max-w-7xl mx-auto">
+    <div
+      id="pricing"
+      className=" py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background"
+    >
+      <div className="max-w-max mx-auto">
         <h2 className="text-xl md:text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
           Flexible Plans <br />
           for Every Need
@@ -65,11 +68,11 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
           scale as you grow.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {plansData.map((plan, index) => (
             <Card
               key={plan.id}
-              className={`relative bg-white dark:bg-background border-red-600 dark:border-gray-700 transition-all duration-300 hover:scale-105 
+              className={` bg-white dark:bg-background border-red-600 dark:border-gray-700 transition-all duration-300 hover:scale-105 
                 ${plan.popular ? "border-red-600 shadow-lg scale-105" : ""} 
                 ${
                   selectedPlan === plan.id && showSelectedPlan
