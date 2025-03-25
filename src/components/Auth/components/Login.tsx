@@ -1,7 +1,5 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useDispatch } from "react-redux";
-import { setIsSignup } from "@/app/global";
 import {
   Card,
   CardContent,
@@ -18,13 +16,11 @@ import { Label } from "@/components/ui/label";
 import { House } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLoginMutation } from "../api";
-import { loginState } from "../AutSlice";
 
 interface LoginProps extends React.ComponentProps<"div"> {
   onToggle: () => void;
 }
 export function Login({ className, onToggle, ...props }: LoginProps) {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
 
@@ -46,10 +42,6 @@ export function Login({ className, onToggle, ...props }: LoginProps) {
       const response = await login(formData).unwrap();
       if (response.status === "success") {
         toast.success(response.message || "Login successful");
-        localStorage.setItem("isAuthenticated", "true");
-        localStorage.setItem("userData", JSON.stringify(response.user_data));
-        dispatch(loginState({ user: response.user_data }));
-
         if (!response.user_data.organization_info_completed) {
           navigate("/home/comp-info");
         } else {

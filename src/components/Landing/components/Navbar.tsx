@@ -50,7 +50,7 @@ export function Navbar() {
           <NavigationMenuItem className="font-bold flex">
             <Link to="/" className="flex items-center">
               <Activity className="h-8 w-8 text-red-500" />
-              <span className="ml-2 text-xl font-bold">MonitorPro</span>
+              <span className="ml-2 text-xl font-bold">MoniPro</span>
             </Link>
           </NavigationMenuItem>
 

@@ -1,9 +1,11 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 export const ProtectedRoute = () => {
-  const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
   const location = useLocation();
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const { isAuthenticated, user } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   if (!isAuthenticated) {
     return <Navigate to="/auth" replace />;
@@ -18,7 +20,7 @@ export const ProtectedRoute = () => {
   }
 
   // Redirect to comp-info if organization info is not completed
-  if (!userData.organization_info_completed) {
+  if (!user?.organization_info_completed) {
     return <Navigate to="/home/comp-info" replace />;
   }
 

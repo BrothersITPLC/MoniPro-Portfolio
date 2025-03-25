@@ -25,7 +25,8 @@ export function UpdateSubscription() {
   const selectedPlan = useSelector(
     (state: RootState) => state.landing.SelectedPlane
   );
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const { data: plansData, isLoading } = useGetPlansQuery();
   const [updatePayment, { isLoading: isUpdating }] =
@@ -75,7 +76,7 @@ export function UpdateSubscription() {
       };
 
       await updatePayment({
-        id: userData.organization_id,
+        id: user?.organization_id,
         data: payload,
       }).unwrap();
 
