@@ -18,6 +18,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { usePasswordReseteMutation } from "@/components/Auth/api";
 
 export function ResetPassword({}: React.ComponentProps<"div">) {
   const navigate = useNavigate();
@@ -26,8 +27,11 @@ export function ResetPassword({}: React.ComponentProps<"div">) {
     email: "",
     otp: "",
     password: "",
-    confirmPassword: "",
+    password2: "",
   });
+
+  // RTK Query hook for password reset
+  const [passwordReset] = usePasswordReseteMutation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -36,16 +40,61 @@ export function ResetPassword({}: React.ComponentProps<"div">) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.password !== formData.password2) {
       toast.error("Passwords do not match");
+      return;
+    }
+
+    if (formData.otp.length !== 6) {
+      toast.error("Please enter a valid 6-digit OTP");
       return;
     }
 
     setIsLoading(true);
     try {
-      // Add your API call here
-      toast.success("Password reset successful");
-      navigate("/login");
+      const resetData = {
+        email: formData.email,
+        otp: formData.otp,
+        password: formData.password,
+        password2: formData.password2,
+      };
+
+      const response = await passwordReset(resetData);
+
+      if ("data" in response) {
+        if (response.data.status === "success") {
+          toast.success(response.data.message || "Password reset successful");
+          navigate("/login");
+        } else {
+          // Handle success response with error status
+          toast.error(response.data.message || "Failed to reset password");
+        }
+      } else if ("error" in response) {
+        // Handle different error status codes
+        const errorData = response.error as any;
+        const statusCode = errorData?.status;
+        const message = errorData?.data?.message || "Failed to reset password";
+
+        switch (statusCode) {
+          case 400:
+            toast.error(message || "Invalid input. Please check your details");
+            break;
+          case 401:
+            toast.error(message || "Invalid OTP. Please try again");
+            break;
+          case 404:
+            toast.error(message || "Email not found or OTP expired");
+            break;
+          case 429:
+            toast.error(message || "Too many attempts. Please try again later");
+            break;
+          case 500:
+            toast.error(message || "Server error. Please try again later");
+            break;
+          default:
+            toast.error(message || "Failed to reset password");
+        }
+      }
     } catch (error: any) {
       toast.error(error.message || "Failed to reset password");
     } finally {
@@ -155,16 +204,16 @@ export function ResetPassword({}: React.ComponentProps<"div">) {
                 </div>
                 <div className="grid gap-3">
                   <Label
-                    htmlFor="confirmPassword"
+                    htmlFor="password2"
                     className="text-gray-900 dark:text-gray-300"
                   >
                     Confirm Password
                   </Label>
                   <Input
-                    id="confirmPassword"
+                    id="password2"
                     type="password"
                     required
-                    value={formData.confirmPassword}
+                    value={formData.password2}
                     onChange={handleChange}
                     className="border-red-600 dark:border-gray-700 focus:ring-red-500 focus:border-red-500"
                   />
