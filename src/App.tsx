@@ -4,7 +4,7 @@ import Landing from "./pages/Landing";
 import { LandingWrapper } from "./components/Home/wrapper/LandingWrapper";
 import { DeviceWrapper } from "./components/Home/wrapper/DeviceWrapper";
 import { TeamWrapper } from "./components/Home/wrapper/TeamWrapper";
-
+import { FAQ } from "./pages/FAQ";
 import { Verfication } from "./pages/Verfication";
 import {
   BrowserRouter as Router,
@@ -21,6 +21,7 @@ import { SecurityAlerts } from "./components/Home/notification/components/Securi
 import { InsightSuggestion } from "./components/Home/notification/components/InsightSuggestion";
 import { PerformanceAlerts } from "./components/Home/notification/components/PerformanceAlerts";
 import { UpdateSubscription } from "./components/Home/company/components/UpdateSubscription";
+import { ResetPassword } from "./pages/ResetPassword";
 function App() {
   return (
     <Router>
@@ -31,6 +32,8 @@ function App() {
             <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/verification" element={<Verfication />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/password-reset" element={<ResetPassword />} />
           </Route>
 
           {/* Protected Routes - Accessible only when authenticated */}
