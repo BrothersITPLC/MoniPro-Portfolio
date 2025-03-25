@@ -8,7 +8,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { PaymentUpdatePayload } from "../type";
 
 interface SubscriptionConfirmationDialogProps {
   open: boolean;

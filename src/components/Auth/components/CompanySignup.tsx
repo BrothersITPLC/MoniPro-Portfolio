@@ -6,11 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { useRegisterMutation } from "../api";
+import { useOrganizationRegisterMutation } from "../api";
 
 export function CompanySignup({ isPrivate }: { isPrivate: boolean }) {
   const navigate = useNavigate();
-  const [register, { isLoading }] = useRegisterMutation();
+  const [register, { isLoading }] = useOrganizationRegisterMutation();
 
   const [formData, setFormData] = useState({
     name: "",

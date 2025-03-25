@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,21 +9,63 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { House } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";
+import { usePasswordForgotMutation } from "../api";
 
 export function ForgotPassword({}: React.ComponentProps<"div">) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // RTK Query hook for password forgot functionality
+  const [passwordForgot] = usePasswordForgotMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Add your API call here
-      toast.success("Reset link sent to your email");
+      const response = await passwordForgot({ email });
+
+      // Check if the response contains data
+      if ("data" in response) {
+        if (response.data.status === "success") {
+          toast.success(
+            response.data.message || "Reset link sent to your email"
+          );
+          navigate("/password-reset");
+        } else {
+          // Handle success response with error status (unlikely but possible)
+          toast.error(response.data.message || "Failed to send reset link");
+        }
+      } else if ("error" in response) {
+        // Handle different error status codes
+        const errorData = response.error as any;
+        const statusCode = errorData?.status;
+        const message = errorData?.data?.message || "Failed to send reset link";
+
+        switch (statusCode) {
+          case 429:
+            toast.error(
+              message || "Please wait before requesting another reset link"
+            );
+            break;
+          case 500:
+            toast.error(
+              message || "Server error occurred. Please try again later"
+            );
+            break;
+          case 502:
+            toast.error(
+              message || "Email service unavailable. Please try again later"
+            );
+            break;
+          default:
+            toast.error(message || "Failed to send reset link");
+        }
+      }
     } catch (error: any) {
       toast.error(error.message || "Failed to send reset link");
     } finally {
