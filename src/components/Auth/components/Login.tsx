@@ -43,7 +43,15 @@ export function Login({ className, onToggle, onReset, ...props }: LoginProps) {
       const response = await login(formData).unwrap();
       if (response.status === "success") {
         toast.success(response.message || "Login successful");
-        if (!response.user_data.organization_info_completed) {
+        if (
+          !response.user_data.organization_info_completed &&
+          response.user_data.is_private
+        ) {
+          navigate("/home/private-info");
+        } else if (
+          !response.user_data.organization_info_completed &&
+          !response.user_data.is_private
+        ) {
           navigate("/home/comp-info");
         } else {
           navigate("/home/dashboard");

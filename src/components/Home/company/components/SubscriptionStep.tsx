@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UseFormReturn } from "react-hook-form";
 import { PlanFeature } from "@/components/Landing/LandingSlice";
 import { useState } from "react";
-
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 interface SubscriptionStepProps {
   form: UseFormReturn<any>;
   selectedPlan: number;
@@ -22,7 +23,7 @@ export function SubscriptionStep({
   onChangePlan,
 }: SubscriptionStepProps) {
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
-
+  const { user } = useSelector((state: RootState) => state.auth);
   const handleDurationSelect = (durationId: number) => {
     setSelectedDuration(durationId);
     form.setValue("organization_payment_duration", durationId); // Update this line
@@ -50,7 +51,7 @@ export function SubscriptionStep({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {selectedPlan && (
+        {selectedPlan && !user?.is_private && (
           <div className="col-span-full mb-4">
             <Button
               variant="link"

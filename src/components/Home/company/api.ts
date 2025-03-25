@@ -17,6 +17,14 @@ export const VerficationApi = createApi({
       }),
       invalidatesTags: ["Profile", "Infrastructures"],
     }),
+    privateInfo: builder.mutation({
+      query: (data) => ({
+        url: "/private/",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Profile", "Infrastructures"],
+    }),
     getProfile: builder.query({
       query: () => ({
         url: "/profile/",
@@ -55,4 +63,5 @@ export const VerficationApi = createApi({
 export const {
   useOrganizationInfoMutation,
   useUpdateOrganizationPaymentMutation,
+  usePrivateInfoMutation,
 } = VerficationApi;

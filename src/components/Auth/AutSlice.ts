@@ -4,6 +4,7 @@ interface User {
   organization_info_completed: boolean;
   user_name: string;
   user_email: string;
+  is_private: boolean;
   organization_name: string;
   organization_payment_plane: string;
   organization_payment_duration: string;

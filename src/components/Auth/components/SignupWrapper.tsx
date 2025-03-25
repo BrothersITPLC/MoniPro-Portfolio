@@ -87,7 +87,7 @@ export function SignupWrapper(onToggle: SignupProps) {
               </span>
             </div>
             {isPrivate ? (
-              <PrivateSignup isPrivate={isPrivate} />
+              <PrivateSignup />
             ) : (
               <CompanySignup isPrivate={isPrivate} />
             )}

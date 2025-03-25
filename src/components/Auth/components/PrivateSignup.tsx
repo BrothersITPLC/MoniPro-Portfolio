@@ -6,20 +6,20 @@ import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { useRegisterMutation } from "../api";
+import { usePrivateRegisterMutation } from "../api";
 
-export function PrivateSignup({ isPrivate }: { isPrivate: boolean }) {
+export function PrivateSignup() {
   const navigate = useNavigate();
-  const [register, { isLoading }] = useRegisterMutation();
+  const [register, { isLoading }] = usePrivateRegisterMutation();
 
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
+    first_name: "",
+    last_name: "",
+    phone: "",
     email: "",
     password: "",
     password2: "",
-    is_private: isPrivate,
+    organization_website: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,12 +37,13 @@ export function PrivateSignup({ isPrivate }: { isPrivate: boolean }) {
 
     try {
       const response = await register({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phoneNumber: formData.phoneNumber,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        phone: formData.phone,
         email: formData.email,
         password: formData.password,
         password2: formData.password2,
+        organization_website: formData.organization_website,
       }).unwrap();
 
       if (response.status === "success") {
@@ -73,56 +74,74 @@ export function PrivateSignup({ isPrivate }: { isPrivate: boolean }) {
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-3">
             <Label
-              htmlFor="firstName"
+              htmlFor="first_name"
               className="text-gray-900 dark:text-gray-300"
             >
               First Name
             </Label>
             <Input
-              id="firstName"
+              id="first_name"
               type="text"
               placeholder="Abebe"
               required
-              value={formData.firstName}
+              value={formData.first_name}
               onChange={handleChange}
               className="border-red-600 dark:border-gray-700 focus:ring-red-500 focus:border-red-500"
             />
           </div>
           <div className="grid gap-3">
             <Label
-              htmlFor="lastName"
+              htmlFor="last_name"
               className="text-gray-900 dark:text-gray-300"
             >
               Last Name
             </Label>
             <Input
-              id="lastName"
+              id="last_name"
               type="text"
               placeholder="Chala"
               required
-              value={formData.lastName}
+              value={formData.last_name}
               onChange={handleChange}
               className="border-red-600 dark:border-gray-700 focus:ring-red-500 focus:border-red-500"
             />
           </div>
         </div>
-        <div className="grid gap-3">
-          <Label
-            htmlFor="phoneNumber"
-            className="text-gray-900 dark:text-gray-300"
-          >
-            Phone Number
-          </Label>
-          <Input
-            id="phoneNumber"
-            type="tel"
-            placeholder="+1234567890"
-            required
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            className="border-red-600 dark:border-gray-700 focus:ring-red-500 focus:border-red-500"
-          />
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-3">
+            <Label htmlFor="phone" className="text-gray-900 dark:text-gray-300">
+              Phone Number
+            </Label>
+            <Input
+              id="phone"
+              type="tel"
+              placeholder="+1234567890"
+              required
+              value={formData.phone}
+              onChange={handleChange}
+              className="border-red-600 dark:border-gray-700 focus:ring-red-500 focus:border-red-500"
+            />
+          </div>{" "}
+          <div className="grid gap-3">
+            <Label
+              htmlFor="organization_website"
+              className="text-gray-900 dark:text-gray-300"
+            >
+              Personal Website
+            </Label>
+            <Input
+              id="organization_website"
+              type="tel"
+              placeholder="www.example.com"
+              required
+              value={formData.organization_website}
+              onChange={handleChange}
+              className="border-red-600 dark:border-gray-700 focus:ring-red-500 focus:border-red-500"
+            />
+          </div>
         </div>
+
         <div className="grid gap-3">
           <Label htmlFor="email">Email</Label>
           <Input

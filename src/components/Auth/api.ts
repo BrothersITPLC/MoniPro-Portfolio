@@ -8,9 +8,17 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BaseUrl, credentials: "include" }),
   tagTypes: ["Profile", "Infrastructures"],
   endpoints: (builder) => ({
-    register: builder.mutation({
+    organizationRegister: builder.mutation({
       query: (user) => ({
-        url: "/register/",
+        url: "/organization-register/",
+        method: "POST",
+        body: user,
+      }),
+      invalidatesTags: ["Profile", "Infrastructures"],
+    }),
+    privateRegister: builder.mutation({
+      query: (user) => ({
+        url: "/private-register/",
         method: "POST",
         body: user,
       }),
@@ -62,13 +70,30 @@ export const authApi = createApi({
       }),
       invalidatesTags: ["Profile"],
     }),
+    PasswordForgot: builder.mutation({
+      query: (email) => ({
+        url: "/password-forgot/",
+        method: "POST",
+        body: email,
+      }),
+    }),
+    PasswordResete: builder.mutation({
+      query: (user_data) => ({
+        url: "/password-reset/",
+        method: "POST",
+        body: user_data,
+      }),
+    }),
   }),
 });
 
 export const {
-  useRegisterMutation,
+  useOrganizationRegisterMutation,
+  usePrivateRegisterMutation,
   useLoginMutation,
   useLogoutMutation,
   useOtpVerficationMutation,
   useGetProfileQuery,
+  usePasswordForgotMutation,
+  usePasswordReseteMutation,
 } = authApi;

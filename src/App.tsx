@@ -13,6 +13,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
+import { PrivateInfo } from "@/components/Home/company/components/PrivateInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
 
@@ -40,7 +41,11 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />}>
               <Route path="dashboard" element={<LandingWrapper />} />
-              <Route path="subscription" element={<UpdateSubscription />} />
+              <Route
+                path="subscription"
+                element={<UpdateSubscription />}
+              />{" "}
+              <Route path="private-info" element={<PrivateInfo />} />
               <Route path="comp-info" element={<CompanyInfo />} />
               <Route path="device-mangment" element={<DeviceWrapper />} />
               <Route path="notification" element={<NotificationWrapper />}>
