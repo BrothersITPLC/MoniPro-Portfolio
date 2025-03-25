@@ -121,7 +121,7 @@ export function Navbar() {
               to="/auth"
               className={`border ${buttonVariants({ variant: "secondary" })}`}
             >
-              Get Started
+              Login{" "}
             </Link>
 
             <ModeToggle />
