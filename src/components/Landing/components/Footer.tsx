@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator";
-import { Github, Twitter, Dribbble, Youtube, Twitch } from "lucide-react";
+import { Github, Twitter, Linkedin, Youtube, Twitch } from "lucide-react";
 
 export const Footer = () => {
   return (
@@ -21,22 +21,22 @@ export const Footer = () => {
             </h3>
             <div className="flex flex-col space-y-2">
               <a
-                href="#"
+                href="https://github.com/BrothersITPLC"
                 className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
               >
                 <Github className="h-4 w-4 mr-2" /> Github
               </a>
               <a
-                href="#"
+                href=""
                 className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
               >
                 <Twitter className="h-4 w-4 mr-2" /> Twitter
               </a>
               <a
-                href="#"
+                href="https://www.linkedin.com/company/brothers-it-plc"
                 className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
               >
-                <Dribbble className="h-4 w-4 mr-2" /> Dribbble
+                <Linkedin className="h-4 w-4 mr-2" /> Linkedin
               </a>
             </div>
           </div>
