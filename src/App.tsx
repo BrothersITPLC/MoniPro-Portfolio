@@ -15,6 +15,7 @@ import {
 import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
 import { PrivateInfo } from "@/components/Home/company/components/PrivateInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
+import { ZabbixHosts } from "./components/Home/devices/components/zabbixhosts";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
 
 import { NotificationWrapper } from "./components/Home/wrapper/NotificationWrapper";
@@ -35,6 +36,7 @@ function App() {
             <Route path="/verification" element={<Verfication />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/password-reset" element={<ResetPassword />} />
+            <Route path="/zabbixhost" element={<ZabbixHosts />} />
           </Route>
 
           {/* Protected Routes - Accessible only when authenticated */}

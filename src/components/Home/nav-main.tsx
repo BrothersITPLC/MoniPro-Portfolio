@@ -33,7 +33,7 @@ export function NavMain({
   }[];
 }) {
   return (
-    <SidebarGroup className="bg-[#1e1b4b] min-h-screen w-64 p-4">
+    <SidebarGroup >
       <SidebarGroupLabel className="text-[#4fd1c5] text-sm font-medium mb-4">Platform</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
@@ -46,9 +46,9 @@ export function NavMain({
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
+                  {item.icon && <item.icon className="font-bold"/>}
 
-                  <span>{item.title}</span>
+                  <span className="font-bold">{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>

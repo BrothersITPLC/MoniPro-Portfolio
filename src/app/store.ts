@@ -7,11 +7,12 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import globalReducer from "./global";
 import { authApi } from "@/components/Auth/api";
+import { zabbixApi } from "@/components/Auth/zabbix";
 import { VerficationApi } from "@/components/Home/company/api";
 import { teamApi } from "@/components/Home/team/api";
 import teamSlice from "@/components/Home/team/teamSlice";
 import { deviceApi } from "@/components/Home/devices/api";
-
+import deviceSlice  from "@/components/Home/devices/deviceSlice";
 const persistConfig = {
   key: "root",
   storage,
@@ -22,7 +23,9 @@ const rootReducer = combineReducers({
   global: globalReducer,
   landing: LandingSlice,
   team: teamSlice,
+  device:deviceSlice ,
   [authApi.reducerPath]: authApi.reducer,
+  [zabbixApi.reducerPath]: zabbixApi.reducer,
   [VerficationApi.reducerPath]: VerficationApi.reducer,
   [landingApi.reducerPath]: landingApi.reducer,
   [teamApi.reducerPath]: teamApi.reducer,
@@ -37,6 +40,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat([
       authApi.middleware,
+      zabbixApi.middleware,
       VerficationApi.middleware,
       landingApi.middleware,
       teamApi.middleware,

@@ -26,8 +26,49 @@ import {
   useUpdateNetworkMutation,
   useDeleteNetworkMutation,
 } from "../api";
+import { useDispatch } from 'react-redux';
+import { setVMs, setNetworks } from '../deviceSlice';
 
 function Device() {
+  const dispatch = useDispatch();
+
+  // RTK Query hooks with skip option
+  const {
+    data: vmsData,
+    isLoading: isLoadingVMs,
+    error: vmsError,
+    refetch: refetchVMs
+  } = useGetVmsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 30000 // Refetch every 30 seconds
+  });
+
+  const {
+    data: networksData,
+    isLoading: isLoadingNetworks,
+    error: networksError,
+    refetch: refetchNetworks
+  } = useGetNetworksQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 30000
+  });
+
+  // Update state when data changes
+  useEffect(() => {
+    if (vmsData?.data) {
+      dispatch(setVMs(vmsData.data));
+    }
+    if (networksData?.data) {
+      dispatch(setNetworks(networksData.data));
+    }
+  }, [vmsData, networksData, dispatch]);
+
+  // Manual refetch on mount
+  useEffect(() => {
+    refetchVMs();
+    refetchNetworks();
+  }, []);
+
   // State for dialogs
   const [isVMFormOpen, setIsVMFormOpen] = useState(false);
   const [isNetworkFormOpen, setIsNetworkFormOpen] = useState(false);
@@ -41,16 +82,7 @@ function Device() {
     useState<Network | null>(null);
 
   // RTK Query hooks
-  const {
-    data: vmsData,
-    isLoading: isLoadingVMs,
-    error: vmsError,
-  } = useGetVmsQuery({});
-  const {
-    data: networksData,
-    isLoading: isLoadingNetworks,
-    error: networksError,
-  } = useGetNetworksQuery({});
+
 
   const [createVm, { isLoading: isCreatingVM }] = useCreateVmMutation();
   const [updateVm, { isLoading: isUpdatingVM }] = useUpdateVmMutation();

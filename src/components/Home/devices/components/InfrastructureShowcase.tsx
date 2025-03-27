@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Server, Network as NetworkIcon } from "lucide-react";
 
+
 interface InfrastructureShowcaseProps {
   vms: VM[];
   networks: Network[];

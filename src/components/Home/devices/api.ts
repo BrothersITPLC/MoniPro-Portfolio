@@ -5,6 +5,7 @@ export const deviceApi = createApi({
   reducerPath: "deviceApi",
   baseQuery: fetchBaseQuery({ baseUrl: BaseUrl, credentials: "include" }),
   tagTypes: ["VMs", "Networks", "Profile", "Infrastructures"],
+  refetchOnMountOrArgChange: 3,
   endpoints: (builder) => ({
     getVms: builder.query({
       query: () => "/vms/",
