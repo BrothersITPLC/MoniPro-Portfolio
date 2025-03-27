@@ -8,8 +8,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,41 +25,37 @@ interface LoginProps extends React.ComponentProps<"div"> {
 export function Login({ className, onToggle, onReset, ...props }: LoginProps) {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
+  const user = useSelector((state: any) => state.auth.user);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  useEffect(() => {
+    if (user) {
+      if (!user.organization_info_completed && user.is_private) {
+        navigate("/home/private-info");
+      } else if (!user.organization_info_completed && !user.is_private) {
+        navigate("/home/comp-info");
+      } else {
+        navigate("/home/dashboard");
+      }
+    }
+  }, [user, navigate]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
-  // Inside handleSubmit function
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await login(formData).unwrap();
-      if (response.status === "success") {
-        toast.success(response.message || "Login successful");
-        if (
-          !response.user_data.organization_info_completed &&
-          response.user_data.is_private
-        ) {
-          navigate("/home/private-info");
-        } else if (
-          !response.user_data.organization_info_completed &&
-          !response.user_data.is_private
-        ) {
-          navigate("/home/comp-info");
-        } else {
-          navigate("/home/dashboard");
-        }
-      } else {
-        toast.error(response.message || "Login failed");
-      }
+      await login(formData).unwrap();
+      toast.success("Login successful");
+      // Navigation will be handled by the useEffect hook
     } catch (error: any) {
       toast.error(error.data?.message || "Failed to login. Please try again.");
     }

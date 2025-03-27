@@ -49,11 +49,28 @@ export function OtpVerfication({
         navigate("/login");
       } else {
         toast.error(response.message || "Verification failed");
+        navigate("/verification");
       }
     } catch (error: any) {
-      toast.error(
-        error.data?.message || "Failed to verify OTP. Please try again."
-      );
+      let errorMessage = "Failed to verify OTP. Please try again.";
+
+      if (error.data) {
+        if (
+          error.data.non_field_errors &&
+          Array.isArray(error.data.non_field_errors)
+        ) {
+          errorMessage = error.data.non_field_errors[0];
+        } else if (typeof error.data.message === "string") {
+          errorMessage = error.data.message;
+        } else if (typeof error.data === "object") {
+          const firstErrorField = Object.keys(error.data)[0];
+          if (firstErrorField && Array.isArray(error.data[firstErrorField])) {
+            errorMessage = error.data[firstErrorField][0];
+          }
+        }
+      }
+
+      toast.error(errorMessage);
     }
   };
 
