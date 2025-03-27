@@ -15,6 +15,7 @@ import { useOrganizationInfoMutation } from "../api";
 import { Pricing } from "@/components/Landing/components/Pricing";
 import { Toaster } from "@/components/ui/sonner";
 
+// First, update the form schema to include duration_id
 const formSchema = z.object({
   organization_name: z.string().min(1, "Organization Name is required"),
   organization_phone: z
@@ -28,7 +29,8 @@ const formSchema = z.object({
     .min(1, "Company Description is required"),
   payment_provider: z.number().optional(),
   organization_payment_plane: z.number().optional(),
-  organization_payment_duration: z.number().optional(), // Add this field
+  organization_payment_duration: z.number().optional(),
+  duration_id: z.number().optional(), // Add this field
   user_id: z.number().optional(),
 });
 
@@ -42,7 +44,7 @@ const steps = [
 import { useGetPlansQuery } from "@/components/Landing/api";
 
 export function CompanyInfo() {
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const { user } = useSelector((state: RootState) => state.auth);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
   const selectedPlan = useSelector(
     (state: RootState) => state.landing.SelectedPlane
@@ -64,12 +66,12 @@ export function CompanyInfo() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      organization_name: userData.user_name || "",
-      organization_phone: userData.organization_phone || "",
-      organization_website: userData.organization_website || "",
-      organization_description: userData.organization_description || "",
+      organization_name: user?.user_name || "",
+      organization_phone: user?.organization_phone || "",
+      organization_website: user?.organization_website || "",
+      organization_description: user?.organization_description || "",
       payment_provider: 1,
-      user_id: userData.user_id,
+      user_id: user?.user_id,
       organization_payment_plane: selectedPlan,
     },
   });
@@ -80,6 +82,7 @@ export function CompanyInfo() {
     form.setValue("payment_provider", selectedPaymentMethod);
   }, [selectedPlan, selectedPaymentMethod, form]);
 
+  // Then in the onSubmit function, update the finalSubmission object
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (currentStep === 3) {
@@ -92,8 +95,8 @@ export function CompanyInfo() {
           ...values,
           payment_provider: selectedPaymentMethod,
           organization_payment_plane: selectedPlan,
-          organization_payment_duration: form.getValues("duration_id"),
-          user_id: userData.user_id,
+          organization_payment_duration: values.duration_id,
+          user_id: user?.user_id,
         };
 
         console.log("Final Submission:", finalSubmission);

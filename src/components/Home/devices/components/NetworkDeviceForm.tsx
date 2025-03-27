@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 import {
   Select,
   SelectContent,
@@ -43,8 +45,7 @@ export function NetworkDeviceForm({
   initialData,
   isEditing = false,
 }: NetworkDeviceFormProps) {
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-
+  const { user } = useSelector((state: RootState) => state.auth);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,7 +55,7 @@ export function NetworkDeviceForm({
       ipAddress: initialData?.ipAddress || "",
       subnetMask: initialData?.subnetMask || "",
       gateway: initialData?.gateway || "",
-      belong_to: initialData?.belong_to || userData?.user_id,
+      belong_to: initialData?.belong_to || user?.user_id,
     },
   });
 

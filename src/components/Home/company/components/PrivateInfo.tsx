@@ -6,17 +6,19 @@ import { useState, useEffect } from "react";
 import { SubscriptionStep } from "./SubscriptionStep";
 import { PaymentStep } from "./PaymentStep";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
 import { usePrivateInfoMutation } from "../api";
 import { Toaster } from "@/components/ui/sonner";
 import { useGetPlansQuery } from "@/components/Landing/api";
+import { setSelectedPlane } from "@/components/Landing/LandingSlice";
 
 const formSchema = z.object({
   payment_provider: z.number().optional(),
   organization_payment_plane: z.number().optional(),
   organization_payment_duration: z.number().optional(),
   user_id: z.number().optional(),
+  duration_id: z.number().optional(),
 });
 
 const steps = [
@@ -25,13 +27,21 @@ const steps = [
 ];
 
 export function PrivateInfo() {
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const dispatch = useDispatch();
+
+  const { user } = useSelector((state: RootState) => state.auth);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<number>(1);
   const selectedPlan = useSelector(
     (state: RootState) => state.landing.SelectedPlane
   );
+
+  const { data: RefechedplansData, refetch } = useGetPlansQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
+  const [showPricing, setShowPricing] = useState(false);
 
   // Move the query hook to the top level
   const {
@@ -47,7 +57,7 @@ export function PrivateInfo() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       payment_provider: 1,
-      user_id: userData.user_id,
+      user_id: user?.user_id,
       organization_payment_plane: selectedPlan,
     },
   });
@@ -58,6 +68,15 @@ export function PrivateInfo() {
     form.setValue("payment_provider", selectedPaymentMethod);
   }, [selectedPlan, selectedPaymentMethod, form]);
 
+  useEffect(() => {
+    refetch();
+    if (user?.is_private) {
+      const planId = RefechedplansData?.find(
+        (plan) => plan.name.toLowerCase() === "individual plan"
+      )?.id;
+      dispatch(setSelectedPlane(planId || 4));
+    }
+  }, [user]);
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (currentStep === 2) {
@@ -70,23 +89,16 @@ export function PrivateInfo() {
           ...values,
           payment_provider: selectedPaymentMethod,
           organization_payment_plane: selectedPlan,
-          organization_payment_duration: form.getValues("duration_id"),
-          user_id: userData.user_id,
+          organization_payment_duration: values.duration_id,
+          user_id: user?.user_id,
         };
-
-        console.log("Final Submission:", finalSubmission);
-
-        // Make the API call
-        const response = await submitPrivateInfo(finalSubmission).unwrap();
-        console.log("API Response:", response);
-
+        await submitPrivateInfo(finalSubmission).unwrap();
         toast.success("Private account information submitted successfully!");
-        navigate("/home/team");
+        navigate("/home/dashbord");
       } else {
         setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length));
       }
     } catch (error) {
-      console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");
     }
   }

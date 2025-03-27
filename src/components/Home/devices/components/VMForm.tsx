@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 import {
   Select,
   SelectContent,
@@ -40,8 +42,7 @@ export function VMForm({
   initialData,
   isEditing = false,
 }: VMFormProps) {
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-
+  const { user } = useSelector((state: RootState) => state.auth);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,14 +51,14 @@ export function VMForm({
       password: initialData?.password || "",
       ipAddress: initialData?.ipAddress || "",
       networkType: initialData?.networkType || "",
-      belong_to: initialData?.belong_to || userData?.user_id,
+      belong_to: initialData?.belong_to || user?.user_id,
     },
   });
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
     const submissionData = {
       ...data,
-      belong_to: userData?.user_id,
+      belong_to: user?.user_id || 0,
     };
     onSubmit(submissionData);
   };

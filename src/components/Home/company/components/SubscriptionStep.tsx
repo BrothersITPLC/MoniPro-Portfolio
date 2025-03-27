@@ -26,8 +26,8 @@ export function SubscriptionStep({
   const { user } = useSelector((state: RootState) => state.auth);
   const handleDurationSelect = (durationId: number) => {
     setSelectedDuration(durationId);
-    form.setValue("organization_payment_duration", durationId); // Update this line
-    form.setValue("duration_id", durationId); // Keep this for backward compatibility if needed
+    form.setValue("organization_payment_duration", durationId);
+    form.setValue("duration_id", durationId);
   };
 
   const selectedPlanData = plansData?.find((plan) => plan.id === selectedPlan);
@@ -41,7 +41,8 @@ export function SubscriptionStep({
         {selectedPlanData && (
           <div className="text-center mb-4">
             <span className="text-lg font-medium text-primary">
-              Selected Plan: {selectedPlanData.name}
+              Selected Plan:{" "}
+              <span className="text-red-600">{selectedPlanData.name}</span>
             </span>
           </div>
         )}
@@ -110,8 +111,11 @@ export function SubscriptionStep({
                     : "Quarterly Billing"}
                 </p>
                 <p className="text-sm text-muted-foreground mt-2">
-                  ${selectedPlanData?.price * (1 - duration.percentage / 100)} /
-                  month
+                  $
+                  {Math.round(
+                    selectedPlanData?.price * (1 - duration.percentage / 100)
+                  )}{" "}
+                  / month
                 </p>
               </div>
             </CardContent>

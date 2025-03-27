@@ -32,11 +32,12 @@ export function MonitoringConfirmationDialog({
             Monitoring Setup Required
           </AlertDialogTitle>
           <AlertDialogDescription className="text-gray-300">
-            <p className="mb-4">
+            {/* Remove the wrapping <p> tag and just keep the text and className */}
+            <span className="mb-4 block">
               To enable monitoring for this{" "}
               {isVM ? "virtual machine" : "network device"}, the following
               actions are required:
-            </p>
+            </span>
             <ul className="list-disc pl-5 space-y-2">
               {isVM ? (
                 <>
