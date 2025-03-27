@@ -12,6 +12,7 @@ interface User {
   organization_website: string;
   organization_description: string;
   organization_id: number;
+  user_id: number;
 }
 
 interface AuthState {

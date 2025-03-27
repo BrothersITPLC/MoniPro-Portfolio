@@ -16,7 +16,7 @@ interface PlansData {
 
 interface LandingState {
   plans: PlansData | null;
-  selectedPlanType: "monthly" | "yearly";
+  selectedPlanType: "monthly" | "quarterly" | "yearly";
   SelectedPlane: number;
 }
 

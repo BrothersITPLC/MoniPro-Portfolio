@@ -10,7 +10,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { useGetInfrastructureListQuery } from "@/components/Landing/api";
+import { InfrastructerList } from "@/components/Home/types";
 
 // This is sample data.
 const getDefaultNavData = () => ({
@@ -64,29 +64,44 @@ const getDefaultNavData = () => ({
   ],
 });
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: infrastructureList, isLoading } =
-    useGetInfrastructureListQuery();
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  deviceList?: InfrastructerList;
+}
+
+export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
   const [navData, setNavData] = React.useState(getDefaultNavData());
 
   React.useEffect(() => {
-    if (infrastructureList && infrastructureList.length > 0) {
+    if (deviceList) {
       const updatedNavData = { ...getDefaultNavData() };
+      const deviceItems = [];
 
-      // Get the first infrastructure item
-      const infrastructure = infrastructureList[0];
-
-      // Update the Devices items with VM data from the API
-      if (infrastructure.vms && infrastructure.vms.length > 0) {
-        updatedNavData.navMain[0].items = infrastructure.vms.map((vm) => ({
-          title: vm.domainName,
-          url: "/home/dashboard",
+      // Add VMs to the device items
+      if (deviceList.vms && deviceList.vms.length > 0) {
+        const vmItems = deviceList.vms.map((vm) => ({
+          title: vm.username,
+          url: `/home/vm/${vm.id}`,
+          key: `vm-${vm.id}`, // Add a unique key property
         }));
+        deviceItems.push(...vmItems);
       }
+
+      // Add Networks to the device items
+      if (deviceList.networks && deviceList.networks.length > 0) {
+        const networkItems = deviceList.networks.map((network) => ({
+          title: network.name,
+          url: `/home/network/${network.id}`,
+          key: `network-${network.id}`, // Add a unique key property
+        }));
+        deviceItems.push(...networkItems);
+      }
+
+      // Update the Devices items with combined VM and Network data
+      updatedNavData.navMain[0].items = deviceItems;
 
       setNavData(updatedNavData);
     }
-  }, [infrastructureList]);
+  }, [deviceList]);
 
   return (
     <Sidebar collapsible="icon" {...props}>

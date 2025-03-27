@@ -7,19 +7,11 @@ import { setPlans } from "@/components/Landing/LandingSlice";
 
 function Landing() {
   const dispatch = useDispatch();
-  const {
-    data: plansData,
-    isLoading,
-    error,
-    refetch,
-  } = useGetPlansQuery(undefined, {
-    // Skip using cached data
+  const { data: plansData, refetch } = useGetPlansQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-
   useEffect(() => {
     refetch();
-
     if (plansData) {
       dispatch(setPlans(plansData));
     }

@@ -17,14 +17,7 @@ export const VerficationApi = createApi({
       }),
       invalidatesTags: ["Profile", "Infrastructures"],
     }),
-    privateInfo: builder.mutation({
-      query: (data) => ({
-        url: "/private/",
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: ["Profile", "Infrastructures"],
-    }),
+
     getProfile: builder.query({
       query: () => ({
         url: "/profile/",
@@ -36,6 +29,31 @@ export const VerficationApi = createApi({
       query: ({ id, data }) => ({
         url: `organization/${id}/update-payment/`,
         method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Profile", "Infrastructures"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
+    }),
+    privateInfo: builder.mutation({
+      query: (data) => ({
+        url: "/private/",
+        method: "PUT",
         body: data,
       }),
       invalidatesTags: ["Profile", "Infrastructures"],

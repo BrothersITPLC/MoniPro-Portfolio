@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authSlice from "@/components/Auth/AutSlice";
 import LandingSlice from "@/components/Landing/LandingSlice";
 import { landingApi } from "@/components/Landing/api";
+import { HomeApi } from "@/components/Home/api";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import globalReducer from "./global";
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   [landingApi.reducerPath]: landingApi.reducer,
   [teamApi.reducerPath]: teamApi.reducer,
   [deviceApi.reducerPath]: deviceApi.reducer,
+  [HomeApi.reducerPath]: HomeApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -39,6 +41,7 @@ export const store = configureStore({
       landingApi.middleware,
       teamApi.middleware,
       deviceApi.middleware,
+      HomeApi.middleware,
     ]),
 });
 
