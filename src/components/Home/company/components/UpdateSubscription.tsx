@@ -110,7 +110,16 @@ export function UpdateSubscription() {
             <Button variant="outline" onClick={() => setShowPricing(false)}>
               Cancel
             </Button>
-            <Button onClick={() => setShowDuration(true)}>
+            <Button
+              onClick={() => {
+                if (selectedPlan) {
+                  setShowDuration(true);
+                  setShowPricing(false);
+                } else {
+                  toast.error("Please select a plan first");
+                }
+              }}
+            >
               Continue with Selected Plan
             </Button>
           </div>

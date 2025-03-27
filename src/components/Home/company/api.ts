@@ -15,23 +15,6 @@ export const VerficationApi = createApi({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["Profile", "Infrastructures"],
-    }),
-
-    getProfile: builder.query({
-      query: () => ({
-        url: "/profile/",
-        method: "GET",
-      }),
-      providesTags: ["Profile"],
-    }),
-    updateOrganizationPayment: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `organization/${id}/update-payment/`,
-        method: "PATCH",
-        body: data,
-      }),
-      invalidatesTags: ["Profile", "Infrastructures"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -46,7 +29,29 @@ export const VerficationApi = createApi({
             (error as any)?.data?.message ||
             "Login or profile fetch failed. Please try again.";
           toast.error(errorMessage);
-          console.error("Login or profile fetch failed:", error);
+        }
+      },
+    }),
+    updateOrganizationPayment: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `organization/${id}/update-payment/`,
+        method: "PATCH",
+        body: data,
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
         }
       },
     }),
@@ -56,7 +61,6 @@ export const VerficationApi = createApi({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: ["Profile", "Infrastructures"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;

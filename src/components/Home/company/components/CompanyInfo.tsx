@@ -99,20 +99,37 @@ export function CompanyInfo() {
           user_id: user?.user_id,
         };
 
-        console.log("Final Submission:", finalSubmission);
-
-        // Make the API call
         const response = await submitOrganizationInfo(finalSubmission).unwrap();
-        console.log("API Response:", response);
 
-        toast.success("Organization information submitted successfully!");
-        navigate("/home/team");
+        if (response.status === "success") {
+          toast.success(
+            response.message ||
+              "Organization information submitted successfully!"
+          );
+          navigate("/home/dashbord");
+        } else {
+          toast.error(
+            response.message || "Failed to submit the form. Please try again."
+          );
+        }
       } else {
         setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length));
       }
-    } catch (error) {
-      console.error("Form submission error", error);
-      toast.error("Failed to submit the form. Please try again.");
+    } catch (error: any) {
+      // Handle specific error messages from the backend
+      const errorMessage =
+        error?.data?.message || "Failed to submit the form. Please try again.";
+
+      if (error?.status === 404) {
+        // Handle 404 errors (User or Organization not found)
+        toast.error(errorMessage);
+      } else if (error?.status === 400) {
+        // Handle 400 errors (Bad Request)
+        toast.error(errorMessage);
+      } else {
+        // Handle other errors
+        toast.error(errorMessage);
+      }
     }
   }
 
