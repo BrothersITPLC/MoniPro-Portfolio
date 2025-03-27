@@ -53,9 +53,11 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
   const handlePlanSelect = (planId: number) => {
     dispatch(setSelectedPlane(planId));
   };
+
   useEffect(() => {
     refetch();
-  });
+  }, []);
+
   if (isLoading || !plansData) {
     return (
       <div className="text-center py-12 text-gray-900 dark:text-gray-300">
@@ -91,7 +93,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
             .map((plan, index) => (
               <Card
                 key={plan.id}
-                className={` bg-white dark:bg-background border-red-600 dark:border-gray-700 transition-all duration-300 hover:scale-105 
+                className={`bg-white dark:bg-background border-red-600 dark:border-gray-700 transition-all duration-300 hover:scale-105 
                 ${plan.popular ? "border-red-600 shadow-lg scale-105" : ""} 
                 ${
                   selectedPlan === plan.id && showSelectedPlan
@@ -100,26 +102,30 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                 }
                 ${!showSelectedPlan ? "hover:border-red-400" : ""}`}
               >
-                {plan.popular && (
-                  <Badge
-                    variant="default"
-                    className="absolute -top-2 left-1/2 -translate-x-1/2 bg-red-500 hover:bg-red-600"
-                  >
-                    Most Popular
-                  </Badge>
-                )}
+                <div className="relative pt-4">
+                  {plan.popular && (
+                    <div className="flex justify-center mb-2">
+                      <Badge
+                        variant="default"
+                        className="bg-red-500 hover:bg-red-600"
+                      >
+                        Most Popular
+                      </Badge>
+                    </div>
+                  )}
 
-                <CardHeader>
-                  <div className="flex justify-center mb-4">
-                    {icons[index % icons.length].icon}
-                  </div>
-                  <CardTitle className="text-gray-900 dark:text-gray-300">
-                    {plan.name}
-                  </CardTitle>
-                  <CardDescription className="text-gray-900 dark:text-gray-300">
-                    {plan.description}
-                  </CardDescription>
-                </CardHeader>
+                  <CardHeader>
+                    <div className="flex justify-center mb-4">
+                      {icons[index % icons.length].icon}
+                    </div>
+                    <CardTitle className="text-gray-900 dark:text-gray-300">
+                      {plan.name}
+                    </CardTitle>
+                    <CardDescription className="text-gray-900 dark:text-gray-300">
+                      {plan.description}
+                    </CardDescription>
+                  </CardHeader>
+                </div>
 
                 <CardContent>
                   <div className="text-center mb-6">

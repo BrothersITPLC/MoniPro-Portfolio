@@ -21,7 +21,7 @@ interface LoginProps extends React.ComponentProps<"div"> {
   onToggle: () => void;
   onReset: () => void;
 }
-export function Login({ className, onToggle, onReset, ...props }: LoginProps) {
+export function Login({ onToggle, onReset }: LoginProps) {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
   const user = useSelector((state: any) => state.auth.user);

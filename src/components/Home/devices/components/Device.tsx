@@ -26,8 +26,43 @@ import {
   useUpdateNetworkMutation,
   useDeleteNetworkMutation,
 } from "../api";
-
+import { useDispatch } from "react-redux";
+import { setVMs, setNetworks } from "../deviceSlice";
 function Device() {
+  const dispatch = useDispatch();
+  // RTK Query hooks with skip option
+  const {
+    data: vmsData,
+    isLoading: isLoadingVMs,
+    error: vmsError,
+    refetch: refetchVMs,
+  } = useGetVmsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 30000, // Refetch every 30 seconds
+  });
+  const {
+    data: networksData,
+    isLoading: isLoadingNetworks,
+    error: networksError,
+    refetch: refetchNetworks,
+  } = useGetNetworksQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    pollingInterval: 30000,
+  });
+  // Update state when data changes
+  useEffect(() => {
+    if (vmsData?.data) {
+      dispatch(setVMs(vmsData.data));
+    }
+    if (networksData?.data) {
+      dispatch(setNetworks(networksData.data));
+    }
+  }, [vmsData, networksData, dispatch]);
+  // Manual refetch on mount
+  useEffect(() => {
+    refetchVMs();
+    refetchNetworks();
+  }, []);
   // State for dialogs
   const [isVMFormOpen, setIsVMFormOpen] = useState(false);
   const [isNetworkFormOpen, setIsNetworkFormOpen] = useState(false);
@@ -39,34 +74,19 @@ function Device() {
   const [editingVM, setEditingVM] = useState<VM | null>(null);
   const [editingNetworkDevice, setEditingNetworkDevice] =
     useState<Network | null>(null);
-
   // RTK Query hooks
-  const {
-    data: vmsData,
-    isLoading: isLoadingVMs,
-    error: vmsError,
-  } = useGetVmsQuery({});
-  const {
-    data: networksData,
-    isLoading: isLoadingNetworks,
-    error: networksError,
-  } = useGetNetworksQuery({});
-
   const [createVm, { isLoading: isCreatingVM }] = useCreateVmMutation();
   const [updateVm, { isLoading: isUpdatingVM }] = useUpdateVmMutation();
   const [deleteVm, { isLoading: isDeletingVM }] = useDeleteVmMutation();
-
   const [createNetwork, { isLoading: isCreatingNetwork }] =
     useCreateNetworkMutation();
   const [updateNetwork, { isLoading: isUpdatingNetwork }] =
     useUpdateNetworkMutation();
   const [deleteNetwork, { isLoading: isDeletingNetwork }] =
     useDeleteNetworkMutation();
-
   // Extract data from query results
   const vms: VM[] = vmsData?.data || [];
   const networks: Network[] = networksData?.data || [];
-
   // Show errors if any
   useEffect(() => {
     if (vmsError) {
@@ -76,7 +96,6 @@ function Device() {
       toast.error("Failed to load network devices");
     }
   }, [vmsError, networksError]);
-
   // Handle VM form submission
   const handleVMSubmit = (data: VMFormData) => {
     setPendingData(data);
@@ -84,7 +103,6 @@ function Device() {
     setIsConfirmationOpen(true);
     setIsVMFormOpen(false);
   };
-
   // Handle Network Device form submission
   const handleNetworkSubmit = (data: NetworkFormData) => {
     setPendingData(data);
@@ -92,7 +110,6 @@ function Device() {
     setIsConfirmationOpen(true);
     setIsNetworkFormOpen(false);
   };
-
   // Handle confirmation dialog confirmation
   const handleConfirmation = async () => {
     try {
@@ -139,13 +156,11 @@ function Device() {
       setPendingData(null);
     }
   };
-
   // Handle VM edit
   const handleEditVM = (vm: VM) => {
     setEditingVM(vm);
     setIsVMFormOpen(true);
   };
-
   // Handle VM delete
   const handleDeleteVM = async (id: string) => {
     try {
@@ -155,13 +170,11 @@ function Device() {
       toast.error("Failed to delete virtual machine");
     }
   };
-
   // Handle Network Device edit
   const handleEditNetworkDevice = (device: Network) => {
     setEditingNetworkDevice(device);
     setIsNetworkFormOpen(true);
   };
-
   // Handle Network Device delete
   const handleDeleteNetworkDevice = async (id: string) => {
     try {
@@ -171,11 +184,9 @@ function Device() {
       toast.error("Failed to delete network device");
     }
   };
-
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-4xl font-bold mb-8">Infrastructure Management</h1>
-
       <Tabs defaultValue="vm" className="mt-8">
         <div className="flex justify-between items-center mb-4">
           <TabsList>
@@ -205,7 +216,6 @@ function Device() {
             </Button>
           </div>
         </div>
-
         <TabsContent value="vm" className="mt-6">
           {isLoadingVMs ? (
             <div className="text-center py-8">Loading virtual machines...</div>
@@ -213,7 +223,6 @@ function Device() {
             <VMList vms={vms} onEdit={handleEditVM} onDelete={handleDeleteVM} />
           )}
         </TabsContent>
-
         <TabsContent value="network" className="mt-6">
           {isLoadingNetworks ? (
             <div className="text-center py-8">Loading network devices...</div>
@@ -226,7 +235,6 @@ function Device() {
           )}
         </TabsContent>
       </Tabs>
-
       {/* VM Form Dialog */}
       <Dialog open={isVMFormOpen} onOpenChange={setIsVMFormOpen}>
         <DialogContent className="sm:max-w-[600px]">
@@ -247,7 +255,6 @@ function Device() {
           />
         </DialogContent>
       </Dialog>
-
       {/* Network Device Form Dialog */}
       <Dialog open={isNetworkFormOpen} onOpenChange={setIsNetworkFormOpen}>
         <DialogContent className="sm:max-w-[600px]">
@@ -270,7 +277,6 @@ function Device() {
           />
         </DialogContent>
       </Dialog>
-
       {/* Monitoring Confirmation Dialog */}
       <MonitoringConfirmationDialog
         open={isConfirmationOpen}
@@ -281,5 +287,4 @@ function Device() {
     </div>
   );
 }
-
 export default Device;
