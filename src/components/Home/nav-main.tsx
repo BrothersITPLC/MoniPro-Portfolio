@@ -27,6 +27,7 @@ export function NavMain({
     items?: {
       title: string;
       url: string;
+      key?: string; // Add optional key property
     }[];
   }[];
 }) {
@@ -39,12 +40,13 @@ export function NavMain({
             key={item.title}
             asChild
             defaultOpen={item.isActive}
-            className="group/collapsible"
+            className="group/collapsible font-semibold"
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
+
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
@@ -52,7 +54,9 @@ export function NavMain({
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
+                    <SidebarMenuSubItem
+                      key={subItem.key || `${subItem.title}-${subItem.url}`}
+                    >
                       <SidebarMenuSubButton asChild>
                         <Link to={subItem.url}>
                           <span>{subItem.title}</span>

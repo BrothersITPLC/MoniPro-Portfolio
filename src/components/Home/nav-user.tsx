@@ -28,10 +28,12 @@ import {
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "@/components/Auth/api";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
+import { logoutState } from "@/components/Auth/AutSlice";
 
 export function NavUser() {
+  const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
 
   const { isMobile } = useSidebar();
@@ -41,11 +43,11 @@ export function NavUser() {
   const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     try {
-      const response = await logout().unwrap(); // Add empty object as argument
+      const response = await logout().unwrap();
 
       if (response.status === "success") {
         toast.success(response.message || "Logout successful");
-        localStorage.setItem("isAuthenticated", "false");
+        dispatch(logoutState());
         navigate("/");
       } else {
         toast.error(response.message || "Logout failed");
