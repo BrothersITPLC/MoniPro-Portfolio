@@ -8,7 +8,7 @@ export const zabbixApi = createApi({
   endpoints: (builder) => ({
     zabbixLogin: builder.mutation({
       query: () => ({
-        url: "https://4.233.79.31:8080/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
@@ -31,7 +31,7 @@ export const zabbixApi = createApi({
 
     zabbixGetItems: builder.query({
       query: ({ authToken, hostids }) => ({
-        url: "https://4.233.79.31:8080/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
@@ -59,7 +59,7 @@ export const zabbixApi = createApi({
 
     zabbixGetRealTimeData: builder.query({
       query: ({ authToken, itemids }) => ({
-        url: "https://4.233.79.31:8080/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
@@ -86,7 +86,7 @@ export const zabbixApi = createApi({
     }),
     zabbixGetHosts: builder.query({
       query: (authToken: string) => ({
-        url: "https://4.233.79.31:8080/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
@@ -111,7 +111,7 @@ export const zabbixApi = createApi({
 
     zabbixGetGraphImage: builder.query({
       query: ({ authToken, itemid, timeFrom, timeTill }) => ({
-        url: "https://4.233.79.31:8080/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
