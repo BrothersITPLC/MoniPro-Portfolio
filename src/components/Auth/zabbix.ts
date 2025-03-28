@@ -6,10 +6,9 @@ export const zabbixApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: BaseUrl, credentials: "include" }),
   tagTypes: ["Profile", "Infrastructures"],
   endpoints: (builder) => ({
-
     zabbixLogin: builder.mutation({
       query: () => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://4.233.79.31:8080/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
@@ -20,9 +19,9 @@ export const zabbixApi = createApi({
           method: "user.login",
           params: {
             username: "Admin",
-            password: "zabbix"
+            password: "zabbix",
           },
-          id: 1
+          id: 1,
         },
       }),
       transformResponse: (response: { result: string }) => {
@@ -32,11 +31,11 @@ export const zabbixApi = createApi({
 
     zabbixGetItems: builder.query({
       query: ({ authToken, hostids }) => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://4.233.79.31:8080/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
-          "Authorization": `Bearer ${authToken}`
+          Authorization: `Bearer ${authToken}`,
         },
         credentials: "omit",
         body: {
@@ -46,11 +45,11 @@ export const zabbixApi = createApi({
             output: ["itemid", "name", "key_"],
             hostids: hostids,
             search: {
-              name: "CPU"  // Example search for CPU items
+              name: "CPU", // Example search for CPU items
             },
-            sortfield: "name"
+            sortfield: "name",
           },
-          id: 2
+          id: 2,
         },
       }),
       transformResponse: (response: { result: any[] }) => {
@@ -60,11 +59,11 @@ export const zabbixApi = createApi({
 
     zabbixGetRealTimeData: builder.query({
       query: ({ authToken, itemids }) => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://4.233.79.31:8080/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
-          "Authorization": `Bearer ${authToken}`
+          Authorization: `Bearer ${authToken}`,
         },
         credentials: "omit",
         body: {
@@ -72,13 +71,13 @@ export const zabbixApi = createApi({
           method: "history.get",
           params: {
             output: "extend",
-            history: 0,  // Assuming we're fetching numeric data
+            history: 0, // Assuming we're fetching numeric data
             itemids: itemids,
-            limit: 100,  // Fetch the last 100 data points for historical data
+            limit: 100, // Fetch the last 100 data points for historical data
             sortfield: "clock",
-            sortorder: "DESC"
+            sortorder: "DESC",
           },
-          id: 3
+          id: 3,
         },
       }),
       transformResponse: (response: { result: any[] }) => {
@@ -87,11 +86,11 @@ export const zabbixApi = createApi({
     }),
     zabbixGetHosts: builder.query({
       query: (authToken: string) => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://4.233.79.31:8080/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
-          "Authorization": `Bearer ${authToken}`
+          Authorization: `Bearer ${authToken}`,
         },
         credentials: "omit",
         body: {
@@ -100,9 +99,9 @@ export const zabbixApi = createApi({
           params: {
             output: ["hostid", "name", "status", "available"],
             selectInterfaces: ["ip", "dns", "useip", "type"],
-            selectGroups: "extend"
+            selectGroups: "extend",
           },
-          id: 2
+          id: 2,
         },
       }),
       transformResponse: (response: { result: any[] }) => {
@@ -112,11 +111,11 @@ export const zabbixApi = createApi({
 
     zabbixGetGraphImage: builder.query({
       query: ({ authToken, itemid, timeFrom, timeTill }) => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://4.233.79.31:8080/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
-          "Authorization": `Bearer ${authToken}`
+          Authorization: `Bearer ${authToken}`,
         },
         credentials: "omit",
         body: {
@@ -129,10 +128,10 @@ export const zabbixApi = createApi({
             time_from: timeFrom,
             time_till: timeTill,
             sortfield: "clock",
-            sortorder: "ASC"
+            sortorder: "ASC",
           },
           auth: authToken,
-          id: 5
+          id: 5,
         },
       }),
       transformResponse: (response: { result: any[] }) => {
@@ -145,7 +144,5 @@ export const zabbixApi = createApi({
   }),
 });
 
-export const {
-  useZabbixGetHostsQuery,
-  useZabbixGetGraphImageQuery,
-} = zabbixApi;
+export const { useZabbixGetHostsQuery, useZabbixGetGraphImageQuery } =
+  zabbixApi;
