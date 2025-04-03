@@ -1,4 +1,4 @@
-import { Shield, Zap, Database, Check } from "lucide-react";
+import { Shield, Zap, Database, Check, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedPlane } from "@/components/Landing/LandingSlice";
@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button";
 import { RootState } from "@/app/store";
 import { useEffect } from "react";
 
+
+
 const icons = [
   {
     icon: <Shield className="w-12 h-12 text-red-500" />,
@@ -26,6 +28,10 @@ const icons = [
   },
   {
     icon: <Database className="w-12 h-12 text-red-500" />,
+    color: "red",
+  },
+  {
+    icon: <Crown className="w-12 h-12 text-red-500" />,
     color: "red",
   },
 ];
@@ -43,6 +49,9 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
   } = useGetPlansQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
+
+  console.log("pricing plan table", plansData);
+
   const selectedPlan = useSelector(
     (state: RootState) => state.landing.SelectedPlane
   );
@@ -66,6 +75,8 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
     );
   }
 
+  const sortedPlansData = plansData.slice().sort((a, b) => a.price - b.price);
+
   return (
     <div
       id="pricing"
@@ -82,7 +93,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {plansData
+          {sortedPlansData
             .filter(
               (plan) =>
                 !(
@@ -93,27 +104,16 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
             .map((plan, index) => (
               <Card
                 key={plan.id}
-                className={`bg-white dark:bg-background border-red-600 dark:border-gray-700 transition-all duration-300 hover:scale-105 
-                ${plan.popular ? "border-red-600 shadow-lg scale-105" : ""} 
+                className={`bg-white dark:bg-background border-red-600 dark:border-gray-700 transition-all duration-300 hover:scale-105  
                 ${
                   selectedPlan === plan.id && showSelectedPlan
                     ? "ring-2 ring-red-500"
                     : ""
                 }
                 ${!showSelectedPlan ? "hover:border-red-400" : ""}`}
+                style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
               >
                 <div className="relative pt-4">
-                  {plan.popular && (
-                    <div className="flex justify-center mb-2">
-                      <Badge
-                        variant="default"
-                        className="bg-red-500 hover:bg-red-600"
-                      >
-                        Most Popular
-                      </Badge>
-                    </div>
-                  )}
-
                   <CardHeader>
                     <div className="flex justify-center mb-4">
                       {icons[index % icons.length].icon}

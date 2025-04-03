@@ -1,6 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { CreditCard, Wallet, ArrowLeft, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import Telebit from "@/components/ui/images/telebirr.jpg"
+import chapa from "@/components/ui/images/chapa.jpg"
 
 interface PaymentStepProps {
   selectedPaymentMethod: number;
@@ -31,44 +35,86 @@ export function PaymentStep({
 
   return (
     <div className="max-w-3xl mx-auto py-10">
-      <h2 className="text-2xl font-bold mb-6 text-center">
-        Choose Payment Method
-      </h2>
+      <div className="text-center mb-10">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <button
-          type="button"
-          onClick={() => setSelectedPaymentMethod(1)}
-          className={`p-6 border rounded-lg transition-all ${
-            selectedPaymentMethod === 1
-              ? "border-red-500"
-              : "hover:border-red-500"
-          }`}
-        >
-          <h3 className="text-xl font-semibold">TelleBirr</h3>
-          <p className="text-gray-500">Pay using TelleBirr mobile money</p>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setSelectedPaymentMethod(2)}
-          className={`p-6 border rounded-lg transition-all ${
-            selectedPaymentMethod === 2
-              ? "border-red-500"
-              : "hover:border-red-500"
-          }`}
-        >
-          <h3 className="text-xl font-semibold">Chapa</h3>
-          <p className="text-gray-500">Pay using Chapa payment gateway</p>
-        </button>
+        <h2 className="text-3xl font-bold my-12">Choose Payment Method</h2>
       </div>
 
-      <div className="flex justify-between mt-8">
-        <Button variant="outline" onClick={onPrevious}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <Card
+          className={`relative group cursor-pointer transition-all duration-300 hover:scale-105 ${
+            selectedPaymentMethod === 1
+              ? "ring-2 ring-red-500 bg-red-50"
+              : "hover:border-red-500"
+          }`}
+          onClick={() => setSelectedPaymentMethod(1)}
+        >
+          <div className="p-8">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 overflow-hidden rounded-lg">
+                <img 
+                  src={Telebit} 
+                  alt="TelleBirr" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className="text-xl font-semibold">TelleBirr</h3>
+            </div>
+            <p className="text-muted-foreground">Pay using TelleBirr mobile money</p>
+            {selectedPaymentMethod === 1 && (
+              <div className="absolute top-4 right-4">
+                <CheckCircle2 className="w-6 h-6 text-red-500" />
+              </div>
+            )}
+          </div>
+        </Card>
+
+        <Card
+          className={`relative group cursor-pointer transition-all duration-300 hover:scale-105 ${
+            selectedPaymentMethod === 2
+              ? "ring-2 ring-red-500 bg-red-50"
+              : "hover:border-red-500"
+          }`}
+          onClick={() => setSelectedPaymentMethod(2)}
+        >
+          <div className="p-8">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 overflow-hidden rounded-lg">
+                <img 
+                  src={chapa} 
+                  alt="Chapa" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h3 className="text-xl font-semibold">Chapa</h3>
+            </div>
+            <p className="text-muted-foreground">Pay using Chapa payment gateway</p>
+            {selectedPaymentMethod === 2 && (
+              <div className="absolute top-4 right-4">
+                <CheckCircle2 className="w-6 h-6 text-red-500" />
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
+
+      <div className="flex justify-between mt-12">
+        <Button 
+          variant="outline" 
+          onClick={onPrevious}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
           Previous Step
         </Button>
-        <Button type="submit" disabled={isLoading} onClick={handleSubmit}>
-          {isLoading ? "Submitting..." : "Submit"}
+        <Button 
+          type="submit" 
+          disabled={isLoading} 
+          onClick={handleSubmit}
+          className="flex items-center gap-2 bg-red-500 hover:bg-red-600"
+        >
+          {isLoading ? "Processing..." : "Complete Setup"}
+          <ArrowRight className="w-4 h-4" />
         </Button>
       </div>
     </div>

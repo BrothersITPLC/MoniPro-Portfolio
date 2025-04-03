@@ -240,12 +240,9 @@ function Device() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>
-              {editingVM ? "Edit Virtual Machine" : "Add Virtual Machine"}
             </DialogTitle>
             <DialogDescription>
-              {editingVM
-                ? "Update the details of your virtual machine."
-                : "Fill in the details to add a new virtual machine."}
+
             </DialogDescription>
           </DialogHeader>
           <VMForm
@@ -260,14 +257,8 @@ function Device() {
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>
-              {editingNetworkDevice
-                ? "Edit Network Device"
-                : "Add Network Device"}
             </DialogTitle>
             <DialogDescription>
-              {editingNetworkDevice
-                ? "Update the details of your network device."
-                : "Fill in the details to add a new network device."}
             </DialogDescription>
           </DialogHeader>
           <NetworkDeviceForm
