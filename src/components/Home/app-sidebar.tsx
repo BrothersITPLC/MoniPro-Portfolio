@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Settings2, SquareTerminal, Bell } from "lucide-react";
+import { Settings2, Monitor, Bell } from "lucide-react";
 import { NavMain } from "@/components/Home/nav-main";
 import { NavUser } from "@/components/Home/nav-user";
 import { TeamSwitcher } from "@/components/Home/team-switcher";
@@ -18,7 +18,7 @@ const getDefaultNavData = () => ({
     {
       title: "Devices",
       url: "#",
-      icon: SquareTerminal,
+      icon: Monitor,
       isActive: true,
       items: [],
     },

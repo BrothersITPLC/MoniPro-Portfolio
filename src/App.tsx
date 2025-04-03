@@ -12,7 +12,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
+import  {CompanyInfo}  from "@/components/Home/company/components/CompanyInfo";
 import { PrivateInfo } from "@/components/Home/company/components/PrivateInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
 import { ZabbixHosts } from "./components/Home/devices/components/zabbixhosts";
@@ -24,6 +24,7 @@ import { InsightSuggestion } from "./components/Home/notification/components/Ins
 import { PerformanceAlerts } from "./components/Home/notification/components/PerformanceAlerts";
 import { UpdateSubscription } from "./components/Home/company/components/UpdateSubscription";
 import { ResetPassword } from "./pages/ResetPassword";
+import { Zabbixtest } from "./components/Home/Test/Test";
 function App() {
   return (
     <Router>
@@ -60,6 +61,7 @@ function App() {
               </Route>
               <Route path="team" element={<TeamWrapper />} />
               <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="test" element={<Zabbixtest />} />
             </Route>
           </Route>
 

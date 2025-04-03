@@ -9,7 +9,7 @@ export const zabbixApi = createApi({
 
     zabbixLogin: builder.mutation({
       query: () => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
@@ -32,7 +32,7 @@ export const zabbixApi = createApi({
 
     zabbixGetItems: builder.query({
       query: ({ authToken, hostids }) => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
@@ -60,7 +60,7 @@ export const zabbixApi = createApi({
 
     zabbixGetRealTimeData: builder.query({
       query: ({ authToken, itemids }) => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
@@ -85,9 +85,10 @@ export const zabbixApi = createApi({
         return response.result;
       },
     }),
+  //for geting host data
     zabbixGetHosts: builder.query({
       query: (authToken: string) => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",
@@ -100,7 +101,12 @@ export const zabbixApi = createApi({
           params: {
             output: ["hostid", "name", "status", "available"],
             selectInterfaces: ["ip", "dns", "useip", "type"],
-            selectGroups: "extend"
+            selectGroups: "extend",
+            filter: {
+              host: [
+                  "Uemis",
+              ]
+          }
           },
           id: 2
         },
@@ -112,7 +118,7 @@ export const zabbixApi = createApi({
 
     zabbixGetGraphImage: builder.query({
       query: ({ authToken, itemid, timeFrom, timeTill }) => ({
-        url: "http://4.233.79.31:80/api_jsonrpc.php",
+        url: "https://zx.brothersit.dev/api_jsonrpc.php",
         method: "POST",
         headers: {
           "Content-Type": "application/json-rpc",

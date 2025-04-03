@@ -28,7 +28,7 @@ function UserTable() {
     if (expandedRows.has(userId)) {
       newExpandedRows.delete(userId);
     } else {
-      newExpandedRows.add(userId);
+      newExpandedRows.add(userId);scp
     }
     setExpandedRows(newExpandedRows);
   };
