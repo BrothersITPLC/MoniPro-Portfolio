@@ -1,20 +1,19 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authSlice from "@/components/Auth/AutSlice";
 import LandingSlice from "@/components/Landing/LandingSlice";
-import zabbixSlice from "@/components/Home/zabbix/zabbixSlice";
+import zabbixSlice from "@/components/Home/zabbixHosts/zabbixSlice";
 import { landingApi } from "@/components/Landing/api";
 import { HomeApi } from "@/components/Home/api";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import globalReducer from "./global";
 import { authApi } from "@/components/Auth/api";
-import { hostApi } from "@/components/Home/zabbix/api";
+import { hostApi } from "@/components/Home/zabbixHosts/api";
 
 import { VerficationApi } from "@/components/Home/company/api";
 import { teamApi } from "@/components/Home/team/api";
 import teamSlice from "@/components/Home/team/teamSlice";
-import { deviceApi } from "@/components/Home/devices/api";
-import deviceSlice from "@/components/Home/devices/deviceSlice";
+
 const persistConfig = {
   key: "root",
   storage,
@@ -25,13 +24,11 @@ const rootReducer = combineReducers({
   global: globalReducer,
   landing: LandingSlice,
   team: teamSlice,
-  device: deviceSlice,
   zabbixhosts: zabbixSlice,
   [authApi.reducerPath]: authApi.reducer,
   [VerficationApi.reducerPath]: VerficationApi.reducer,
   [landingApi.reducerPath]: landingApi.reducer,
   [teamApi.reducerPath]: teamApi.reducer,
-  [deviceApi.reducerPath]: deviceApi.reducer,
   [HomeApi.reducerPath]: HomeApi.reducer,
   [hostApi.reducerPath]: hostApi.reducer,
 });
@@ -46,7 +43,6 @@ export const store = configureStore({
       VerficationApi.middleware,
       landingApi.middleware,
       teamApi.middleware,
-      deviceApi.middleware,
       HomeApi.middleware,
       hostApi.middleware,
     ]),

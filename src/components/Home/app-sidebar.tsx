@@ -11,9 +11,9 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { InfrastructerList } from "@/components/Home/types";
-import { useGetZabixHostesQuery } from "@/components/Home/zabbix/api";
+import { useGetZabixHostesQuery } from "@/components/Home/zabbixHosts/api";
 import { useDispatch, useSelector } from "react-redux";
-import { setHosts } from "./zabbix/zabbixSlice";
+import { setHosts } from "./zabbixHosts/zabbixSlice";
 
 // This is sample data.
 const getDefaultNavData = () => ({

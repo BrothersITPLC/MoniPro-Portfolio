@@ -1,9 +1,9 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BaseUrl } from "../../../BaseUrl";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "@/lib/baseQuery";
 
 export const teamApi = createApi({
   reducerPath: "teamApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BaseUrl, credentials: "include" }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ["Team"],
   endpoints: (builder) => ({
     getTeam: builder.query({

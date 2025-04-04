@@ -1,11 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BaseUrl } from "../../BaseUrl";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "@/lib/baseQuery";
 import { loginState } from "./AutSlice";
 import { toast } from "sonner";
-
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BaseUrl, credentials: "include" }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ["Profile", "Infrastructures"],
   endpoints: (builder) => ({
     organizationRegister: builder.mutation({
