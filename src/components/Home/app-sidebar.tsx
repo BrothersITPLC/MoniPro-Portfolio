@@ -11,6 +11,9 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { InfrastructerList } from "@/components/Home/types";
+import { useGetZabixHostesQuery } from "@/components/Home/zabbix/api";
+import { useDispatch, useSelector } from "react-redux";
+import { setHosts } from "./zabbix/zabbixSlice";
 
 // This is sample data.
 const getDefaultNavData = () => ({
@@ -69,39 +72,37 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
+  const { hosts } = useSelector((state: any) => state.zabbixhosts);
+  const dispatch = useDispatch();
+  const { data: ZabbixhostList } = useGetZabixHostesQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
   const [navData, setNavData] = React.useState(getDefaultNavData());
 
+  // Effect to update Redux store when Zabbix data is fetched
   React.useEffect(() => {
-    if (deviceList) {
+    if (ZabbixhostList?.data) {
+      dispatch(setHosts(ZabbixhostList.data));
+    }
+  }, [ZabbixhostList, dispatch]);
+
+  // Effect to update navigation when hosts data changes
+  React.useEffect(() => {
+    if (hosts && hosts.length > 0) {
       const updatedNavData = { ...getDefaultNavData() };
-      const deviceItems = [];
 
-      // Add VMs to the device items
-      if (deviceList.vms && deviceList.vms.length > 0) {
-        const vmItems = deviceList.vms.map((vm) => ({
-          title: vm.username,
-          url: `/home/vm/${vm.id}`,
-          key: `vm-${vm.id}`, // Add a unique key property
-        }));
-        deviceItems.push(...vmItems);
-      }
+      // Create items for each host
+      const hostItems = hosts.map((host) => ({
+        title: host.host,
+        url: `/home/zabbixhost/${host.hostid}`,
+        key: `host-${host.hostid}`,
+      }));
 
-      // Add Networks to the device items
-      if (deviceList.networks && deviceList.networks.length > 0) {
-        const networkItems = deviceList.networks.map((network) => ({
-          title: network.name,
-          url: `/home/network/${network.id}`,
-          key: `network-${network.id}`, // Add a unique key property
-        }));
-        deviceItems.push(...networkItems);
-      }
-
-      // Update the Devices items with combined VM and Network data
-      updatedNavData.navMain[0].items = deviceItems;
-
+      // Update the Devices section with host items
+      updatedNavData.navMain[0].items = hostItems;
       setNavData(updatedNavData);
     }
-  }, [deviceList]);
+  }, [hosts]);
 
   return (
     <Sidebar collapsible="icon" {...props}>

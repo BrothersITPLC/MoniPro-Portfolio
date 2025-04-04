@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface User {
+export interface User {
   organization_info_completed: boolean;
   user_name: string;
   user_email: string;
@@ -13,6 +13,8 @@ interface User {
   organization_description: string;
   organization_id: number;
   user_id: number;
+  user_have_zabbix_credentials_1: boolean;
+  user_have_zabbix_user: boolean;
 }
 
 interface AuthState {

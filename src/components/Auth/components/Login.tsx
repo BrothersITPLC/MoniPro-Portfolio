@@ -25,7 +25,6 @@ export function Login({ onToggle, onReset }: LoginProps) {
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
   const user = useSelector((state: any) => state.auth.user);
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",

@@ -24,6 +24,7 @@ export const authApi = createApi({
       }),
       invalidatesTags: ["Profile", "Infrastructures"],
     }),
+
     getProfile: builder.query({
       query: () => ({
         url: "/profile/",
@@ -35,6 +36,56 @@ export const authApi = createApi({
         url: "/login/",
         method: "POST",
         body: user,
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
+    }),
+    SetZabbixCredentialsFirst: builder.mutation({
+      query: () => ({
+        url: "/zabbix-credentials/",
+        method: "POST",
+        body: {},
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
+    }),
+    SetZabbixUser: builder.mutation({
+      query: () => ({
+        url: "/zabbix-users/",
+        method: "POST",
+        body: {},
       }),
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
@@ -96,4 +147,6 @@ export const {
   useGetProfileQuery,
   usePasswordForgotMutation,
   usePasswordReseteMutation,
+  useSetZabbixCredentialsFirstMutation,
+  useSetZabbixUserMutation,
 } = authApi;
