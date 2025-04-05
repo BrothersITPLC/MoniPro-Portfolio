@@ -15,7 +15,7 @@ import {
 import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
 import { PrivateInfo } from "@/components/Home/company/components/PrivateInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
-import { ZabbixHosts } from "./components/Home/zabbix/components/zabbixhosts";
+import { ZabbixHosts } from "./components/Home/zabbixHosts/components/zabbixhosts";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
 
 import { NotificationWrapper } from "./components/Home/wrapper/NotificationWrapper";
@@ -24,7 +24,6 @@ import { InsightSuggestion } from "./components/Home/notification/components/Ins
 import { PerformanceAlerts } from "./components/Home/notification/components/PerformanceAlerts";
 import { UpdateSubscription } from "./components/Home/company/components/UpdateSubscription";
 import { ResetPassword } from "./pages/ResetPassword";
-import { Zabbixtest } from "./components/Home/Test/Test";
 function App() {
   return (
     <Router>
@@ -60,7 +59,6 @@ function App() {
               </Route>
               <Route path="team" element={<TeamWrapper />} />
               <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="test" element={<Zabbixtest />} />
               <Route path="zabbixhost/:hostId" element={<ZabbixHosts />} />
             </Route>
           </Route>
