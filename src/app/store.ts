@@ -11,7 +11,7 @@ import { authApi } from "@/components/Auth/api";
 import { hostApi } from "@/components/Home/zabbix/api";
 
 import { VerficationApi } from "@/components/Home/company/api";
-import { teamApi } from "@/components/Home/team/api";
+import { api } from "@/components/Home/team/api";
 import teamSlice from "@/components/Home/team/teamSlice";
 import { deviceApi } from "@/components/Home/devices/api";
 import deviceSlice from "@/components/Home/devices/deviceSlice";
@@ -30,7 +30,7 @@ const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [VerficationApi.reducerPath]: VerficationApi.reducer,
   [landingApi.reducerPath]: landingApi.reducer,
-  [teamApi.reducerPath]: teamApi.reducer,
+  [api.reducerPath]: api.reducer,
   [deviceApi.reducerPath]: deviceApi.reducer,
   [HomeApi.reducerPath]: HomeApi.reducer,
   [hostApi.reducerPath]: hostApi.reducer,
@@ -45,7 +45,7 @@ export const store = configureStore({
       authApi.middleware,
       VerficationApi.middleware,
       landingApi.middleware,
-      teamApi.middleware,
+      api.middleware,
       deviceApi.middleware,
       HomeApi.middleware,
       hostApi.middleware,

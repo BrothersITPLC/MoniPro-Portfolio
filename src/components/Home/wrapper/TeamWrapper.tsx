@@ -1,13 +1,13 @@
-import UserTable from "@/components/Home/team/components/UserTable";
+import UserTable from "@/components/Home/team/components/user-table";
 import { useDispatch } from "react-redux";
-import { useGetTeamQuery } from "@/components/Home/team/api";
+import { useGetTeamMembersQuery } from "@/components/Home/team/api";
 import { setTeamMembers } from "@/components/Home/team/teamSlice";
 import { useEffect } from "react";
 export function TeamWrapper() {
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   const dispatch = useDispatch();
-  const { data: teamData, refetch } = useGetTeamQuery(userData?.user_id, {
+  const { data: teamData, refetch } = useGetTeamMembersQuery(userData?.user_id, {
     refetchOnMountOrArgChange: true,
   });
 

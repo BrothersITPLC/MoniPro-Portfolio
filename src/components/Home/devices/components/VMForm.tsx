@@ -14,9 +14,9 @@ import type { VMFormData } from "../types"
 const formSchema = z.object({
   domainName: z.string().min(1, "Domain name is required"),
   username: z.string().min(2, "Username must be at least 2 characters"),
-  // Simplified password validation - just require input
+
   password: z.string().min(1, "Password is required"),
-  // Enhanced IP address validation
+
   ipAddress: z.string().refine(
     (value) => {
       if (!value) return false

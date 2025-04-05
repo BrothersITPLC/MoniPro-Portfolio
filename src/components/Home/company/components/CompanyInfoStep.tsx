@@ -4,7 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import type { UseFormReturn } from "react-hook-form"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
 interface CompanyInfoStepProps {
   form: UseFormReturn<any>
@@ -13,10 +13,10 @@ interface CompanyInfoStepProps {
 
 export function CompanyInfoStep({ form, onSubmit }: CompanyInfoStepProps) {
   return (
-    <div className="max-w-3xl mx-auto py-10">
+    <div className="max-w-3xl mx-auto py-10 mt-10">
       <Card className="border-none shadow-none">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Company Information</CardTitle>
+          {/* <CardTitle className="text-2xl font-bold">Company Information</CardTitle> */}
           
         </CardHeader>
         <CardContent>
@@ -109,7 +109,7 @@ export function CompanyInfoStep({ form, onSubmit }: CompanyInfoStepProps) {
               />
 
               <div className="pt-2 flex justify-end">
-                <Button type="submit" className="px-6 gap-2 transition-all hover:gap-3">
+                <Button type="submit"  className="flex text-white items-center gap-2 bg-violet-500 hover:bg-violet-600">
                   Next Step
                   <ArrowRight className="h-4 w-4" />
                 </Button>
