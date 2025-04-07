@@ -232,7 +232,7 @@ export function CompanyInfo() {
                 <div
                   className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
                     currentStep >= step.id
-                      ? "bg-violet-500 text-white"
+                      ? "bg-[var(--secondary)] text-white"
                       : "bg-gray-100 text-gray-950"
                   }`}
                 >
@@ -241,7 +241,7 @@ export function CompanyInfo() {
                   {currentStep > step.id && (
                     <div className="absolute -right-3 -bottom-3  p-1.5 shadow-lg">
                       <svg
-                        className="w-4 h-4 text-violet-500"
+                        className="w-4 h-4 text-[var(--secondary)]"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -270,7 +270,7 @@ export function CompanyInfo() {
                 <div className="w-64 mx-4 h-1 bg-gray-200">
                   <div
                     className={`h-full transition-all duration-300 ${
-                      currentStep > step.id ? "bg-violet-500" : ""
+                      currentStep > step.id ? "bg-[var(--secondary)]" : ""
                     }`}
                   />
                 </div>

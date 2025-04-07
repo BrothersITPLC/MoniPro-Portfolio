@@ -170,7 +170,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 pb-5">
-            <User className="h-5 w-5 text-violet-500" />
+            <User className="h-5 w-5 text-[var(--secondary)]" />
             {isEditing ? "Edit User" : "Create New User"}
           </DialogTitle>
 
@@ -192,7 +192,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
                       <Input
                         placeholder="John"
                         {...field}
-                        className="transition-all focus-visible:ring-violet-500/20 focus-visible:ring-4"
+                        className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
                       />
                     </FormControl>
                     <FormMessage />
@@ -213,7 +213,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
                       <Input
                         placeholder="Doe"
                         {...field}
-                        className="transition-all focus-visible:ring-violet-500/20 focus-visible:ring-4"
+                        className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
                       />
                     </FormControl>
                     <FormMessage />
@@ -235,7 +235,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
                     <Input
                       placeholder="johndoe"
                       {...field}
-                      className="transition-all focus-visible:ring-violet-500/20 focus-visible:ring-4"
+                      className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
                     />
                   </FormControl>
                   <FormMessage />
@@ -258,7 +258,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
                         type="password"
                         placeholder="******"
                         {...field}
-                        className="transition-all focus-visible:ring-violet-500/20 focus-visible:ring-4"
+                        className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
                       />
                     </FormControl>
                     <FormMessage />
@@ -280,7 +280,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
                         type="password"
                         placeholder="******"
                         {...field}
-                        className="transition-all focus-visible:ring-violet-500/20 focus-visible:ring-4"
+                        className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
                       />
                     </FormControl>
                     <FormMessage />
@@ -313,7 +313,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
                 </FormLabel>
                 <Select onValueChange={handleMediaTypeChange} value={selectedMediaType || ""}>
                   <FormControl>
-                    <SelectTrigger className="transition-all focus-visible:ring-violet-500/20 focus-visible:ring-4">
+                    <SelectTrigger className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4">
                       <SelectValue placeholder="Select media type" />
                     </SelectTrigger>
                   </FormControl>
@@ -339,7 +339,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
                           type="email"
                           placeholder="john.doe@example.com"
                           {...field}
-                          className="transition-all focus-visible:ring-violet-500/20 focus-visible:ring-4"
+                          className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
                         />
                       </FormControl>
                       <FormMessage />
@@ -362,7 +362,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
                         <Input
                           placeholder="@johndoe"
                           {...field}
-                          className="transition-all focus-visible:ring-violet-500/20 focus-visible:ring-4"
+                          className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
                         />
                       </FormControl>
                       <FormMessage />
@@ -374,7 +374,7 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
 
             {/* Permissions Section */}
             <div className="space-y-4 pt-4 border-t">
-              <h3 className="text-lg font-medium text-violet-500">User Permissions</h3>
+              <h3 className="text-lg font-medium text-[var(--secondary)]">User Permissions</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
@@ -415,12 +415,10 @@ export function UserForm({ onSubmit, user, open, onOpenChange, isEditing = false
                 variant="outline"
                 onClick={() => onOpenChange(false)}
                 className="border-gray-200"
-                onClick={() => onOpenChange(false)}
-                className="border-gray-200"
               >
                 Cancel
               </Button>
-              <Button type="submit" className="bg-violet-500 hover:bg-violet-500 text-white">
+              <Button type="submit" className="bg-[var(--secondary)] hover:bg-[var(--secondary)] text-white">
                 {isEditing ? "Update User" : "Create User"}
               </Button>
             </DialogFooter>

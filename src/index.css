@@ -5,10 +5,12 @@ html {
 @plugin "tailwindcss-animate";
 @custom-variant dark (&:is(.dark *));
 :root {
+  --primary: #7c3aed !important; /* violet-600 */
+  --secondary: #8b5cf6 !important; /* violet-500 */
+  --accent: #ddd6fe !important; /* violet-100 */
+  --light: #f5f3ff !important; /* violet-50 */
+
   --radius: 0.625rem;
-  --violet-50: #f5f3ff;
-  --violet-100: #ede9fe;
-  --primary-violet: #8b5cf6;
   --white: #ffffff;
   --gray-100: #f3f4f6;
   --gray-950: #030712;

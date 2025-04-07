@@ -42,9 +42,9 @@ export function SubscriptionStep({
         
         </h2>
         {selectedPlanData && (
-          <div className="text-center mb-4 bg-violet-50 dark:bg-neutral-800  dark:border-2 dark:text-white  py-3 rounded-lg">
+          <div className="text-center mb-4 bg-[var(--light)] dark:bg-neutral-800  dark:border-2 dark:text-white  py-3 rounded-lg">
             <span className="text-lg font-medium inline-flex items-center gap-2">
-              <RefreshCcw className="w-5 h-5 text-violet-500" />
+              <RefreshCcw className="w-5 h-5 text-[var(--secondary)]" />
               Selected Plan:{" "}
               <span className="text-red-600 font-semibold">{selectedPlanData.name}</span>
             </span>
@@ -70,25 +70,25 @@ export function SubscriptionStep({
         <Card
           className={`cursor-pointer transition-all hover:scale-105 group ${
             selectedDuration === 1
-              ? "border-violet-500 shadow-lg ring-2 ring-violet-500/20"
-              : "hover:border-violet-500/50"
+              ? "border-[var(--secondary)] shadow-lg ring-2 ring-[var(--secondary)]/20"
+              : "hover:border-[var(--secondary)]/50"
           }`}
           onClick={() => handleDurationSelect(1)}
         >
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl">
-              <Calendar className={`w-5 h-5 ${selectedDuration === 1 ? 'text-violet-500' : 'text-gray-400 group-hover:text-violet-500'}`} />
+              <Calendar className={`w-5 h-5 ${selectedDuration === 1 ? 'text-[var(--secondary)]' : 'text-gray-400 group-hover:text-[var(--secondary)]'}`} />
               Monthly
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-center space-y-3">
-              <p className="text-3xl font-bold text-violet-500">
+              <p className="text-3xl font-bold text-[var(--secondary)]">
                 ${selectedPlanData?.price}
               </p>
               <p className="text-muted-foreground">Billed Monthly</p>
               {selectedDuration === 1 && (
-                <div className="text-violet-500 text-sm font-medium">
+                <div className="text-[var(--secondary)] text-sm font-medium">
                   ✓ Currently Selected
                 </div>
               )}
@@ -102,35 +102,35 @@ export function SubscriptionStep({
             key={duration.duration_id}
             className={`cursor-pointer transition-all hover:scale-105 group ${
               selectedDuration === duration.duration_id
-                ? "border-violet-500 shadow-lg ring-2 ring-violet-500/20"
-                : "hover:border-violet-500/50"
+                ? "border-[var(--secondary)] shadow-lg ring-2 ring-[var(--secondary)]/20"
+                : "hover:border-[var(--secondary)]/50"
             }`}
             onClick={() => handleDurationSelect(duration.duration_id)}
           >
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-xl">
                 {duration.duration === "yearly" ? (
-                  <CalendarCheck className={`w-5 h-5 ${selectedDuration === duration.duration_id ? 'text-violet-500' : 'text-gray-400 group-hover:text-violet-500'}`} />
+                  <CalendarCheck className={`w-5 h-5 ${selectedDuration === duration.duration_id ? 'text-[var(--secondary)]' : 'text-gray-400 group-hover:text-[var(--secondary)]'}`} />
                 ) : (
-                  <CalendarDays className={`w-5 h-5 ${selectedDuration === duration.duration_id ? 'text-violet-500' : 'text-gray-400 group-hover:text-violet-500'}`} />
+                  <CalendarDays className={`w-5 h-5 ${selectedDuration === duration.duration_id ? 'text-[var(--secondary)]' : 'text-gray-400 group-hover:text-[var(--secondary)]'}`} />
                 )}
                 {duration.duration === "yearly" ? "Yearly" : "Quarterly"}
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-center space-y-3">
-                <div className="bg-violet-50 dark:bg-neutral-800 text-violet-500 font-bold text-2xl py-2 rounded-full">
+                <div className="bg-[var(--light)] dark:bg-neutral-800 text-[var(--secondary)] font-bold text-2xl py-2 rounded-full">
                   {duration.percentage}% OFF
                 </div>
                 <p className="text-muted-foreground">
                   {duration.duration === "yearly" ? "Annual Billing" : "Quarterly Billing"}
                 </p>
-                <p className="text-lg font-semibold text-violet-500">
+                <p className="text-lg font-semibold text-[var(--secondary)]">
                   ${Math.round(selectedPlanData?.price * (1 - duration.percentage / 100))}
                   <span className="text-sm text-muted-foreground"> / month</span>
                 </p>
                 {selectedDuration === duration.duration_id && (
-                  <div className="text-violet-500 text-sm font-medium">
+                  <div className="text-[var(--secondary)] text-sm font-medium">
                     ✓ Currently Selected
                   </div>
                 )}
@@ -152,7 +152,7 @@ export function SubscriptionStep({
         <Button 
           onClick={onNext} 
           disabled={!selectedDuration}
-           className="flex items-center gap-2 bg-violet-500 text-white hover:bg-violet-400"
+           className="flex items-center gap-2 bg-[var(--secondary)] text-white hover:bg-[var(--secondary)]"
         >
           Next Step
           <ArrowRight className="w-4 h-4" />
