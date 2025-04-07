@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "@/lib/baseQuery";
-
+import { TeamMember } from "./teamSlice";
 export const teamApi = createApi({
   reducerPath: "teamApi",
   baseQuery: baseQueryWithReauth,
@@ -13,7 +13,7 @@ export const teamApi = createApi({
     }),
 
     // Create team member
-    createTeam: builder.mutation<TeamMember, CreateTeamRequest>({
+    createTeam: builder.mutation<TeamMember, void>({
       query: (body) => ({
         url: "/team",
         method: "POST",
@@ -23,7 +23,10 @@ export const teamApi = createApi({
     }),
 
     // Update team member
-    updateTeamMember: builder.mutation<TeamMember, Partial<TeamMember> & { id: number }>({
+    updateTeamMember: builder.mutation<
+      TeamMember,
+      Partial<TeamMember> & { id: number }
+    >({
       query: ({ id, ...patch }) => ({
         url: `/team/${id}`,
         method: "PATCH",
@@ -41,7 +44,7 @@ export const teamApi = createApi({
       invalidatesTags: ["Team"],
     }),
   }),
-})
+});
 
 // Export hooks for usage in components
 export const {
@@ -49,5 +52,4 @@ export const {
   useCreateTeamMutation,
   useUpdateTeamMemberMutation,
   useDeleteTeamMemberMutation,
-} = api
-
+} = teamApi;
