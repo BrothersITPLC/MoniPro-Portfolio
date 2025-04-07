@@ -38,7 +38,7 @@ function App() {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/password-reset" element={<ResetPassword />} />
             <Route
-              path="/api/auth/google/callback"
+              path="/social/auth/google/callback"
               element={<GoogleCallback />}
             />
           </Route>
