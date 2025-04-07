@@ -9,7 +9,7 @@ import { toast } from "sonner";
 export const handleGoogleAuth = async () => {
   try {
     const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-      REDIRECT_URL_DEP
+      REDIRECT_URL
     )}&response_type=code&scope=${encodeURIComponent(SCOPE)}`;
 
     // Store auth in progress flag

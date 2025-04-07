@@ -38,7 +38,6 @@ export function Login({ onToggle, onReset }: LoginProps) {
       if (event.data && event.data.action === "google-login-success") {
         toast.success("Google login successful!");
         setIsGoogleLoading(false);
-        // Force a refresh of the user data after Google login
         window.location.href = "/home/dashboard";
       }
     };
