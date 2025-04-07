@@ -3,6 +3,7 @@ import authSlice from "@/components/Auth/AutSlice";
 import LandingSlice from "@/components/Landing/LandingSlice";
 import zabbixSlice from "@/components/Home/zabbixHosts/zabbixSlice";
 import { landingApi } from "@/components/Landing/api";
+import { teamApi } from "@/components/Home/team/api";
 import { HomeApi } from "@/components/Home/api";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
@@ -25,6 +26,7 @@ const rootReducer = combineReducers({
   team: teamSlice,
   zabbixhosts: zabbixSlice,
   [authApi.reducerPath]: authApi.reducer,
+  [teamApi.reducerPath]: teamApi.reducer, 
   [VerficationApi.reducerPath]: VerficationApi.reducer,
   [landingApi.reducerPath]: landingApi.reducer,
   [HomeApi.reducerPath]: HomeApi.reducer,
@@ -38,6 +40,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat([
       authApi.middleware,
+      teamApi.middleware, 
       VerficationApi.middleware,
       landingApi.middleware,
       HomeApi.middleware,

@@ -39,7 +39,7 @@ export function Banner() {
                 </div>
               </div>
               <div className="space-y-2 text-right">
-                <span className="inline-block px-4 py-1.5 bg-[var(--accent)] text-[var(--secondary)] rounded-full text-lg font-medium dark:border-2 dark:bg-black dark:text-white">
+                <span className="inline-block px-4 py-1.5 bg-[var(--acent)] text-[var(--secondary)] rounded-full text-lg font-medium dark:border-2 dark:bg-black dark:text-white">
                   {user.organization_payment_plane}
                 </span>
                 <div className="flex items-center gap-2 text-gray-500 justify-end ">
