@@ -24,6 +24,7 @@ import { InsightSuggestion } from "./components/Home/notification/components/Ins
 import { PerformanceAlerts } from "./components/Home/notification/components/PerformanceAlerts";
 import { UpdateSubscription } from "./components/Home/company/components/UpdateSubscription";
 import { ResetPassword } from "./pages/ResetPassword";
+import { GoogleCallback } from "./components/Auth/components/GoogleCallback";
 function App() {
   return (
     <Router>
@@ -36,6 +37,10 @@ function App() {
             <Route path="/verification" element={<Verfication />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/password-reset" element={<ResetPassword />} />
+            <Route
+              path="/api/auth/google/callback"
+              element={<GoogleCallback />}
+            />
           </Route>
 
           {/* Protected Routes - Accessible only when authenticated */}
