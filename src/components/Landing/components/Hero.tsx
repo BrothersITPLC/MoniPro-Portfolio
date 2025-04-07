@@ -19,7 +19,7 @@ export function Hero() {
 
         <Link
           to="/auth"
-          className="bg-red-500 px-8 py-4 rounded-lg text-xl font-semibold hover:bg-red-600 transition-all transform hover:scale-105"
+          className="bg-red-500 px-8 py-4 rounded-lg text-xl text-white font-semibold hover:bg-red-600 transition-all transform hover:scale-105"
         >
           Start Monitoring Now
         </Link>

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { CompanyInfoStep } from "./CompanyInfoStep";
 import { SubscriptionStep } from "./SubscriptionStep";
 import { PaymentStep } from "./PaymentStep";
+import { Building2, CreditCard, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { useNavigate } from "react-router-dom";
@@ -35,9 +36,9 @@ const formSchema = z.object({
 });
 
 const steps = [
-  { id: 1, name: "Company Information" },
-  { id: 2, name: "Subscription Plan" },
-  { id: 3, name: "Payment Method" },
+  { id: 1, name: "Company Information", icon: Building2 },
+  { id: 2, name: "Subscription Plan", icon: Clock },
+  { id: 3, name: "Payment Method", icon: CreditCard },
 ];
 
 // Add this import
@@ -220,27 +221,56 @@ export function CompanyInfo() {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container mx-auto">
       <Toaster />
-      <div className="mb-8">
-        <div className="flex items-center justify-center space-x-4">
-          {steps.map((step) => (
-            <div key={step.id} className="flex items-center">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  currentStep >= step.id
-                    ? "bg-red-500 text-white"
-                    : "bg-gray-200 text-gray-600"
-                }`}
-              >
-                {step.id}
+      <div className="pt-4"> {/* Reduced top padding */}
+        <div className="flex items-center justify-center">
+          {steps.map((step, index) => (
+            <div key={step.id} className="flex items-center"> 
+              <div className="relative">
+                {/* Step circle with icon */}
+                <div
+                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
+                    currentStep >= step.id
+                      ? "bg-[var(--secondary)] text-white"
+                      : "bg-gray-100 text-gray-950"
+                  }`}
+                >
+                  <step.icon className="w-6 h-6" />
+                  {/* Completion check mark */}
+                  {currentStep > step.id && (
+                    <div className="absolute -right-3 -bottom-3  p-1.5 shadow-lg">
+                      <svg
+                        className="w-4 h-4 text-[var(--secondary)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={5}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                {/* Step name */}
+                <div
+                  className={`absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap text-sm font-medium ${
+                    currentStep >= step.id ? "text-red" : "text-gray-500"
+                  }`}
+                >
+                  {step.name}
+                </div>
               </div>
-              <span className="ml-2 text-sm font-medium">{step.name}</span>
-              {step.id !== steps.length && (
-                <div className="w-12 h-1 mx-4 bg-gray-200">
+              {/* Connector line */}
+              {index < steps.length - 1 && (
+                <div className="w-64 mx-4 h-1 bg-gray-200">
                   <div
-                    className={`h-full ${
-                      currentStep > step.id ? "bg-red-500" : ""
+                    className={`h-full transition-all duration-300 ${
+                      currentStep > step.id ? "bg-[var(--secondary)]" : ""
                     }`}
                   />
                 </div>

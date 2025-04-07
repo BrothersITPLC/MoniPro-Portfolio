@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Define the type for a team member
-interface TeamMember {
+export interface TeamMember {
   id: number;
   first_name: string;
   last_name: string;

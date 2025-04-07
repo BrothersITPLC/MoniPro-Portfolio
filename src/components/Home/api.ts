@@ -1,10 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BaseUrl } from "../../BaseUrl";
+import { createApi } from "@reduxjs/toolkit/query/react";
 import { InfrastructerList } from "./types";
+import { baseQueryWithReauth } from "@/lib/baseQuery";
 
 export const HomeApi = createApi({
   reducerPath: "HomeApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BaseUrl, credentials: "include" }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getInfrastructureList: builder.query<InfrastructerList[], void>({
       query: () => ({

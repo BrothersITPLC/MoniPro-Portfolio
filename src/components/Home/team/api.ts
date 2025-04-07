@@ -1,27 +1,55 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BaseUrl } from "../../../BaseUrl";
-
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { baseQueryWithReauth } from "@/lib/baseQuery";
+import { TeamMember } from "./teamSlice";
 export const teamApi = createApi({
   reducerPath: "teamApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BaseUrl, credentials: "include" }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: ["Team"],
   endpoints: (builder) => ({
-    getTeam: builder.query({
-      query: (id) => ({
-        url: `/users/by-organization/?organization_id=${id}`,
-        method: "GET",
-      }),
+    // Get team members
+    getTeamMembers: builder.query<TeamMember[], void>({
+      query: () => "/team",
       providesTags: ["Team"],
     }),
-    creatTeam: builder.mutation({
-      query: (user) => ({
-        url: "/users/",
+
+    // Create team member
+    createTeam: builder.mutation<TeamMember, void>({
+      query: (body) => ({
+        url: "/team",
         method: "POST",
-        body: user,
+        body,
+      }),
+      invalidatesTags: ["Team"],
+    }),
+
+    // Update team member
+    updateTeamMember: builder.mutation<
+      TeamMember,
+      Partial<TeamMember> & { id: number }
+    >({
+      query: ({ id, ...patch }) => ({
+        url: `/team/${id}`,
+        method: "PATCH",
+        body: patch,
+      }),
+      invalidatesTags: ["Team"],
+    }),
+
+    // Delete team member
+    deleteTeamMember: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/team/${id}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["Team"],
     }),
   }),
 });
 
-export const { useGetTeamQuery, useCreatTeamMutation } = teamApi;
+// Export hooks for usage in components
+export const {
+  useGetTeamMembersQuery,
+  useCreateTeamMutation,
+  useUpdateTeamMemberMutation,
+  useDeleteTeamMemberMutation,
+} = teamApi;

@@ -1,23 +1,19 @@
 export interface User {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    status: boolean;
-    permissions: {
-      addVM: boolean;
-      addUser: boolean;
-      controlVM: {
-        id: string;
-        name: string;
-        type: 'Process' | 'System';
-      }[];
-      mediaTypes: {
-        email: boolean;
-        telegram: boolean;
-      };
-    };
+  id: string
+  email: string
+  firstName: string
+  lastName: string
+  status: boolean
+  permissions: {
+    addVM: boolean
+    addUser: boolean
+    mediaTypes: {
+      email: boolean
+      telegram: boolean
+    }
+    controlVM: string[]
   }
+}
   
   export interface ModalProps {
     isOpen: boolean;
@@ -26,21 +22,16 @@ export interface User {
   }
   
   export interface UserFormData {
-    email: string;
-    firstName: string;
-    lastName: string;
-    status: boolean;
-    permissions: {
-      addVM: boolean;
-      addUser: boolean;
-      controlVM: {
-        id: string;
-        name: string;
-        type: 'Process' | 'System';
-      }[];
-      mediaTypes: {
-        email: boolean;
-        telegram: boolean;
-      };
-    };
+    username: string
+    firstName: string
+    lastName: string
+    status: boolean
+    password: string
+    confirmPassword: string
+    mediaTypes: {
+      email: boolean
+      telegram: boolean
+    }
+    email: string
+    telegramusername: string
   }
