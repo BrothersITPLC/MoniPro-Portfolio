@@ -135,7 +135,7 @@ function UserTable() {
             setIsDialogOpen(true)
           }}
           disabled={isCreating}
-          className="bg-violet-600 hover:bg-violet-500 text-white"
+          className="bg-[var(--primary)] hover:bg-[var(--secondary)] text-white"
         >
           <PlusCircle className="mr-2 h-4 w-4" />
           Add User
@@ -144,7 +144,7 @@ function UserTable() {
 
       <div className="rounded-lg border border-gray-200 overflow-hidden">
         <Table>
-          <TableHeader className="bg-violet-50">
+          <TableHeader className="bg-[var(--light)]">
             <TableRow>
               <TableHead className="w-[50px] text-center"></TableHead>
               <TableHead className="font-medium text-gray-700">Email</TableHead>
@@ -290,7 +290,7 @@ function UserTableRowEnhanced({
               variant="outline"
               size="sm"
               onClick={() => onEdit(user)}
-              className="h-8 border-gray-200 text-gray-700 hover:bg-violet-50 hover:text-violet-500 hover:border-violet-100"
+              className="h-8 border-gray-200 text-gray-700 hover:bg-[var(--light)] hover:text-[var(--secondary)] hover:border-[var(--accent)]"
             >
               <Edit className="h-3.5 w-3.5" />
               <span className="sr-only">Edit</span>
@@ -308,22 +308,22 @@ function UserTableRowEnhanced({
         </td>
       </TableRow>
       {isExpanded && (
-        <TableRow className={isEven ? "bg-violet-50/30" : "bg-violet-50/50"}>
+        <TableRow className={isEven ? "bg-[var(--light)]/30" : "bg-[var(--light)]/50"}>
           <td colSpan={6} className="p-4">
-            <div className="rounded-lg bg-white p-4 shadow-sm border border-violet-100">
-              <h4 className="font-medium text-violet-500 mb-3">User Permissions</h4>
+            <div className="rounded-lg bg-white p-4 shadow-sm border border-[var(--accent)]">
+              <h4 className="font-medium text-[var(--secondary)] mb-3">User Permissions</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <h5 className="text-sm font-medium text-gray-700">Access Control</h5>
                   <div className="flex items-center gap-2">
                     <div
-                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.addVM ? "bg-violet-500" : "bg-gray-300"}`}
+                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.addVM ? "bg-[var(--secondary)]" : "bg-gray-300"}`}
                     ></div>
                     <span className="text-sm">Add VM</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div
-                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.addUser ? "bg-violet-500" : "bg-gray-300"}`}
+                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.addUser ? "bg-[var(--secondary)]" : "bg-gray-300"}`}
                     ></div>
                     <span className="text-sm">Add User</span>
                   </div>
@@ -333,13 +333,13 @@ function UserTableRowEnhanced({
                   <h5 className="text-sm font-medium text-gray-700">Media Types</h5>
                   <div className="flex items-center gap-2">
                     <div
-                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.mediaTypes.email ? "bg-violet-500" : "bg-gray-300"}`}
+                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.mediaTypes.email ? "bg-[var(--secondary)]" : "bg-gray-300"}`}
                     ></div>
                     <span className="text-sm">Email</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div
-                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.mediaTypes.telegram ? "bg-violet-500" : "bg-gray-300"}`}
+                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.mediaTypes.telegram ? "bg-[var(--secondary)]" : "bg-gray-300"}`}
                     ></div>
                     <span className="text-sm">Telegram</span>
                   </div>
@@ -350,7 +350,7 @@ function UserTableRowEnhanced({
                   {user.permissions.controlVM.length > 0 ? (
                     user.permissions.controlVM.map((vm, index) => (
                       <div key={index} className="flex items-center gap-2">
-                        <div className="h-2.5 w-2.5 rounded-full bg-violet-500"></div>
+                        <div className="h-2.5 w-2.5 rounded-full bg-[var(--secondary)]"></div>
                         <span className="text-sm">{vm}</span>
                       </div>
                     ))
@@ -364,7 +364,7 @@ function UserTableRowEnhanced({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="text-violet-500 border-violet-100 hover:bg-violet-50 hover:border-violet-100"
+                  className="text-[var(--secondary)] border-[var(--accent)] hover:bg-[var(--light)] hover:border-[var(--accent)]"
                   onClick={() => onEdit(user)}
                 >
                   Edit Permissions

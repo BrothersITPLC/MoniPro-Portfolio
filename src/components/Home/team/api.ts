@@ -49,5 +49,5 @@ export const {
   useCreateTeamMutation,
   useUpdateTeamMemberMutation,
   useDeleteTeamMemberMutation,
-} = api
+} = teamApi
 

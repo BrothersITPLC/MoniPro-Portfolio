@@ -27,11 +27,11 @@ export function Banner() {
             <div className="flex  justify-between flex-wrap gap-4">
 
               <div>
-                <h1 className="text-3xl font-bold text-violet-500">
+                <h1 className="text-3xl font-bold text-[var(--secondary)]">
                   Welcome, {user.user_name}
                 </h1>
                 <div className="mt-2 text-lg flex items-center gap-2 text-gray-600">
-                  <Building2 className="h-5 w-5 text-violet-500 " />
+                  <Building2 className="h-5 w-5 text-[var(--secondary)] " />
                   <p>
                     <span className="dark:text-white">{user.organization_name}</span>
                   </p>
@@ -39,11 +39,11 @@ export function Banner() {
                 </div>
               </div>
               <div className="space-y-2 text-right">
-                <span className="inline-block px-4 py-1.5 bg-violet-100 text-violet-500 rounded-full text-lg font-medium dark:border-2 dark:bg-black dark:text-white">
+                <span className="inline-block px-4 py-1.5 bg-[var(--accent)] text-[var(--secondary)] rounded-full text-lg font-medium dark:border-2 dark:bg-black dark:text-white">
                   {user.organization_payment_plane}
                 </span>
                 <div className="flex items-center gap-2 text-gray-500 justify-end ">
-                  <Clock className="h-4 w-4 dark:text-violet-500" />
+                  <Clock className="h-4 w-4 dark:text-[var(--secondary)]" />
                   <span className="capitalize dark:text-white">
                     {user.organization_payment_duration} Subscription
                   </span>
@@ -53,24 +53,24 @@ export function Banner() {
           </div>
           <div className="px-6 pb-6 space-y-6">
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="flex items-center gap-3 bg-violet-50  p-3 rounded-lg dark:border-2  dark:bg-black ">
-                <Phone className="h-5 w-5 text-violet-500 dark:text-violet-500" />
+              <div className="flex items-center gap-3 bg-[var(--light)]  p-3 rounded-lg dark:border-2  dark:bg-black ">
+                <Phone className="h-5 w-5 text-[var(--secondary)] dark:text-[var(--secondary)]" />
                 <span className="text-gray-700 dark:text-white dark:text-white">{user.organization_phone}</span>
               </div>
-              <div className="flex items-center gap-3 bg-violet-50 p-3 rounded-lg  dark:border-2  dark:bg-black ">
-                <Globe className="h-5 w-5 text-violet-500  dark:text-violet-500" />
+              <div className="flex items-center gap-3 bg-[var(--light)] p-3 rounded-lg  dark:border-2  dark:bg-black ">
+                <Globe className="h-5 w-5 text-[var(--secondary)]  dark:text-[var(--secondary)]" />
                 <a
                   href={user.organization_website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-violet-500 dark:text-violet-500 hover:text-violet-500 hover:underline dark:text-white"
+                  className="text-[var(--secondary)] dark:text-[var(--secondary)] hover:text-[var(--secondary)] hover:underline dark:text-white"
                 >
                   {user.organization_website}
                 </a>
               </div>
             </div>
-            <div className="bg-violet-50 rounded-lg p-4  dark:border-2  dark:bg-black">
-              <p className="text-gray-600 leading-relaxed dark:text-violet-500 dark:text-white">
+            <div className="bg-[var(--light)] rounded-lg p-4  dark:border-2  dark:bg-black">
+              <p className="text-gray-600 leading-relaxed dark:text-[var(--secondary)] dark:text-white">
                 {user.organization_description}
               </p>
             </div>

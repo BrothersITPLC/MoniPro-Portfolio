@@ -109,7 +109,7 @@ export function CompanyInfoStep({ form, onSubmit }: CompanyInfoStepProps) {
               />
 
               <div className="pt-2 flex justify-end">
-                <Button type="submit"  className="flex text-white items-center gap-2 bg-violet-500 hover:bg-violet-600">
+                <Button type="submit"  className="flex text-white items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--primary)]">
                   Next Step
                   <ArrowRight className="h-4 w-4" />
                 </Button>

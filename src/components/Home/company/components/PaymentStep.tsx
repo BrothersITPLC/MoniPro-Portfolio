@@ -42,8 +42,8 @@ export function PaymentStep({
         <Card
           className={`relative group cursor-pointer transition-all duration-300 hover:scale-105 ${
             selectedPaymentMethod === 1
-              ? "ring-2 ring-violet-500 bg-red-50"
-              : "hover:border-violet-500"
+              ? "ring-2 ring-[var(--secondary)] bg-red-50"
+              : "hover:border-[var(--secondary)]"
           }`}
           onClick={() => setSelectedPaymentMethod(1)}
         >
@@ -61,7 +61,7 @@ export function PaymentStep({
             <p className="text-muted-foreground">Pay using TelleBirr mobile money</p>
             {selectedPaymentMethod === 1 && (
               <div className="absolute top-4 right-4">
-                <CheckCircle2 className="w-6 h-6 text-violet-500" />
+                <CheckCircle2 className="w-6 h-6 text-[var(--secondary)]" />
               </div>
             )}
           </div>
@@ -70,8 +70,8 @@ export function PaymentStep({
         <Card
           className={`relative group cursor-pointer transition-all duration-300 hover:scale-105 ${
             selectedPaymentMethod === 2
-              ? "ring-2 ring-violet-500 bg-red-50"
-              : "hover:border-violet-500"
+              ? "ring-2 ring-[var(--secondary)] bg-red-50"
+              : "hover:border-[var(--secondary)]"
           }`}
           onClick={() => setSelectedPaymentMethod(2)}
         >
@@ -89,7 +89,7 @@ export function PaymentStep({
             <p className="text-muted-foreground">Pay using Chapa payment gateway</p>
             {selectedPaymentMethod === 2 && (
               <div className="absolute top-4 right-4">
-                <CheckCircle2 className="w-6 h-6 text-violet-500" />
+                <CheckCircle2 className="w-6 h-6 text-[var(--secondary)]" />
               </div>
             )}
           </div>
@@ -109,7 +109,7 @@ export function PaymentStep({
           type="submit" 
           disabled={isLoading} 
           onClick={handleSubmit}
-          className="flex items-center gap-2 bg-violet-500 hover:bg-violet-600"
+          className="flex items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--primary)]"
         >
           {isLoading ? "Processing..." : "Complete Setup"}
           <ArrowRight className="w-4 h-4" />
