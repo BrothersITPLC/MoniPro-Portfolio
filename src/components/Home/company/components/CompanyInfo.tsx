@@ -107,7 +107,9 @@ export function CompanyInfo() {
             response.message ||
               "Organization information submitted successfully!"
           );
-          navigate("/home/dashbord");
+          setTimeout(() => {
+            navigate("/home/dashboard");
+          }, 1000);
         } else {
           toast.error(
             response.message || "Failed to submit the form. Please try again."
