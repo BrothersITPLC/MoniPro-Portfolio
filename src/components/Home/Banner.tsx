@@ -21,7 +21,7 @@ export function Banner() {
 
   return (
 
-      <div className="mx-auto space-y-8">
+      <div className="container mx-auto space-y-8">
         <div className="rounded-xl shadow-lg border-2  overflow-hidden">
           <div className="p-6">
             <div className="flex  justify-between flex-wrap gap-4">

@@ -23,9 +23,10 @@ export function SubscriptionStep({
   onPrevious,
   onNext,
   onChangePlan,
+  planType
 }: SubscriptionStepProps) {
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
-  const { user } = useSelector((state: RootState) => state.auth);
+  // const { user } = useSelector((state: RootState) => state.auth);
   const handleDurationSelect = (durationId: number) => {
     setSelectedDuration(durationId);
     form.setValue("organization_payment_duration", durationId);
@@ -41,7 +42,7 @@ export function SubscriptionStep({
          
         
         </h2>
-        {selectedPlanData && (
+        {selectedPlanData &&  (
           <div className="text-center mb-4 bg-[var(--light)] dark:bg-neutral-800  dark:border-2 dark:text-white  py-3 rounded-lg">
             <span className="text-lg font-medium inline-flex items-center gap-2">
               <RefreshCcw className="w-5 h-5 text-[var(--secondary)]" />
@@ -53,7 +54,7 @@ export function SubscriptionStep({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-        {selectedPlan && !user?.is_private && (
+        {selectedPlan && planType != "individual" && (
           <div className="col-span-full mb-4">
             <Button
               variant="outline"
