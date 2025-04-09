@@ -35,7 +35,6 @@ import { logoutState } from "@/components/Auth/AutSlice";
 export function NavUser() {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
-
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const [logout, { isLoading }] = useLogoutMutation();
@@ -56,6 +55,7 @@ export function NavUser() {
       toast.error(error.data?.message || "Failed to Logout. Please try again.");
     }
   };
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -63,69 +63,99 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="hover:bg-[#f5f3ff] transition-all duration-200 rounded-xl p-2
+                         data-[state=open]:bg-[#f5f3ff] data-[state=open]:shadow-md"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user?.user_name} alt={user?.user_name} />
-                <AvatarFallback className="rounded-lg">
-                  <UserRoundCheck />
+              <Avatar className="h-10 w-10 rounded-lg border-2 border-[#7c3aed]">
+                <AvatarImage 
+                  src={user?.user_name} 
+                  alt={user?.user_name}
+                  className="object-cover"
+                />
+                <AvatarFallback className="rounded-lg bg-[#8b5cf6] text-white">
+                  <UserRoundCheck className="h-5 w-5" />
                 </AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user?.user_name}</span>
-                <span className="truncate text-xs">{user?.user_email}</span>
+              <div className="grid flex-1 text-left text-sm leading-tight ml-3">
+                <span className="truncate font-semibold text-[15px] text-gray-800">
+                  {user?.user_name}
+                </span>
+                <span className="truncate text-[13px] text-gray-600">
+                  {user?.user_email}
+                </span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
+              <ChevronsUpDown className="ml-auto size-5 text-[#8b5cf6]" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
+            className="w-[280px] rounded-xl shadow-lg border border-[#ddd6fe]"
             side={isMobile ? "bottom" : "right"}
             align="end"
-            sideOffset={4}
+            sideOffset={8}
           >
             <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user?.user_name} alt={user?.user_name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              <div className="flex items-center gap-3 p-3 text-left">
+                <Avatar className="h-12 w-12 rounded-lg border-2 border-[#7c3aed]">
+                  <AvatarImage 
+                    src={user?.user_name} 
+                    alt={user?.user_name}
+                    className="object-cover" 
+                  />
+                  <AvatarFallback className="rounded-lg bg-[#8b5cf6] text-white">
+                    <UserRoundCheck className="h-6 w-6" />
+                  </AvatarFallback>
                 </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
+                <div className="grid flex-1 text-left leading-tight">
+                  <span className="truncate font-semibold text-[16px] text-gray-800">
                     {user?.user_name}
                   </span>
-                  <span className="truncate text-xs">{user?.user_email}</span>
+                  <span className="truncate text-[14px] text-gray-600">
+                    {user?.user_email}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-[#ddd6fe]" />
             <DropdownMenuGroup>
               <Link to="/home/subscription">
-                <DropdownMenuItem>
-                  <Sparkles />
-                  update subscriprion plane
+                <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
+                                          hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
+                                          rounded-lg mx-1 my-0.5">
+                  <Sparkles className="mr-2 h-5 w-5 text-[#7c3aed]" />
+                  <span className="font-medium">Update Subscription Plan</span>
                 </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+            <DropdownMenuSeparator className="bg-[#ddd6fe]" />
+            <DropdownMenuGroup className="p-1">
+              <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
+                                        hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
+                                        rounded-lg">
+                <BadgeCheck className="mr-2 h-5 w-5 text-[#8b5cf6]" />
+                <span className="font-medium">Account</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
+              <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
+                                        hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
+                                        rounded-lg">
+                <CreditCard className="mr-2 h-5 w-5 text-[#8b5cf6]" />
+                <span className="font-medium">Billing</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+              <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
+                                        hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
+                                        rounded-lg">
+                <Bell className="mr-2 h-5 w-5 text-[#8b5cf6]" />
+                <span className="font-medium">Notifications</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSubmit}>
-              <LogOut />
-              Log out
+            <DropdownMenuSeparator className="bg-[#ddd6fe]" />
+            <DropdownMenuItem 
+              onClick={handleSubmit}
+              className="py-2.5 px-3 text-[14px] cursor-pointer
+                       hover:bg-red-50 focus:bg-red-50 text-red-600
+                       rounded-lg mx-1 my-0.5"
+            >
+              <LogOut className="mr-2 h-5 w-5" />
+              <span className="font-medium">Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
