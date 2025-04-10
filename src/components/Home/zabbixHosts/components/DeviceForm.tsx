@@ -1,29 +1,52 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Server, Network, Key, Globe, Database } from "lucide-react"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Server, Network, Key, Globe, Database } from "lucide-react";
 
 const schema = z.object({
   host: z.string().min(1, "Host name is required"),
-  ip: z.string().optional(),
+  ip: z.string().ip({ message: "Invalid IP address" }),
   dns: z.string().optional(),
   username: z.string().min(1, "Username is required"),
   password: z.string().min(1, "Password is required"),
   network_type: z.string().min(1, "Network type is required"),
   device_type: z.string(),
   network_device_type: z.string().optional(),
-})
-
+}).refine(
+    (data) => {
+      if (data.device_type === "network") {
+        return data.network_device_type !== undefined && data.network_device_type !== "";
+      }
+      return true;
+    },
+    {
+      message: "Network device type is required",
+      path: ["network_device_type"],
+    }
+  );
 interface DeviceFormProps {
-  onSubmit: (data: any) => void
-  type: "vm" | "network"
-  onTypeChange: (type: "vm" | "network") => void
+  onSubmit: (data: any) => void;
+  type: "vm" | "network";
+  onTypeChange: (type: "vm" | "network") => void;
 }
 
 export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
@@ -39,7 +62,7 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
       device_type: type,
       network_device_type: "",
     },
-  })
+  });
 
   return (
     <Card className="w-full max-w-2xl mx-auto shadow-lg">
@@ -80,7 +103,9 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                   name="host"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700">Host Name</FormLabel>
+                      <FormLabel className="text-slate-700">
+                        Host Name <span className="text-red-300">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -99,9 +124,15 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                     name="ip"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-700">IP Address (Optional)</FormLabel>
+                        <FormLabel className="text-slate-700">
+                          IP Address <span className="text-red-300">*</span>
+                        </FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="192.168.1.1" className="focus-visible:ring-emerald-500 h-9" />
+                          <Input
+                            {...field}
+                            placeholder="192.168.1.1"
+                            className="focus-visible:ring-emerald-500 h-9"
+                          />
                         </FormControl>
                         <FormMessage className="text-red-500" />
                       </FormItem>
@@ -113,7 +144,9 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                     name="dns"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-700">DNS (Optional)</FormLabel>
+                        <FormLabel className="text-slate-700">
+                          DNS (Optional)
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -133,8 +166,13 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                     name="network_device_type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-700">Device Type</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <FormLabel className="text-slate-700">
+                          Device Type
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
                           <FormControl>
                             <SelectTrigger className="focus-visible:ring-emerald-500 h-9">
                               <SelectValue placeholder="Select device type" />
@@ -144,7 +182,9 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                             <SelectItem value="router">Router</SelectItem>
                             <SelectItem value="switch">Switch</SelectItem>
                             <SelectItem value="firewall">Firewall</SelectItem>
-                            <SelectItem value="loadbalancer">Load Balancer</SelectItem>
+                            <SelectItem value="loadbalancer">
+                              Load Balancer
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                         <FormMessage className="text-red-500" />
@@ -166,9 +206,15 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700">Username</FormLabel>
+                      <FormLabel className="text-slate-700">
+                        Username <span className="text-red-300">*</span>
+                      </FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="admin" className="focus-visible:ring-emerald-500 h-9" />
+                        <Input
+                          {...field}
+                          placeholder="admin"
+                          className="focus-visible:ring-emerald-500 h-9"
+                        />
                       </FormControl>
                       <FormMessage className="text-red-500" />
                     </FormItem>
@@ -180,7 +226,9 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700">Password</FormLabel>
+                      <FormLabel className="text-slate-700">
+                        Password <span className="text-red-300">*</span>
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="password"
@@ -206,7 +254,9 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                 name="network_type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-slate-700">Network Type</FormLabel>
+                    <FormLabel className="text-slate-700">
+                      Network Type <span className="text-red-300">*</span>
+                    </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
                         <SelectTrigger className="focus-visible:ring-emerald-500 h-9">
@@ -233,7 +283,10 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
               >
                 Reset
               </Button>
-              <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">
+              <Button
+                type="submit"
+                className="bg-emerald-600 hover:bg-emerald-700"
+              >
                 Create Device
               </Button>
             </div>
@@ -241,6 +294,5 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
         </Form>
       </CardContent>
     </Card>
-  )
+  );
 }
-

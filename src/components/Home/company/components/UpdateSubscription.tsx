@@ -34,7 +34,7 @@ export function UpdateSubscription() {
 
   const form = useForm({
     defaultValues: {
-      organization_payment_plane: selectedPlan,
+      organization_payment_plan: selectedPlan,
       organization_payment_duration: null,
     },
   });
@@ -71,7 +71,7 @@ export function UpdateSubscription() {
     try {
       const duration = form.getValues("organization_payment_duration");
       const payload = {
-        organization_payment_plane: selectedPlan,
+        organization_payment_plan: selectedPlan,
         organization_payment_duration: duration,
       };
 

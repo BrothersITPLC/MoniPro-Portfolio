@@ -27,10 +27,6 @@ interface PlanSelectionProps {
   onNext: (step: number) => void;
 }
 
-const PaymentSchema = z.object({
-  payment_provider: z.number().min(1, "Payment provider is required"),
-});
-
 export function PaymentStep({ onNext }: PlanSelectionProps) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
