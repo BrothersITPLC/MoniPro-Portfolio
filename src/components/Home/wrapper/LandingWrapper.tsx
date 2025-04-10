@@ -28,6 +28,7 @@ const customStyles = `
 
 export function LandingWrapper() {
   const user = useSelector((state: any) => state.auth.user);
+  console.log(user);
   const [setZabbixCredentialsFirst] = useSetZabbixCredentialsFirstMutation();
   const [setZabbixUser] = useSetZabbixUserMutation();
 

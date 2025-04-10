@@ -50,7 +50,7 @@ const getDefaultNavData = () => ({
       items: [
         {
           title: "Information",
-          url: "/home/comp-info",
+          url: "/home/info-update",
         },
         {
           title: "Team",

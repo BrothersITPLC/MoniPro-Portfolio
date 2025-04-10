@@ -6,7 +6,7 @@ export interface User {
   user_email: string;
   is_private: boolean;
   organization_name: string;
-  organization_payment_plane: string;
+  organization_payment_plan: string;
   organization_payment_duration: string;
   organization_phone: string;
   organization_website: string;

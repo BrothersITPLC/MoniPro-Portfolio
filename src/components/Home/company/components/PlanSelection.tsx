@@ -18,6 +18,7 @@ const subscriptionTypeSchema = z.object({
 
 interface PlanSelectionProps {
   onNext: (step: number) => void;
+  onPrevious: () => void;
 }
 
 export function PlanSelection({ onNext }: PlanSelectionProps) {
@@ -38,8 +39,8 @@ export function PlanSelection({ onNext }: PlanSelectionProps) {
       ...organizationData, // spread existing data first
       is_private: type, // then override is_private
       payment_provider: organizationData?.payment_provider ?? 0,
-      organization_payment_plane:
-        organizationData?.organization_payment_plane ?? 0,
+      organization_payment_plan:
+        organizationData?.organization_payment_plan ?? 0,
       organization_payment_duration:
         organizationData?.organization_payment_duration ?? 0,
       user_id: organizationData?.user_id ?? 0,

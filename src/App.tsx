@@ -24,6 +24,8 @@ import { PerformanceAlerts } from "./components/Home/notification/components/Per
 import { UpdateSubscription } from "./components/Home/company/components/UpdateSubscription";
 import { ResetPassword } from "./pages/ResetPassword";
 import { GoogleCallback } from "./components/Auth/components/GoogleCallback";
+import  {PersonalInfoUpdate}  from "./components/Home/company/components/Infoupdate";
+
 function App() {
   return (
     <Router>
@@ -51,6 +53,7 @@ function App() {
                 element={<UpdateSubscription />}
               />{" "}
               <Route path="comp-info" element={<CompanyInfo />} />
+              <Route path="info-update" element={<PersonalInfoUpdate />} />
               <Route path="device-mangment" element={<DeviceWrapper />} />
               <Route path="notification" element={<NotificationWrapper />}>
                 <Route path="security" element={<SecurityAlerts />} />
