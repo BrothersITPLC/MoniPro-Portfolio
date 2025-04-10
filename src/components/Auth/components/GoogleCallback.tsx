@@ -34,13 +34,19 @@ export function GoogleCallback() {
           setStatus("success");
           // Notify the opener window and close this one
           if (window.opener) {
+            // First send the message with user data
             window.opener.postMessage(
-              { action: "google-login-success", user: response.user },
+              { action: "google-authentication-success", user: response.user },
               window.location.origin
             );
+
+            // Then force a reload of the opener window after a short delay to ensure message is processed
+            setTimeout(() => {
+              window.opener.location.reload();
+            }, 500);
           }
 
-          toast.success("Google login successful!");
+          toast.success("Google Authentication successful!");
 
           // Close this window after a short delay
           setTimeout(() => {
@@ -78,7 +84,7 @@ export function GoogleCallback() {
             <div className="flex justify-center mb-4">
               <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
             </div>
-            <p>Processing your login...</p>
+            <p>Processing your request...</p>
           </>
         )}
 
@@ -100,7 +106,9 @@ export function GoogleCallback() {
                 />
               </svg>
             </div>
-            <p className="text-green-600 font-medium">Login successful!</p>
+            <p className="text-green-600 font-medium">
+              Authentication successful!
+            </p>
           </>
         )}
 

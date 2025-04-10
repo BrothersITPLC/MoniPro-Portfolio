@@ -1,18 +1,76 @@
-import { User, Globe, Phone, FileText, ArrowRight, ArrowLeft } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import type { UseFormReturn } from "react-hook-form"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import {
+  User,
+  Globe,
+  Phone,
+  FileText,
+  ArrowRight,
+  ArrowLeft,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "@/app/store";
+import { setOrganization } from "../companySclice";
+import type { OrganizationDataInfrence } from "../companySclice";
 
-interface PersonalInfoStepProps {
-  form: UseFormReturn<any>
-  onPrevious: () => void;
-  onSubmit: (values: any) => void
+interface PlanSelectionProps {
+  onNext: (step: number) => void;
 }
+const personalInfoSchema = z.object({
+  first_name: z.string().min(1, "first name name is required"),
+  last_name: z.string().min(1, "last name name name is required"),
+  organization_phone: z
+    .string()
+    .regex(
+      /^0[79]\d{8}$/,
+      "Phone number must be 10 digits and start with 09 or 07"
+    ),
+  organization_website: z.string().optional(),
+  organization_description: z.string().optional(),
+});
+export function PersonalInfoStep({ onNext }: PlanSelectionProps) {
+  const dispatch = useDispatch();
+  const organizationData = useSelector(
+    (state: RootState) => state.companyInfo.organizationData
+  );
 
-export function PersonalInfoStep({ form, onPrevious, onSubmit }: PersonalInfoStepProps) {
+  const form = useForm<z.infer<typeof personalInfoSchema>>({
+    resolver: zodResolver(personalInfoSchema),
+    defaultValues: {
+      first_name: organizationData?.first_name || "",
+      last_name: organizationData?.last_name || "",
+      organization_phone: organizationData?.organization_phone || "",
+      organization_website: organizationData?.organization_website || "",
+      organization_description:
+        organizationData?.organization_description || "",
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof personalInfoSchema>) => {
+    const updatedData: OrganizationDataInfrence = {
+      ...organizationData!,
+      ...data,
+    };
+    dispatch(setOrganization(updatedData));
+    onNext(3);
+  };
+
+  const onPrevious = () => {
+    onNext(1);
+  };
   return (
     <div className="max-w-3xl mx-auto py-10 mt-10">
       <Card className="border-none shadow-none">
@@ -21,7 +79,10 @@ export function PersonalInfoStep({ form, onPrevious, onSubmit }: PersonalInfoSte
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-8 w-full"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
@@ -68,7 +129,7 @@ export function PersonalInfoStep({ form, onPrevious, onSubmit }: PersonalInfoSte
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
-                  name="phone_number"
+                  name="organization_phone"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex items-center gap-2">
@@ -88,31 +149,29 @@ export function PersonalInfoStep({ form, onPrevious, onSubmit }: PersonalInfoSte
                 />
                 <FormField
                   control={form.control}
-                  name="personal_website"
+                  name="organization_website"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex items-center gap-2">
                         <Globe className="h-4 w-4 text-muted-foreground" />
-                         Personal Website
+                        Personal Website
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="https://yourwebsite.com "
-                          type="description"
+                          placeholder="https://yourwebsite.com"
                           {...field}
                           className="border-border/60 focus-visible:ring-primary/20"
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-                    
                   )}
                 />
               </div>
 
               <FormField
                 control={form.control}
-                name="description "
+                name="organization_description"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
@@ -121,10 +180,9 @@ export function PersonalInfoStep({ form, onPrevious, onSubmit }: PersonalInfoSte
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="account description"
-                        type="description"
+                        placeholder="Tell us about yourself..."
                         {...field}
-                        className="border-border/60 focus-visible:ring-primary/20"
+                        className="border-border/60 focus-visible:ring-primary/20 min-h-[120px]"
                       />
                     </FormControl>
                     <FormMessage />
@@ -133,8 +191,8 @@ export function PersonalInfoStep({ form, onPrevious, onSubmit }: PersonalInfoSte
               />
 
               <div className="pt-2 flex justify-between">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={onPrevious}
                   className="flex items-center gap-2"
                 >
@@ -155,5 +213,5 @@ export function PersonalInfoStep({ form, onPrevious, onSubmit }: PersonalInfoSte
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

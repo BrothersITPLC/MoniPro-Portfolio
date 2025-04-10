@@ -35,23 +35,26 @@ export function Login({ onToggle, onReset }: LoginProps) {
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
-      if (event.data && event.data.action === "google-login-success") {
+      if (event.data && event.data.action === "google-authentication-success") {
         toast.success("Google login successful!");
         setIsGoogleLoading(false);
-        // Force a refresh of the user data after Google login
-        window.location.href = "/home/dashboard";
+
+        // Check if organization info is completed
+        if (event.data.user && !event.data.user.organization_info_completed) {
+          navigate("/home/comp-info");
+        } else {
+          navigate("/home/dashboard");
+        }
       }
     };
 
     window.addEventListener("message", messageHandler);
     return () => window.removeEventListener("message", messageHandler);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (user) {
-      if (!user.organization_info_completed && user.is_private) {
-        navigate("/home/private-info");
-      } else if (!user.organization_info_completed && !user.is_private) {
+      if (!user.organization_info_completed) {
         navigate("/home/comp-info");
       } else {
         navigate("/home/dashboard");

@@ -1,11 +1,21 @@
-import { useEffect } from "react"
-import { Banner } from "../Banner"
-import { InfrastructureShowcase } from "../zabbixHosts/components/InfrastructureShowcase"
-import { useSelector } from "react-redux"
-import { useSetZabbixCredentialsFirstMutation, useSetZabbixUserMutation } from "@/components/Auth/api"
-import { Server, Network, Users, Database, AlertTriangle, ClipboardList } from "lucide-react"
+import { useEffect } from "react";
+import { Banner } from "../Banner";
+import { InfrastructureShowcase } from "../zabbixHosts/components/InfrastructureShowcase";
+import { useSelector } from "react-redux";
+import {
+  useSetZabbixCredentialsFirstMutation,
+  useSetZabbixUserMutation,
+} from "@/components/Auth/api";
+import {
+  Server,
+  Network,
+  Users,
+  Database,
+  AlertTriangle,
+  ClipboardList,
+} from "lucide-react";
 
-import type { User } from "@/components/Auth/AutSlice"
+import type { User } from "@/components/Auth/AutSlice";
 
 const customStyles = `
   :root {
@@ -14,42 +24,42 @@ const customStyles = `
     --accent: #ddd6fe !important; 
     --light: #f5f3ff !important;
   }
-`
+`;
 
 export function LandingWrapper() {
-  const user = useSelector((state: any) => state.auth.user)
-  const [setZabbixCredentialsFirst] = useSetZabbixCredentialsFirstMutation()
-  const [setZabbixUser] = useSetZabbixUserMutation()
+  const user = useSelector((state: any) => state.auth.user);
+  const [setZabbixCredentialsFirst] = useSetZabbixCredentialsFirstMutation();
+  const [setZabbixUser] = useSetZabbixUserMutation();
 
   const handleSetZabbixCredentials = async (user: User | null) => {
-    if (user && !user.user_have_zabbix_credentials_1) {
+    if (user && !user.user_have_zabbix_credentials) {
       try {
-        await setZabbixCredentialsFirst({}).unwrap()
+        await setZabbixCredentialsFirst({}).unwrap();
       } catch (error) {
-        console.error("Failed to set Zabbix credentials:", error)
+        console.error("Failed to set Zabbix credentials:", error);
       }
     }
-  }
+  };
 
   const handleSetZabbixUser = async (user: User | null) => {
     if (user && !user.user_have_zabbix_user) {
       try {
-        await setZabbixUser({}).unwrap()
+        await setZabbixUser({}).unwrap();
       } catch (error) {
-        console.error("Failed to set Zabbix user:", error)
+        console.error("Failed to set Zabbix user:", error);
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (user && user.organization_info_completed) {
       const setupZabbix = async () => {
-        await handleSetZabbixCredentials(user)
-        await handleSetZabbixUser(user)
-      }
-      setupZabbix()
+        await handleSetZabbixCredentials(user);
+        await handleSetZabbixUser(user);
+      };
+      setupZabbix();
     }
-  }, [user])
+  }, [user]);
 
   const mockVMs = [
     {
@@ -85,7 +95,7 @@ export function LandingWrapper() {
       availability: "ZBX",
       agent_type: "Linux by Zabbix agent",
     },
-  ]
+  ];
 
   const mockNetworkDevices = [
     {
@@ -104,11 +114,11 @@ export function LandingWrapper() {
       status: "Enabled",
       availability: "ZBX ",
     },
-  ]
+  ];
 
-  const isLoading = false
-  const vms = mockVMs
-  const networkDevices = mockNetworkDevices
+  const isLoading = false;
+  const vms = mockVMs;
+  const networkDevices = mockNetworkDevices;
 
   const dashboardData = {
     totalHosts: vms.length + networkDevices.length,
@@ -116,14 +126,34 @@ export function LandingWrapper() {
     networkCount: networkDevices.length,
     totalUsers: 8,
     recentProblems: [
-      { id: 1, name: "Server01 CPU High", severity: "high", time: "10 min ago" },
-      { id: 2, name: "Network Switch Down", severity: "critical", time: "1 hour ago" },
+      {
+        id: 1,
+        name: "Server01 CPU High",
+        severity: "high",
+        time: "10 min ago",
+      },
+      {
+        id: 2,
+        name: "Network Switch Down",
+        severity: "critical",
+        time: "1 hour ago",
+      },
     ],
     recentTasks: [
-      { id: 1, user: "John Doe", action: "Restarted Server03", time: "15 min ago" },
-      { id: 2, user: "Jane Smith", action: "Updated firewall rules", time: "2 hours ago" },
+      {
+        id: 1,
+        user: "John Doe",
+        action: "Restarted Server03",
+        time: "15 min ago",
+      },
+      {
+        id: 2,
+        user: "Jane Smith",
+        action: "Updated firewall rules",
+        time: "2 hours ago",
+      },
     ],
-  }
+  };
 
   return (
     <div className="w-full">
@@ -139,16 +169,24 @@ export function LandingWrapper() {
                 <Database className="size-6 text-white" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Total Hosts</h3>
-                <p className="text-2xl font-bold text-[#7c3aed]">{dashboardData.totalHosts}</p>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Total Hosts
+                </h3>
+                <p className="text-2xl font-bold text-[#7c3aed]">
+                  {dashboardData.totalHosts}
+                </p>
                 <div className="mt-2 flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-sm">
                     <Server className="size-4 text-[#8b5cf6]" />
-                    <span className="text-gray-700">{dashboardData.vmCount} Virtual Machines</span>
+                    <span className="text-gray-700">
+                      {dashboardData.vmCount} Virtual Machines
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <Network className="size-4 text-[#8b5cf6]" />
-                    <span className="text-gray-700">{dashboardData.networkCount} Network Devices</span>
+                    <span className="text-gray-700">
+                      {dashboardData.networkCount} Network Devices
+                    </span>
                   </div>
                 </div>
               </div>
@@ -162,8 +200,12 @@ export function LandingWrapper() {
                 <Users className="size-6 text-white" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
-                <p className="text-2xl font-bold text-[#8b5cf6]">{dashboardData.totalUsers}</p>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Total Users
+                </h3>
+                <p className="text-2xl font-bold text-[#8b5cf6]">
+                  {dashboardData.totalUsers}
+                </p>
               </div>
             </div>
           </div>
@@ -175,11 +217,15 @@ export function LandingWrapper() {
                 <AlertTriangle className="size-6 text-white" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Recent Problems</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Recent Problems
+                </h3>
                 <div className="mt-2 space-y-2">
                   {dashboardData.recentProblems.map((problem) => (
                     <div key={problem.id} className="text-sm">
-                      <p className="font-medium text-gray-700">{problem.name}</p>
+                      <p className="font-medium text-gray-700">
+                        {problem.name}
+                      </p>
                       <p className="text-xs text-gray-500">{problem.time}</p>
                     </div>
                   ))}
@@ -195,7 +241,9 @@ export function LandingWrapper() {
                 <ClipboardList className="size-6 text-white" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Recent Tasks</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Recent Tasks
+                </h3>
                 <div className="mt-2 space-y-2">
                   {dashboardData.recentTasks.map((task) => (
                     <div key={task.id} className="text-sm">
@@ -217,7 +265,11 @@ export function LandingWrapper() {
             <Server className="size-6 text-[#7c3aed]" />
             Virtual Machines
           </h2>
-          <InfrastructureShowcase devices={vms} type="vm" isLoading={isLoading} />
+          <InfrastructureShowcase
+            devices={vms}
+            type="vm"
+            isLoading={isLoading}
+          />
         </section>
 
         {/* Network Devices Section */}
@@ -226,9 +278,13 @@ export function LandingWrapper() {
             <Network className="size-6 text-[#7c3aed]" />
             Network Devices
           </h2>
-          <InfrastructureShowcase devices={networkDevices} type="network" isLoading={isLoading} />
+          <InfrastructureShowcase
+            devices={networkDevices}
+            type="network"
+            isLoading={isLoading}
+          />
         </section>
       </div>
     </div>
-  )
+  );
 }

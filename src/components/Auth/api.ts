@@ -7,23 +7,14 @@ export const authApi = createApi({
   baseQuery: baseQueryWithReauth,
   tagTypes: ["Profile", "Infrastructures"],
   endpoints: (builder) => ({
-    organizationRegister: builder.mutation({
+    initialRegister: builder.mutation({
       query: (user) => ({
-        url: "/organization-register/",
+        url: "/initial-register/",
         method: "POST",
         body: user,
       }),
       invalidatesTags: ["Profile", "Infrastructures"],
     }),
-    privateRegister: builder.mutation({
-      query: (user) => ({
-        url: "/private-register/",
-        method: "POST",
-        body: user,
-      }),
-      invalidatesTags: ["Profile", "Infrastructures"],
-    }),
-
     getProfile: builder.query({
       query: () => ({
         url: "/profile/",
@@ -163,8 +154,7 @@ export const authApi = createApi({
 });
 
 export const {
-  useOrganizationRegisterMutation,
-  usePrivateRegisterMutation,
+  useInitialRegisterMutation,
   useLoginMutation,
   useLogoutMutation,
   useOtpVerficationMutation,

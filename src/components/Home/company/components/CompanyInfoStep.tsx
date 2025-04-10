@@ -1,28 +1,87 @@
-import { Building2, Globe, Phone, FileText, ArrowRight, ArrowLeft } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import type { UseFormReturn } from "react-hook-form"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-
-interface CompanyInfoStepProps {
-  form: UseFormReturn<any>
-  onPrevious: () => void;
-  onSubmit: (values: any) => void
+import {
+  Building2,
+  Globe,
+  Phone,
+  FileText,
+  ArrowRight,
+  ArrowLeft,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "@/app/store";
+import { setOrganization } from "../companySclice";
+import type { OrganizationDataInfrence } from "../companySclice";
+interface PlanSelectionProps {
+  onNext: (step: number) => void;
 }
 
-export function CompanyInfoStep({ form, onPrevious, onSubmit }: CompanyInfoStepProps) {
+const CompanyInfoSchema = z.object({
+  organization_name: z.string().min(1, "Company name is required"),
+  organization_phone: z
+    .string()
+    .regex(
+      /^0[79]\d{8}$/,
+      "Phone number must be 10 digits and start with 09 or 07"
+    ),
+  organization_website: z.string().optional(),
+  organization_description: z.string().optional(),
+});
+
+export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
+  const dispatch = useDispatch();
+  const organizationData = useSelector(
+    (state: RootState) => state.companyInfo.organizationData
+  );
+
+  const form = useForm<z.infer<typeof CompanyInfoSchema>>({
+    resolver: zodResolver(CompanyInfoSchema),
+    defaultValues: {
+      organization_name: organizationData?.organization_name || "",
+      organization_phone: organizationData?.organization_phone || "",
+      organization_website: organizationData?.organization_website || "",
+      organization_description:
+        organizationData?.organization_description || "",
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof CompanyInfoSchema>) => {
+    const updatedData: OrganizationDataInfrence = {
+      ...organizationData!,
+      ...data,
+    };
+    dispatch(setOrganization(updatedData));
+    onNext(3);
+  };
+
+  const onPrevious = () => {
+    onNext(1);
+  };
   return (
     <div className="max-w-3xl mx-auto py-10 mt-10">
       <Card className="border-none shadow-none">
         <CardHeader className="space-y-1">
           {/* <CardTitle className="text-2xl font-bold">Company Information</CardTitle> */}
-          
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-8 w-full"
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
@@ -44,7 +103,6 @@ export function CompanyInfoStep({ form, onPrevious, onSubmit }: CompanyInfoStepP
                     </FormItem>
                   )}
                 />
-                {/* Apply the same changes to other form fields */}
                 <FormField
                   control={form.control}
                   name="organization_phone"
@@ -110,8 +168,8 @@ export function CompanyInfoStep({ form, onPrevious, onSubmit }: CompanyInfoStepP
               />
 
               <div className="pt-2 flex justify-between">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={onPrevious}
                   className="flex items-center gap-2"
                 >
@@ -119,7 +177,10 @@ export function CompanyInfoStep({ form, onPrevious, onSubmit }: CompanyInfoStepP
                   Previous Step
                 </Button>
 
-                <Button type="submit" className="flex text-white items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--primary)]">
+                <Button
+                  type="submit"
+                  className="flex text-white items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--primary)]"
+                >
                   Next Step
                   <ArrowRight className="h-4 w-4" />
                 </Button>
@@ -129,5 +190,5 @@ export function CompanyInfoStep({ form, onPrevious, onSubmit }: CompanyInfoStepP
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

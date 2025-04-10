@@ -13,7 +13,7 @@ export interface User {
   organization_description: string;
   organization_id: number;
   user_id: number;
-  user_have_zabbix_credentials_1: boolean;
+  user_have_zabbix_credentials: boolean;
   user_have_zabbix_user: boolean;
 }
 

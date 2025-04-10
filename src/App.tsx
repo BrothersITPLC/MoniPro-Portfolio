@@ -13,7 +13,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
-import { PrivateInfo } from "@/components/Home/company/components/PrivateInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
 import { ZabbixHosts } from "./components/Home/zabbixHosts/components/zabbixhosts";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
@@ -51,7 +50,6 @@ function App() {
                 path="subscription"
                 element={<UpdateSubscription />}
               />{" "}
-              <Route path="private-info" element={<PrivateInfo />} />
               <Route path="comp-info" element={<CompanyInfo />} />
               <Route path="device-mangment" element={<DeviceWrapper />} />
               <Route path="notification" element={<NotificationWrapper />}>

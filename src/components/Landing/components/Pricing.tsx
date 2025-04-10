@@ -15,8 +15,6 @@ import { Button } from "@/components/ui/button";
 import { RootState } from "@/app/store";
 import { useEffect } from "react";
 
-
-
 const icons = [
   {
     icon: <Shield className="w-12 h-12 text-red-500" />,
@@ -49,8 +47,6 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
   } = useGetPlansQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-
-  console.log("pricing plan table", plansData);
 
   const selectedPlan = useSelector(
     (state: RootState) => state.landing.SelectedPlane
@@ -111,7 +107,13 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                     : ""
                 }
                 ${!showSelectedPlan ? "hover:border-red-400" : ""}`}
-                style={{ height: '100%', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
               >
                 <div className="relative pt-4">
                   <CardHeader>

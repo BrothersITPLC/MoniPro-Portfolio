@@ -39,12 +39,18 @@ export const handleGoogleAuth = async () => {
       const messageHandler = (event: MessageEvent) => {
         if (event.origin !== window.location.origin) return;
 
-        if (event.data && event.data.action === "google-login-success") {
+        if (
+          event.data &&
+          event.data.action === "google-authentication-success"
+        ) {
           clearInterval(popupCheckInterval);
           window.removeEventListener("message", messageHandler);
           localStorage.removeItem("googleAuthInProgress");
           resolve(true);
-        } else if (event.data && event.data.action === "google-login-error") {
+        } else if (
+          event.data &&
+          event.data.action === "google-authentication-error"
+        ) {
           clearInterval(popupCheckInterval);
           window.removeEventListener("message", messageHandler);
           localStorage.removeItem("googleAuthInProgress");
