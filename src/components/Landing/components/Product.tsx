@@ -3,7 +3,7 @@ import { Activity, Server, Cloud, Code } from "lucide-react";
 const monitoringCards = [
   {
     title: "Network Monitoring",
-    icon: <Activity className="w-8 h-8 text-red-500" />,
+    icon: <Activity className="w-8 h-8 text-[var(--secondary)]" />,
     description:
       "Real-time network performance monitoring with AI-powered insights",
     image:
@@ -11,7 +11,7 @@ const monitoringCards = [
   },
   {
     title: "Server Monitoring",
-    icon: <Server className="w-8 h-8 text-red-500" />,
+    icon: <Server className="w-8 h-8 text-[var(--secondary)]" />,
     description:
       "Comprehensive server health monitoring and predictive maintenance",
     image:
@@ -19,14 +19,14 @@ const monitoringCards = [
   },
   {
     title: "Cloud Monitoring",
-    icon: <Cloud className="w-8 h-8 text-red-500" />,
+    icon: <Cloud className="w-8 h-8 text-[var(--secondary)]" />,
     description: "Multi-cloud infrastructure monitoring and optimization",
     image:
       "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=2000",
   },
   {
     title: "Application Monitoring",
-    icon: <Code className="w-8 h-8 text-red-500" />,
+    icon: <Code className="w-8 h-8 text-[var(--secondary)]" />,
     description: "End-to-end application performance monitoring and debugging",
     image:
       "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=2000",
@@ -50,7 +50,7 @@ export function Product() {
           {monitoringCards.map((card, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-background text-gray-900 dark:text-gray-300 border border-red-600 dark:border-gray-700 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
+              className="bg-white dark:bg-background text-gray-900 dark:text-gray-300 border border-[var(--primary)] dark:border-gray-700 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
             >
               <div className="h-48 overflow-hidden">
                 <img

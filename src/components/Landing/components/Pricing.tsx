@@ -17,20 +17,16 @@ import { useEffect } from "react";
 
 const icons = [
   {
-    icon: <Shield className="w-12 h-12 text-red-500" />,
-    color: "red",
+    icon: <Shield className="w-12 h-12 text-[var(--primary)]" />,
   },
   {
-    icon: <Zap className="w-12 h-12 text-red-500" />,
-    color: "red",
+    icon: <Zap className="w-12 h-12 text-[var(--primary)]" />,
   },
   {
-    icon: <Database className="w-12 h-12 text-red-500" />,
-    color: "red",
+    icon: <Database className="w-12 h-12 text-[var(--primary)]" />,
   },
   {
-    icon: <Crown className="w-12 h-12 text-red-500" />,
-    color: "red",
+    icon: <Crown className="w-12 h-12 text-[var(--primary)]" />,
   },
 ];
 
@@ -76,7 +72,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
   return (
     <div
       id="pricing"
-      className=" py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background"
+      className="py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background"
     >
       <div className="max-w-max mx-auto">
         <h2 className="text-xl md:text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
@@ -88,7 +84,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
           scale as you grow.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="flex flex-row justify-center gap-8">
           {sortedPlansData
             .filter(
               (plan) =>
@@ -100,13 +96,13 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
             .map((plan, index) => (
               <Card
                 key={plan.id}
-                className={`bg-white dark:bg-background border-red-600 dark:border-gray-700 transition-all duration-300 hover:scale-105  
+                className={`bg-white dark:bg-background border-[var(--primary)] dark:border-gray-700 transition-all duration-300 hover:scale-105  
                 ${
                   selectedPlan === plan.id && showSelectedPlan
-                    ? "ring-2 ring-red-500"
+                    ? "ring-2 ring-[var(--primary)]"
                     : ""
                 }
-                ${!showSelectedPlan ? "hover:border-red-400" : ""}`}
+                ${!showSelectedPlan ? "hover:border-[var(--secondary)]" : ""}`}
                 style={{
                   height: "100%",
                   width: "100%",
@@ -140,7 +136,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                         <Badge
                           key={discount.duration}
                           variant="secondary"
-                          className="mr-2 bg-red-100 text-red-500 dark:bg-red-900/30"
+                          className="mr-2 bg-[var(--acent)] text-[var(--primary)] dark:bg-[var(--acent)]/30"
                         >
                           Save {discount.percentage}% on {discount.duration}{" "}
                           plan
@@ -152,7 +148,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                   <div className="space-y-3">
                     {plan.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-center">
-                        <Check className="w-5 h-5 text-red-500 mr-3" />
+                        <Check className="w-5 h-5 text-[var(--primary)] mr-3" />
                         <span className="text-sm text-gray-900 dark:text-gray-300">
                           {feature}
                         </span>
@@ -162,8 +158,8 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
 
                   {showSelectedPlan ? (
                     <Button
-                      className={`w-full mt-6 bg-red-500 hover:bg-red-600 transition-all transform hover:scale-105 ${
-                        selectedPlan === plan.id ? "bg-red-600" : ""
+                      className={`w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105 ${
+                        selectedPlan === plan.id ? "bg-[var(--secondary)]" : ""
                       }`}
                       onClick={() => handlePlanSelect(plan.id)}
                     >
@@ -171,7 +167,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                     </Button>
                   ) : isAuthenticated ? (
                     <Button
-                      className="w-full mt-6 bg-red-500 hover:bg-red-600 transition-all transform hover:scale-105"
+                      className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
                       onClick={() => handlePlanSelect(plan.id)}
                     >
                       Select Plan
@@ -179,7 +175,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                   ) : (
                     <Button
                       onClick={() => handlePlanSelect(plan.id)}
-                      className="w-full mt-6 bg-red-500 hover:bg-red-600 transition-all transform hover:scale-105"
+                      className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
                       asChild
                     >
                       <Link to="/auth">Get Started</Link>

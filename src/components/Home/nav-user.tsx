@@ -35,6 +35,7 @@ import { logoutState } from "@/components/Auth/AutSlice";
 export function NavUser() {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
+  
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const [logout, { isLoading }] = useLogoutMutation();
@@ -55,6 +56,12 @@ export function NavUser() {
       toast.error(error.data?.message || "Failed to Logout. Please try again.");
     }
   };
+
+  const selectedPlan = useSelector(
+    (state: RootState) => state.landing.SelectedPlane
+  );
+
+ console.log("this is the selected plane", selectedPlan);
 
   return (
     <SidebarMenu>
@@ -116,7 +123,7 @@ export function NavUser() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-[#ddd6fe]" />
-            <DropdownMenuGroup>
+             <DropdownMenuGroup>
               <Link to="/home/subscription">
                 <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
                                           hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]

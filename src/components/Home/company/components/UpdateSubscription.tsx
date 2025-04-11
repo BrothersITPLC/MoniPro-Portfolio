@@ -147,7 +147,7 @@ export function UpdateSubscription() {
 
     return (
       <div className="max-w-4xl mx-auto p-6">
-        <Card className="mb-6">
+        {selectedPlan !== 4 && <Card className="mb-6">
           <CardHeader>
             <CardTitle>Current Subscription</CardTitle>
             <CardDescription>
@@ -171,7 +171,7 @@ export function UpdateSubscription() {
               </div>
             </div>
           </CardContent>
-        </Card>
+        </Card>}
 
         <Card>
           <CardHeader>
@@ -203,12 +203,7 @@ export function UpdateSubscription() {
         duration={durationDetails.name}
         savings={durationDetails.savings}
       />
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold">Subscription Management</h1>
-        <p className="text-muted-foreground mt-2">
-          Update or change your subscription plan and billing cycle
-        </p>
-      </div>
+
       {renderContent()}
     </div>
   );

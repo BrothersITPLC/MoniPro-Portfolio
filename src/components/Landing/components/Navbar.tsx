@@ -49,7 +49,7 @@ export function Navbar() {
         <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between ">
           <NavigationMenuItem className="font-bold flex">
             <Link to="/" className="flex items-center">
-              <Activity className="h-8 w-8 text-red-500" />
+              <Activity className="h-8 w-8 text-violet-500" />
               <span className="ml-2 text-xl font-bold">MoniPro</span>
             </Link>
           </NavigationMenuItem>
@@ -119,7 +119,7 @@ export function Navbar() {
           <div className="hidden md:flex gap-2">
             <Link
               to="/auth"
-              className={`border ${buttonVariants({ variant: "secondary" })}`}
+              className={`text-white border ${buttonVariants({ variant: "secondary" })}`}
             >
               Login{" "}
             </Link>

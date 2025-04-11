@@ -19,9 +19,9 @@ export function AiFeatures() {
           with smart automation and insights.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white dark:bg-background border border-red-600 dark:border-gray-700 p-8 rounded-xl hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105">
+          <div className="bg-white dark:bg-background border border-[var(--primary)] dark:border-gray-700 p-8 rounded-xl hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105">
             <div className="mb-6">
-              <Activity className="w-12 h-12 text-red-500" />
+              <Activity className="w-12 h-12 text-[var(--secondary)]" />
             </div>
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-300">
               Predictive Analytics
@@ -31,9 +31,9 @@ export function AiFeatures() {
               they occur.
             </p>
           </div>
-          <div className="bg-white dark:bg-background border border-red-600 dark:border-gray-700 p-8 rounded-xl hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105">
+          <div className="bg-white dark:bg-background border border-[var(--primary)] dark:border-gray-700 p-8 rounded-xl hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105">
             <div className="mb-6">
-              <Server className="w-12 h-12 text-red-500" />
+              <Server className="w-12 h-12 text-[var(--secondary)]" />
             </div>
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-300">
               Automated Response
@@ -42,9 +42,9 @@ export function AiFeatures() {
               Intelligent automation that responds to incidents in real-time.
             </p>
           </div>
-          <div className="bg-white dark:bg-background border border-red-600 dark:border-gray-700 p-8 rounded-xl hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105">
+          <div className="bg-white dark:bg-background border border-[var(--primary)] dark:border-gray-700 p-8 rounded-xl hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105">
             <div className="mb-6">
-              <Cloud className="w-12 h-12 text-red-500" />
+              <Cloud className="w-12 h-12 text-[var(--secondary)]" />
             </div>
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-300">
               Smart Alerts

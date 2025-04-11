@@ -45,11 +45,11 @@ export function Testimonials() {
           {testimonials.map((testimonial, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-background border border-red-600 dark:border-gray-700 p-8 rounded-xl hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105"
+              className="bg-white dark:bg-background border border-[var(--primary)] dark:border-gray-700 p-8 rounded-xl hover:shadow-2xl transition-all duration-300 hover:transform hover:scale-105"
             >
               <div className="flex mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-red-500 fill-current" />
+                  <Star key={i} className="w-5 h-5 text-[var(--secondary)] fill-current" />
                 ))}
               </div>
               <p className="text-gray-900 dark:text-gray-300 mb-6 italic">
@@ -62,7 +62,7 @@ export function Testimonials() {
                 <p className="text-gray-900 dark:text-gray-300">
                   {testimonial.role}
                 </p>
-                <p className="text-red-500 font-medium">
+                <p className="text-[var(--secondary)] font-medium">
                   {testimonial.company}
                 </p>
               </div>

@@ -94,14 +94,14 @@ export function Login({ onToggle, onReset }: LoginProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-md mx-auto">
-      <Card className="border border-red-600 dark:border-gray-700 bg-white dark:bg-background hover:shadow-2xl transition-all duration-300">
+    <div className="flex flex-col gap-6 w-full max-w-[430px] mx-auto">
+      <Card className="border border-[var(--primary)] dark:border-gray-700 bg-white dark:bg-background hover:shadow-2xl transition-all duration-300">
         <CardHeader className="text-center space-y-3">
           <Link
             to="/"
             className="flex items-center justify-center hover:scale-105 transition-all duration-300"
           >
-            <House className="h-8 w-8 text-red-500" />
+            <House className="h-8 w-8 text-[var(--secondary)]" />
           </Link>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-300">
             Welcome back
@@ -116,7 +116,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
               <div className="flex flex-col gap-4">
                 <Button
                   variant="outline"
-                  className="w-full border-red-600 dark:border-gray-700 hover:bg-red-50 dark:hover:bg-red-900/30 transition-all duration-300 hover:scale-105"
+                  className="w-full border-[var(--primary)] dark:border-gray-700 hover:bg-[var(--light)] dark:hover:bg-violet-900/30 transition-all duration-300 hover:scale-105"
                   type="button"
                   onClick={handleGoogleLogin}
                   disabled={isGoogleLoading}
@@ -140,7 +140,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
 
                 <Button
                   variant="outline"
-                  className="w-full border-red-600 dark:border-gray-700 hover:bg-red-50 dark:hover:bg-red-900/30 transition-all duration-300 hover:scale-105"
+                  className="w-full border-[var(--primary)] dark:border-gray-700 hover:bg-[var(--light)] dark:hover:bg-violet-900/30 transition-all duration-300 hover:scale-105"
                   type="button"
                   onClick={handleGithubLogin}
                   disabled={isGithubLoading}
@@ -185,7 +185,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="border-red-600 dark:border-gray-700 focus:ring-red-500 focus:border-red-500"
+                    className="border-[var(--primary)] dark:border-gray-700 focus:ring-[var(--secondary)] focus:border-[var(--secondary)]"
                   />
                 </div>
                 <div className="grid gap-3">
@@ -198,7 +198,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
                     </Label>
                     <button
                       type="button"
-                      className="ml-auto text-sm text-red-500 hover:text-red-600 hover:underline transition-colors"
+                      className="ml-auto text-sm text-[var(--secondary)] hover:text-[var(--primary)] hover:underline transition-colors"
                       onClick={onReset}
                     >
                       Forgot your password?
@@ -210,12 +210,12 @@ export function Login({ onToggle, onReset }: LoginProps) {
                     required
                     value={formData.password}
                     onChange={handleChange}
-                    className="border-red-600 dark:border-gray-700 focus:ring-red-500 focus:border-red-500"
+                    className="border-[var(--primary)] dark:border-gray-700 focus:ring-[var(--secondary)] focus:border-[var(--secondary)]"
                   />
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-red-500 hover:bg-red-600 text-white transition-all duration-300 hover:scale-105"
+                  className="w-full bg-[var(--secondary)] hover:bg-[var(--primary)] text-white transition-all duration-300 hover:scale-105"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -232,7 +232,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
                 Don&apos;t have an account?{" "}
                 <button
                   type="button"
-                  className="text-red-500 hover:text-red-600 underline underline-offset-4 cursor-pointer transition-colors"
+                  className="text-[var(--secondary)] hover:text-[var(--primary)] underline underline-offset-4 cursor-pointer transition-colors"
                   onClick={onToggle}
                 >
                   Sign up
@@ -246,14 +246,14 @@ export function Login({ onToggle, onReset }: LoginProps) {
         By signing in, you agree to our{" "}
         <a
           href="#"
-          className="text-red-500 hover:text-red-600 underline underline-offset-4 transition-colors"
+          className="text-[var(--secondary)] hover:text-[var(--primary)] underline underline-offset-4 transition-colors"
         >
           Terms of Service
         </a>{" "}
         and{" "}
         <a
           href="#"
-          className="text-red-500 hover:text-red-600 underline underline-offset-4 transition-colors"
+          className="text-[var(--secondary)] hover:text-[var(--primary)] underline underline-offset-4 transition-colors"
         >
           Privacy Policy
         </a>
