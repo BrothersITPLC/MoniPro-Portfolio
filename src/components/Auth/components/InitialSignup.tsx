@@ -72,7 +72,7 @@ export function CompanySignup() {
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           <FormField
             control={form.control}
             name="password"
@@ -86,6 +86,8 @@ export function CompanySignup() {
               </FormItem>
             )}
           />
+          </div>
+          <div className="grid grid-cols-1 gap-4">
           <FormField
             control={form.control}
             name="password2"
@@ -99,7 +101,7 @@ export function CompanySignup() {
               </FormItem>
             )}
           />
-        </div>
+         </div>
         <Button
           type="submit"
           className="w-full cursor-pointer bg-[var(--secondary)] hover:bg-[var(--primary)] transition-all duration-300 transform hover:scale-105"

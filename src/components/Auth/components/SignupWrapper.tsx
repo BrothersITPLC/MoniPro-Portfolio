@@ -50,7 +50,7 @@ export function SignupWrapper(onToggle: SignupProps) {
     }
   };
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col w-full max-w-[440px] gap-6">
       <Card className="border border-[var(--primary)] dark:border-gray-700 bg-white dark:bg-background hover:shadow-2xl transition-all duration-300">
         <CardHeader className="text-center space-y-3">
           <Link to="/" className="flex justify-center items-center">
