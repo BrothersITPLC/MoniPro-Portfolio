@@ -42,6 +42,9 @@ const CompanyInfoSchema = z.object({
 });
 
 export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
+
+  const selectedPlan = useSelector((state: RootState) => state.landing.SelectedPlane);
+
   const dispatch = useDispatch();
   const organizationData = useSelector(
     (state: RootState) => state.companyInfo.organizationData
@@ -64,17 +67,17 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
       ...data,
     };
     dispatch(setOrganization(updatedData));
-    onNext(3);
+    onNext(selectedPlan === 0 ? 3 : 2); // If selectedPlan is 0, go to step 3, else go to step 2
   };
 
   const onPrevious = () => {
-    onNext(1);
+    onNext(selectedPlan === 0 ? 1 : 1);
   };
   return (
     <div className="max-w-3xl mx-auto py-10 mt-10">
       <Card className="border-none shadow-none">
         <CardHeader className="space-y-1">
-          {/* <CardTitle className="text-2xl font-bold">Company Information</CardTitle> */}
+      
         </CardHeader>
         <CardContent>
           <Form {...form}>

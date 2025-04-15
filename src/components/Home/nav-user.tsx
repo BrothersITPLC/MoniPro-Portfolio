@@ -125,7 +125,7 @@ export function NavUser() {
             <DropdownMenuSeparator className="bg-[#ddd6fe]" />
              <DropdownMenuGroup>
               <Link to="/home/subscription">
-                <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
+                  <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
                                           hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
                                           rounded-lg mx-1 my-0.5">
                   <Sparkles className="mr-2 h-5 w-5 text-[#7c3aed]" />

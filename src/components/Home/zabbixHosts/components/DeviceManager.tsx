@@ -29,6 +29,10 @@ export function DeviceManager() {
   const networkDevices = hosts.filter((host) => host.device_type === "network");
 
   const handleSubmit = (data: any) => {
+    if (!data.ip && !data.dns) {
+      toast.error("Please provide either IP address or DNS");
+      return;
+    }
     setPendingData(data);
     setIsConfirmationOpen(true);
     setIsFormOpen(false);

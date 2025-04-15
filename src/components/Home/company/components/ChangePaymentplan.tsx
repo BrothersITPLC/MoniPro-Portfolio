@@ -1,8 +1,7 @@
 import { Shield, Zap, Database, Check, Crown } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedPlane } from "@/components/Landing/LandingSlice";
-import { useGetPlansQuery } from "../api";
+import { useGetPlansQuery } from "../../../Landing/api";
+import { setOrganization } from "../companySclice";
 import {
   Card,
   CardContent,
@@ -10,14 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { OrganizationDataInfrence } from "../companySclice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/app/store";
-import { useEffect } from "react";
-
-import { setOrganization } from "../../Home/company/companySclice";
-import type { OrganizationDataInfrence } from "../../Home/company/companySclice";
-
+import { useEffect, useState } from "react";
+import { toast } from "sonner"; 
+import { setSelectedPlane } from "@/components/Landing/LandingSlice";
 
 const icons = [
   {
@@ -34,17 +32,18 @@ const icons = [
   },
 ];
 
-interface PricingProps {
-  showSelectedPlan?: boolean;
+
+
+interface ChangePaymentProps {
+  setShowPricing: (value: boolean) => void;
 }
 
-export function Pricing({ showSelectedPlan = false }: PricingProps) {
+export function ChangePayment({ setShowPricing }: ChangePaymentProps) {
 
-  const organizationData = useSelector(
-    (state: RootState) => state.companyInfo.organizationData
-  );
-
+  const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
+  
   const dispatch = useDispatch();
+
   const {
     data: plansData,
     isLoading,
@@ -53,40 +52,37 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
     refetchOnMountOrArgChange: true,
   });
 
-  const selectedPlan = useSelector(
-    (state: RootState) => state.landing.SelectedPlane
+  const organizationData = useSelector(
+    (state: RootState) => state.companyInfo.organizationData
   );
-  const { isAuthenticated, user } = useSelector(
+
+  const { user } = useSelector(
     (state: RootState) => state.auth
   );
 
-  console.log("this is plan data: ", plansData);
-
-  const handlePlanSelect = (planId: number) => {
-    dispatch(setSelectedPlane(planId));
-    
-    const selectedPlan = sortedPlansData.find(plan => plan.id === planId);
-
-    const type = selectedPlan?.name.toLowerCase() === "Individual plan".toLowerCase();
-    
-    console.log("selected plan: ", selectedPlan);
-    console.log("type: ", type);
-
+ const handlePlanUpdate = (planId: number) => {
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
-      is_private: type,
+      organization_payment_plan: planId,
     };
-    
+    setSelectedPlanId(planId);
     dispatch(setOrganization(updatedData));
-    console.log("updated data: ", updatedData);
-    
+    dispatch(setSelectedPlane(planId)); 
+ 
   };
 
+  const handleupdate = () => {
+    if(selectedPlanId === null) {
+      toast.error("Please select a plan");
+      return; 
+    }
+    setShowPricing(false); 
+    console.log("this is the updated one: ", organizationData);
+  }
 
   useEffect(() => {
     refetch();
   }, []);
-
 
   if (isLoading || !plansData) {
     return (
@@ -98,27 +94,23 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
 
   const sortedPlansData = plansData.slice().sort((a, b) => a.price - b.price);
 
+  // Filter plans based on organization's privacy status
+  const filteredPlans = organizationData?.is_private
+    ? sortedPlansData.filter(plan => plan.name.toLowerCase() === 'individual plan')
+    : sortedPlansData.filter(plan => plan.name.toLowerCase() !== 'individual plan');
+    
   return (
     <div
       id="pricing"
-      className="py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background"
+      className="py-12 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background"
     >
       <div className="max-w-max mx-auto">
-        <h2 className="text-xl md:text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
-          Flexible Plans <br />
-          for Every Need
-        </h2>
-        <p className="text-xl text-gray-900 dark:text-gray-300 mb-12 max-w-2xl mx-auto text-center">
-          Choose the perfect plan that matches your monitoring requirements and
-          scale as you grow.
-        </p>
-
         <div className="flex flex-row justify-center gap-8">
-          {sortedPlansData
+          {filteredPlans
             .filter(
               (plan) =>
                 !(
-                  user?.is_private === false &&
+                  user?.is_private === true &&
                   plan.name.toLowerCase() === "individual plan"
                 )
             )
@@ -127,11 +119,11 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                 key={plan.id}
                 className={`bg-white dark:bg-background border-[var(--primary)] dark:border-gray-700 transition-all duration-300 hover:scale-105  
                 ${
-                  selectedPlan === plan.id && showSelectedPlan
+                  selectedPlanId === plan.id
                     ? "ring-2 ring-[var(--primary)]"
                     : ""
                 }
-                ${!showSelectedPlan ? "hover:border-[var(--secondary)]" : ""}`}
+                hover:border-[var(--secondary)]`}
                 style={{
                   height: "100%",
                   width: "100%",
@@ -185,34 +177,26 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                     ))}
                   </div>
 
-                  {showSelectedPlan ? (
-                    <Button
-                      className={`w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105 ${
-                        selectedPlan === plan.id ? "bg-[var(--secondary)]" : ""
-                      }`}
-                      onClick={() => handlePlanSelect(plan.id)}
-                    >
-                      {selectedPlan === plan.id ? "Selected" : "Select Plan"}
-                    </Button>
-                  ) : isAuthenticated ? (
-                    <Button
+                  <Button
                       className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
-                      onClick={() => handlePlanSelect(plan.id)}
+                      onClick={() => handlePlanUpdate(plan.id)}
                     >
                       Select Plan
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => handlePlanSelect(plan.id)}
-                      className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
-                      asChild
-                    >
-                      <Link to="/auth">Get Started</Link>
-                    </Button>
-                  )}
+                 </Button>
+
                 </CardContent>
               </Card>
             ))}
+
+        </div>
+            <Button
+                className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
+                onClick={handleupdate}
+            >
+                Update Plan
+            </Button>
+        <div>
+
         </div>
       </div>
     </div>

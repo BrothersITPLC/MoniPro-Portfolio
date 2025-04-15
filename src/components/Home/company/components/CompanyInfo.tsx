@@ -6,27 +6,44 @@ import type { RootState } from "@/app/store";
 import { PlanSelection } from "./PlanSelection";
 import { PersonalInfoStep } from "./PersonalInfoStep";
 import { CompanyInfoStep } from "./CompanyInfoStep";
+import { PricingStep } from "./PaymentplaneSelection";
 import { SubscriptionStep } from "./SubscriptionStep";
 import { PaymentStep } from "./PaymentStep";
 import { setOrganization } from "../companySclice";
 
-const steps = [
-  { id: 1, name: "Account Type", icon: CheckSquare },
-  { id: 2, name: "Information", icon: User },
-  { id: 3, name: "Subscription Plan", icon: Clock },
-  { id: 4, name: "Payment Method", icon: CreditCard },
-];
 
 export function CompanyInfo() {
+
+  const selectedPlan = useSelector(
+    (state: RootState) => state.landing.SelectedPlane
+  );  
+
+  const [selectedPlanId, setSelectedPlanId] = useState<number>(0);
+
+  const steps = selectedPlan === 0 ? [
+    { id: 1, name: "Account Type", icon: CheckSquare },
+    { id: 2, name: "Information", icon: User },
+    { id: 3, name: "Payment Plane", icon: CreditCard },
+    { id: 4, name: "Subscription Plan", icon: Clock },
+    { id: 5, name: "Payment Method", icon: CreditCard },
+  ] : [
+    { id: 1, name: "Information", icon: User },
+    { id: 2, name: "Subscription Plan", icon: Clock },
+    { id: 3, name: "Payment Method", icon: CreditCard },
+  ];
+
   const dispatch = useDispatch();
 
   const organizationData = useSelector(
     (state: RootState) => state.companyInfo.organizationData
   );
   const userData = useSelector((state: RootState) => state.auth);
+
+  console.log("This is selectedPlan", selectedPlanId);
+
   const user_id = userData?.user?.user_id;
 
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(selectedPlan === 0 ? 1 : 1);
 
   const handleNext = (step: number) => {
     setCurrentStep(step);
@@ -98,9 +115,14 @@ export function CompanyInfo() {
         ))}
       </div>
 
-      {currentStep === 1 && <PlanSelection onNext={handleNext} />}
+      {/* Step 1: Plan Selection (only for selectedPlan === 0) */}
+      {selectedPlan === 0 && currentStep === 1 && (
+        <PlanSelection onNext={handleNext} />
+      )}
 
-      {currentStep === 2 && (
+      {/* Step 2 for selectedPlan === 0, Step 1 for others: Information */}
+      {((selectedPlan === 0 && currentStep === 2) || 
+        (selectedPlan !== 0 && currentStep === 1)) && (
         <>
           {organizationData?.is_private ? (
             <PersonalInfoStep onNext={handleNext} />
@@ -110,9 +132,29 @@ export function CompanyInfo() {
         </>
       )}
 
-      {currentStep === 3 && <SubscriptionStep onNext={handleNext} />}
+      {/* Step 3: Pricing (only for selectedPlan === 0) */}
+      {selectedPlan === 0 && currentStep === 3 && (
+        <PricingStep onNext={handleNext} setSelectedPlan={setSelectedPlanId} />
+      )}
 
-      {currentStep === 4 && <PaymentStep onNext={handleNext} />}
+      {/* Step 4 for selectedPlan === 0, Step 2 for others: Subscription */}
+      {((selectedPlan === 0 && currentStep === 4) || 
+        (selectedPlan !== 0 && currentStep === 2)) && (
+        <SubscriptionStep 
+          onNext={handleNext} 
+          selectedPlanId={selectedPlan === 0 ? selectedPlanId : selectedPlan} 
+        />
+      )}
+
+      {/* Step 5 for selectedPlan === 0, Step 3 for others: Payment */}
+      {((selectedPlan === 0 && currentStep === 5) || 
+        (selectedPlan !== 0 && currentStep === 3)) && (
+        <PaymentStep 
+          onNext={handleNext} 
+          selectedPlanId={selectedPlan === 0 ? selectedPlanId : selectedPlan}
+        />
+      )}
+
     </div>
   );
 }

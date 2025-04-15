@@ -22,14 +22,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { setSelectedPlane } from "@/components/Landing/LandingSlice";
 
 interface PlanSelectionProps {
   onNext: (step: number) => void;
+  selectedPlanId: number;  // Add type annotation
 }
 
-export function PaymentStep({ onNext }: PlanSelectionProps) {
+export function PaymentStep({ onNext, selectedPlanId }: PlanSelectionProps) {
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const selectedPlan = useSelector((state: RootState) => state.landing.SelectedPlane);
+
   const organizationData = useSelector(
     (state: RootState) => state.companyInfo.organizationData
   );
@@ -53,7 +59,8 @@ export function PaymentStep({ onNext }: PlanSelectionProps) {
       ...organizationData!,
       payment_provider: selectedPaymentMethod,
     };
-
+    
+    console.log("updatedData", updatedData);
     dispatch(setOrganization(updatedData));
 
     // Show confirmation dialog
@@ -66,16 +73,19 @@ export function PaymentStep({ onNext }: PlanSelectionProps) {
       // Submit the complete organization data to the backend
       const response = await organizationInfo(organizationData).unwrap();
 
+      // Dispatch selected plan before handling response
+      dispatch(setSelectedPlane(selectedPlanId));
+
       setIsLoading(false);
       setShowConfirmDialog(false);
 
       // Check response status
       if (response.status === "success") {
         toast.success(response.message || "Profile updated successfully");
+        console.log("this is the final data to be sent", response);
         navigate("/home/dashboard");
       } else {
         toast.error(response.message || "An error occurred during submission");
-        // Reset to first step if there's an error
         onNext(1);
       }
     } catch (error: any) {
@@ -87,7 +97,6 @@ export function PaymentStep({ onNext }: PlanSelectionProps) {
         "Failed to process your request. Please try again.";
       toast.error(errorMessage);
 
-      // Reset to first step on error
       onNext(1);
     }
   };
@@ -97,17 +106,17 @@ export function PaymentStep({ onNext }: PlanSelectionProps) {
   };
 
   const onPrevious = () => {
-    onNext(3);
+    onNext(selectedPlan === 0 ? 4 : 2); // If selectedPlan is 0, go back to Subscription Plan, else go back to Subscription Plan
   };
 
   return (
     <>
       <div className="max-w-3xl mx-auto py-10">
         <div className="text-center mb-10 mt-30">
-          <h2 className="text-2xl font-bold mb-2">Select Payment Method</h2>
+          {/* <h2 className="text-2xl font-bold mb-2">Select Payment Method</h2>
           <p className="text-muted-foreground">
             Choose your preferred payment method to complete your subscription
-          </p>
+          </p> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

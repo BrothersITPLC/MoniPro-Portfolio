@@ -23,7 +23,7 @@ interface LandingState {
 const initialState: LandingState = {
   plans: null,
   selectedPlanType: "monthly",
-  SelectedPlane: 2,
+  SelectedPlane: 0,
 };
 
 const LandingSlice = createSlice({

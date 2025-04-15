@@ -1,4 +1,4 @@
-import * as React from "react";
+import  React,{useEffect} from "react";
 import { Settings2, Monitor, Bell } from "lucide-react";
 import { NavMain } from "@/components/Home/nav-main";
 import { NavUser } from "@/components/Home/nav-user";
@@ -14,6 +14,8 @@ import { InfrastructerList } from "@/components/Home/types";
 import { useGetZabixHostesQuery } from "@/components/Home/zabbixHosts/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setHosts } from "./zabbixHosts/zabbixSlice";
+import { useGetPlansQuery } from "@/components/Landing/api";
+import { setPlans } from "@/components/Landing/LandingSlice";
 
 const getDefaultNavData = () => ({
   navMain: [
@@ -70,8 +72,13 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
-  const { hosts } = useSelector((state: any) => state.zabbixhosts);
   const dispatch = useDispatch();
+
+  const { data: plansData, refetch } = useGetPlansQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const { hosts } = useSelector((state: any) => state.zabbixhosts);
   const { data: ZabbixhostList } = useGetZabixHostesQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
@@ -83,7 +90,7 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
     }
   }, [ZabbixhostList, dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (hosts && hosts.length > 0) {
       const updatedNavData = { ...getDefaultNavData() };
       const hostItems = hosts.map((host) => ({
@@ -95,7 +102,12 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
       setNavData(updatedNavData);
     }
   }, [hosts]);
-
+  useEffect(() => {
+    refetch();
+    if (plansData) {
+      dispatch(setPlans(plansData));
+    }
+  }, [plansData, dispatch, refetch]);
   return (
     <Sidebar 
       collapsible="icon" 

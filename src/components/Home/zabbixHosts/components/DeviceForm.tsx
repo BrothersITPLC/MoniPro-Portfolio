@@ -24,7 +24,7 @@ import { Server, Network, Key, Globe, Database } from "lucide-react";
 
 const schema = z.object({
   host: z.string().min(1, "Host name is required"),
-  ip: z.string().ip({ message: "Invalid IP address" }),
+  ip: z.string().optional(),
   dns: z.string().optional(),
   username: z.string().min(1, "Username is required"),
   password: z.string().min(1, "Password is required"),
@@ -65,8 +65,8 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
   });
 
   return (
-    <Card className="w-full max-w-2xl mx-auto shadow-lg">
-      <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 border-b py-2">
+    <Card className="w-full max-w-2xl  border-none shadow-none">
+      <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100  py-2">
         <CardTitle className="flex items-center gap-2 text-slate-800">
           {type === "vm" ? (
             <Server className="h-5 w-5 text-emerald-500" />
@@ -125,7 +125,7 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-slate-700">
-                          IP Address <span className="text-red-300">*</span>
+                          IP Address (Optional)
                         </FormLabel>
                         <FormControl>
                           <Input

@@ -10,7 +10,6 @@ import { RootState } from "@/app/store";
 import { setOrganization } from "../companySclice";
 import type { OrganizationDataInfrence } from "../companySclice";
 import { toast } from "sonner";
-import { Pricing } from "@/components/Landing/components/Pricing";
 import {
   Calendar,
   ArrowLeft,
@@ -19,79 +18,65 @@ import {
   CalendarDays,
   CalendarCheck,
 } from "lucide-react";
-import { setSelectedPlane } from "@/components/Landing/LandingSlice";
+import { ChangePayment } from "./ChangePaymentplan";
+import { useGetPlansQuery } from "../../../Landing/api";
 
 interface PlanSelectionProps {
   onNext: (step: number) => void;
+  selectedPlanId: number | null; 
 }
 
+
 const subscriptionSchema = z.object({
-  organization_payment_plan: z.number().min(1, "Payment plan is required"),
-  organization_payment_duration: z
-    .number()
-    .min(1, "Payment duration is required"),
+  organization_payment_duration: z.number().min(1, "Payment duration is required"),
 });
 
-export function SubscriptionStep({ onNext }: PlanSelectionProps) {
+export function SubscriptionStep({ onNext, selectedPlanId }: PlanSelectionProps) {
+  
+  const selectedPlan = useSelector(
+    (state: RootState) => state.landing.SelectedPlane
+  );  
+  
+
   const dispatch = useDispatch();
   const organizationData = useSelector(
     (state: RootState) => state.companyInfo.organizationData
   );
-  const plans = useSelector((state: RootState) => state.landing.plans);
-  const selectedPlan = useSelector(
-    (state: RootState) => state.landing.SelectedPlane
-  );
 
-  // State declarations
+  const {
+    data: plansData,
+    isLoading,
+  } = useGetPlansQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
   const [showPricing, setShowPricing] = useState(false);
   const [selectedDuration, setSelectedDuration] = useState<number>(
     organizationData?.organization_payment_duration || 0
   );
 
-  // Form setup
   const form = useForm<z.infer<typeof subscriptionSchema>>({
     resolver: zodResolver(subscriptionSchema),
     defaultValues: {
-      organization_payment_plan:
-        organizationData?.organization_payment_plan || 0,
       organization_payment_duration:
         organizationData?.organization_payment_duration || 0,
     },
   });
 
-  // Automatically select Individual plan if is_private is true
-  useEffect(() => {
-    if (organizationData?.is_private) {
-      const individualPlan = plans?.find(
-        (plan) => plan.name.toLowerCase() === "individual plan"
-      );
-      if (individualPlan) {
-        dispatch(setSelectedPlane(individualPlan.id));
-      }
-    }
-  }, [organizationData?.is_private, plans, dispatch]);
-
-  // Plan change handler
-  const handlePlanChange = (planId: number) => {
-    dispatch(setSelectedPlane(planId));
-    const updatedData: OrganizationDataInfrence = {
-      ...organizationData!,
-      organization_payment_plan: planId,
-    };
-    dispatch(setOrganization(updatedData));
-    setShowPricing(false);
-  };
+  const selectedPlanData = plansData?.find(plan => plan.id === selectedPlanId);
 
   const handleDurationSelect = (durationId: number) => {
     setSelectedDuration(durationId);
+    console.log("this is selected duration id id: ", selectedDuration )
+    console.log("this is selected duration id: ", durationId )
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
       organization_payment_duration: durationId,
-      organization_payment_plan: selectedPlan,
     };
+     
+
     dispatch(setOrganization(updatedData));
     form.setValue("organization_payment_duration", durationId);
-    form.setValue("organization_payment_plan", selectedPlan);
   };
 
   const handleNext = () => {
@@ -99,34 +84,29 @@ export function SubscriptionStep({ onNext }: PlanSelectionProps) {
       toast.error("Please select a subscription duration to continue.");
       return;
     }
-    onNext(4);
+    onNext(selectedPlan === 0 ? 5 : 3); // If selectedPlan is 0, go to step 5, else go to step 3
   };
 
   const onPrevious = () => {
-    onNext(2);
+    onNext(selectedPlan === 0 ? 3 : 1); // If selectedPlan is 0, go back to Payment Plan, else go back to Information
   };
 
   const handleChangePlan = () => {
     setShowPricing(true);
+    
+    
+
   };
 
-  const selectedPlanData = plans?.find((plan) => plan.id === selectedPlan);
-
-  if (!selectedPlanData) {
+  if (isLoading || !selectedPlanData) {
     return <div>Loading plan details...</div>;
   }
 
   if (showPricing) {
     return (
-      <div className="max-w-7xl mx-auto py-10">
-        <Pricing
-          showSelectedPlan={true}
-          onPlanSelect={(planId) => {
-            dispatch(setSelectedPlane(planId));
-            handlePlanChange(planId);
-          }}
-        />
-        <div className="mt-8 flex justify-center">
+      <div className="max-w-7xl mx-auto py-6">
+        
+        <div className="flex justify-center">
           <Button
             variant="outline"
             onClick={() => setShowPricing(false)}
@@ -136,14 +116,15 @@ export function SubscriptionStep({ onNext }: PlanSelectionProps) {
             Back to Subscription
           </Button>
         </div>
+        <ChangePayment setShowPricing={setShowPricing} />
       </div>
     );
   }
 
   return (
     <div className="max-w-3xl mx-auto py-10 mt-12">
-      {/* Add Change Plan button for non-private accounts */}
-      {!organizationData?.is_private && (
+
+      { selectedPlan!=0 &&
         <div className="mb-4">
           <Button
             variant="outline"
@@ -154,7 +135,7 @@ export function SubscriptionStep({ onNext }: PlanSelectionProps) {
             Change Selected Plan
           </Button>
         </div>
-      )}
+      }
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-center mb-3 flex items-center justify-center gap-2"></h2>
         <div className="text-center mb-4 bg-[var(--light)] dark:bg-neutral-800 dark:border-2 dark:text-white py-3 rounded-lg">

@@ -43,6 +43,9 @@ const personalInfoSchema = z.object({
 });
 export function PersonalInfoStep({ onNext }: PlanSelectionProps) {
   const dispatch = useDispatch();
+
+  const selectedPlan = useSelector((state: RootState) => state.landing.SelectedPlane);
+
   const organizationData = useSelector(
     (state: RootState) => state.companyInfo.organizationData
   );
@@ -65,11 +68,11 @@ export function PersonalInfoStep({ onNext }: PlanSelectionProps) {
       ...data,
     };
     dispatch(setOrganization(updatedData));
-    onNext(3);
+    onNext(selectedPlan === 0 ? 3 : 2); // If selectedPlan is 0, go to step 3, else go to step 2
   };
 
   const onPrevious = () => {
-    onNext(1);
+    onNext(selectedPlan === 0 ? 1 : 1);
   };
   return (
     <div className="max-w-3xl mx-auto py-10 mt-10">
@@ -77,6 +80,7 @@ export function PersonalInfoStep({ onNext }: PlanSelectionProps) {
         <CardHeader className="space-y-1">
           {/* <CardTitle className="text-2xl font-bold">Personal Information</CardTitle> */}
         </CardHeader>
+        
         <CardContent>
           <Form {...form}>
             <form
@@ -211,6 +215,7 @@ export function PersonalInfoStep({ onNext }: PlanSelectionProps) {
             </form>
           </Form>
         </CardContent>
+
       </Card>
     </div>
   );

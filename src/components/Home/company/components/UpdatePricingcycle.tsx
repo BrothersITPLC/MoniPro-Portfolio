@@ -2,7 +2,7 @@ import { Shield, Zap, Database, Check, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedPlane } from "@/components/Landing/LandingSlice";
-import { useGetPlansQuery } from "../api";
+import { useGetPlansQuery } from "../../../Landing/api";
 import {
   Card,
   CardContent,
@@ -13,11 +13,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/app/store";
-import { useEffect } from "react";
+import { useEffect } from "react";import { toast } from "sonner";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { ArrowLeft } from "lucide-react"; // Import an icon for the back arrow
 
-import { setOrganization } from "../../Home/company/companySclice";
-import type { OrganizationDataInfrence } from "../../Home/company/companySclice";
 
+import { useUpdateOrganizationPaymentMutation } from '../api'
 
 const icons = [
   {
@@ -38,12 +39,8 @@ interface PricingProps {
   showSelectedPlan?: boolean;
 }
 
-export function Pricing({ showSelectedPlan = false }: PricingProps) {
-
-  const organizationData = useSelector(
-    (state: RootState) => state.companyInfo.organizationData
-  );
-
+export function UpdatePricing({ showSelectedPlan = false }: PricingProps) {
+  const navigate = useNavigate(); // Initialize useNavigate
   const dispatch = useDispatch();
   const {
     data: plansData,
@@ -53,40 +50,48 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
     refetchOnMountOrArgChange: true,
   });
 
+  const [updateOrganizationPayment, {isError, error}] = useUpdateOrganizationPaymentMutation();
+
   const selectedPlan = useSelector(
     (state: RootState) => state.landing.SelectedPlane
   );
+
+  const selectedDuration = useSelector(
+    (state: RootState) => state.landing.selectedPlanType
+  );
+
+  let selectedDurationId = 0; 
+
+  if (selectedDuration === "monthly") {
+    selectedDurationId = 1;
+  } else if (selectedDuration === "quarterly") {
+    selectedDurationId = 2;
+  } else if (selectedDuration === "yearly") {
+    selectedDurationId = 3;
+  }
+
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
   );
 
-  console.log("this is plan data: ", plansData);
-
   const handlePlanSelect = (planId: number) => {
     dispatch(setSelectedPlane(planId));
-    
-    const selectedPlan = sortedPlansData.find(plan => plan.id === planId);
-
-    const type = selectedPlan?.name.toLowerCase() === "Individual plan".toLowerCase();
-    
-    console.log("selected plan: ", selectedPlan);
-    console.log("type: ", type);
-
-    const updatedData: OrganizationDataInfrence = {
-      ...organizationData!,
-      is_private: type,
-    };
-    
-    dispatch(setOrganization(updatedData));
-    console.log("updated data: ", updatedData);
-    
   };
 
+  const UpdatePricing = () => {
+    updateOrganizationPayment({
+      id: user?.organization_id,
+      data: { 
+        organization_payment_duration: selectedDurationId,
+        organization_payment_plan: selectedPlan 
+      }
+    });
+    toast.success("Pricing plan updated sucessfully.");
+  };
 
   useEffect(() => {
     refetch();
   }, []);
-
 
   if (isLoading || !plansData) {
     return (
@@ -103,15 +108,19 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
       id="pricing"
       className="py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background"
     >
+      <button
+        className="flex items-center gap-2 mb-4 p-2 rounded-lg bg-[var(--secondary)] text-white hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
+        onClick={() => navigate("/home/subscription")}
+      >
+        <ArrowLeft className="w-5 h-5" />
+        Back
+      </button>
       <div className="max-w-max mx-auto">
-        <h2 className="text-xl md:text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
-          Flexible Plans <br />
-          for Every Need
+        <h2 className="text-xl md:text-3xl font-bold mb-12 text-center text-gray-900 dark:text-gray-300">
+          Update Pricing Plan <br />
+          
         </h2>
-        <p className="text-xl text-gray-900 dark:text-gray-300 mb-12 max-w-2xl mx-auto text-center">
-          Choose the perfect plan that matches your monitoring requirements and
-          scale as you grow.
-        </p>
+
 
         <div className="flex flex-row justify-center gap-8">
           {sortedPlansData
@@ -215,6 +224,21 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
             ))}
         </div>
       </div>
+      <div className="flex justify-between mt-8">
+        <Button 
+          className="flex items-center gap-2 bg-[var(--secondary)] text-white hover:bg-[var(--secondary)]" 
+          onClick={UpdatePricing}
+          disabled={isLoading}
+        >
+          {isLoading ? "Updating..." : "Update"}
+        </Button>
+        {isError && (
+          <div className="text-red-500">
+            Error: {error?.data?.message || "Failed to update billing cycle"}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }
