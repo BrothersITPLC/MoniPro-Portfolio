@@ -2,7 +2,6 @@ import {
   GOOGLE_CLIENT_ID,
   REDIRECT_URL,
   SCOPE,
-  REDIRECT_URL_DEP,
 } from "@/app/constant";
 import { toast } from "sonner";
 
