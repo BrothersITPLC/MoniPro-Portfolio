@@ -40,12 +40,12 @@ export function DeviceManager() {
 
   const handleConfirm = async () => {
     try {
-      await createHost(pendingData).unwrap();
-      toast.success(
-        `${
-          deviceType === "vm" ? "Virtual machine" : "Network device"
-        } created successfully`
-      );
+      const result= await createHost(pendingData).unwrap();
+       if (result.status !== "success") {
+        toast.error(result.message ||"Failed to create host");
+        return;
+      }
+      toast.success(result.message || "Device created successfully");
       setIsConfirmationOpen(false);
       setPendingData(null);
     } catch (error) {
