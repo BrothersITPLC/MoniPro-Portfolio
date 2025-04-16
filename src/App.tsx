@@ -13,7 +13,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
-import { PrivateInfo } from "@/components/Home/company/components/PrivateInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
 import { ZabbixHosts } from "./components/Home/zabbixHosts/components/zabbixhosts";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
@@ -22,9 +21,14 @@ import { NotificationWrapper } from "./components/Home/wrapper/NotificationWrapp
 import { SecurityAlerts } from "./components/Home/notification/components/SecurityAlerts";
 import { InsightSuggestion } from "./components/Home/notification/components/InsightSuggestion";
 import { PerformanceAlerts } from "./components/Home/notification/components/PerformanceAlerts";
-import { UpdateSubscription } from "./components/Home/company/components/UpdateSubscription";
+import { UpdateSubscription } from "./components/Home/company/components/Update";
 import { ResetPassword } from "./pages/ResetPassword";
 import { GoogleCallback } from "./components/Auth/components/GoogleCallback";
+import  {PersonalInfoUpdate}  from "./components/Home/company/components/Infoupdate";
+
+import { Updatebillingcycle } from "./components/Home/company/components/UpdateBillingcycle";
+import { UpdatePricing } from "./components/Home/company/components/UpdatePricingcycle";
+
 function App() {
   return (
     <Router>
@@ -51,8 +55,8 @@ function App() {
                 path="subscription"
                 element={<UpdateSubscription />}
               />{" "}
-              <Route path="private-info" element={<PrivateInfo />} />
               <Route path="comp-info" element={<CompanyInfo />} />
+              <Route path="info-update" element={<PersonalInfoUpdate />} />
               <Route path="device-mangment" element={<DeviceWrapper />} />
               <Route path="notification" element={<NotificationWrapper />}>
                 <Route path="security" element={<SecurityAlerts />} />
@@ -65,6 +69,8 @@ function App() {
               <Route path="team" element={<TeamWrapper />} />
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="zabbixhost/:hostId" element={<ZabbixHosts />} />
+              <Route path="update_billingcycle" element={<Updatebillingcycle />} />
+              <Route path="update_pricingcycle" element={<UpdatePricing />} />  
             </Route>
           </Route>
 

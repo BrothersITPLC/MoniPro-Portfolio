@@ -2,14 +2,13 @@ import {
   GOOGLE_CLIENT_ID,
   REDIRECT_URL,
   SCOPE,
-  REDIRECT_URL_DEP,
 } from "@/app/constant";
 import { toast } from "sonner";
 
 export const handleGoogleAuth = async () => {
   try {
     const authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(
-      REDIRECT_URL_DEP
+      REDIRECT_URL
     )}&response_type=code&scope=${encodeURIComponent(SCOPE)}`;
 
     // Store auth in progress flag
@@ -39,12 +38,18 @@ export const handleGoogleAuth = async () => {
       const messageHandler = (event: MessageEvent) => {
         if (event.origin !== window.location.origin) return;
 
-        if (event.data && event.data.action === "google-login-success") {
+        if (
+          event.data &&
+          event.data.action === "google-authentication-success"
+        ) {
           clearInterval(popupCheckInterval);
           window.removeEventListener("message", messageHandler);
           localStorage.removeItem("googleAuthInProgress");
           resolve(true);
-        } else if (event.data && event.data.action === "google-login-error") {
+        } else if (
+          event.data &&
+          event.data.action === "google-authentication-error"
+        ) {
           clearInterval(popupCheckInterval);
           window.removeEventListener("message", messageHandler);
           localStorage.removeItem("googleAuthInProgress");

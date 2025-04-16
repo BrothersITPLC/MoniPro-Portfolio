@@ -23,14 +23,14 @@ export const Footer = () => {
               <a
                 target="_blank"
                 href="https://github.com/BrothersITPLC"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
+                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
               >
                 <Github className="h-4 w-4 mr-2" /> Github
               </a>
               <a
                 target="_blank"
                 href="https://x.com/"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
+                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
                   <svg
@@ -49,7 +49,7 @@ export const Footer = () => {
               <a
                 target="_blank"
                 href="https://discord.com/"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
+                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
                   <svg
@@ -75,14 +75,14 @@ export const Footer = () => {
             <div className="flex flex-col space-y-2">
               <a
                 href="#"
-                className="text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
+                className="text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
               >
                 Web
               </a>
               <a
                 target="_blank"
                 href="https://play.google.com/store/games"
-                className="text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
+                className="text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
               >
                 Mobile
               </a>
@@ -97,14 +97,14 @@ export const Footer = () => {
               <a
                 target="_blank"
                 href="https://www.youtube.com/"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
+                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
               >
                 <Youtube className="h-4 w-4 mr-2" /> Youtube
               </a>
               <a
                 target="_blank"
                 href="https://telegram.org/"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
+                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <svg
@@ -122,7 +122,7 @@ export const Footer = () => {
               </a>
               <Link
                 to="/faq"
-                className="text-sm text-gray-900 dark:text-gray-300 hover:text-red-500 transition-colors"
+                className="text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <svg
@@ -148,12 +148,12 @@ export const Footer = () => {
 
         <div className="text-center">
           <p className="text-gray-900 dark:text-gray-300">
-            &copy; 2025 Powered By{" "}
+            &copy; {new Date().getFullYear()} Powered By{" "}
             <a
               href="https://www.brothersitplc.com/"
               target="_blank"
               rel="noreferrer noopener"
-              className="font-medium text-red-500 hover:text-red-600 hover:underline"
+              className="font-medium text-[var(--secondary)] hover:text-[var(--primary)] hover:underline"
             >
               Brothers IT PLC
             </a>

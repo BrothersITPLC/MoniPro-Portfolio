@@ -20,11 +20,11 @@ export const ProtectedRoute = () => {
   ) {
     return <Outlet />;
   }
-
+  if (location.pathname === "/home/comp-info" && user?.organization_info_completed) {
+    return <Navigate to="/home/dashboard" replace />;
+  }
   // Redirect to comp-info if organization info is not completed
-  if (!user?.organization_info_completed && user?.is_private) {
-    return <Navigate to="/home/private-info" replace />;
-  } else if (!user?.organization_info_completed) {
+ else if (!user?.organization_info_completed) {
     return <Navigate to="/home/comp-info" replace />;
   }
 

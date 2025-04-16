@@ -6,14 +6,14 @@ export interface User {
   user_email: string;
   is_private: boolean;
   organization_name: string;
-  organization_payment_plane: string;
+  organization_payment_plan: string;
   organization_payment_duration: string;
   organization_phone: string;
   organization_website: string;
   organization_description: string;
   organization_id: number;
   user_id: number;
-  user_have_zabbix_credentials_1: boolean;
+  user_have_zabbix_credentials: boolean;
   user_have_zabbix_user: boolean;
 }
 

@@ -1,8 +1,8 @@
-import * as React from "react";
+import  React,{useEffect} from "react";
 import { Settings2, Monitor, Bell } from "lucide-react";
 import { NavMain } from "@/components/Home/nav-main";
 import { NavUser } from "@/components/Home/nav-user";
-import { TeamSwitcher } from "@/components/Home/team-switcher";
+import TeamSwitcher from "@/components/Home/team-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -14,8 +14,9 @@ import { InfrastructerList } from "@/components/Home/types";
 import { useGetZabixHostesQuery } from "@/components/Home/zabbixHosts/api";
 import { useDispatch, useSelector } from "react-redux";
 import { setHosts } from "./zabbixHosts/zabbixSlice";
+import { useGetPlansQuery } from "@/components/Landing/api";
+import { setPlans } from "@/components/Landing/LandingSlice";
 
-// This is sample data.
 const getDefaultNavData = () => ({
   navMain: [
     {
@@ -26,7 +27,7 @@ const getDefaultNavData = () => ({
       items: [],
     },
     {
-      title: "Notfication",
+      title: "Notification",
       url: "#",
       icon: Bell,
       items: [
@@ -39,12 +40,11 @@ const getDefaultNavData = () => ({
           url: "/home/notification/performance",
         },
         {
-          title: "Insight and suggestion",
+          title: "Insight and Suggestion",
           url: "/home/notification/insight-suggestion",
         },
       ],
     },
-
     {
       title: "Settings",
       url: "/home",
@@ -52,7 +52,7 @@ const getDefaultNavData = () => ({
       items: [
         {
           title: "Information",
-          url: "/home/comp-info",
+          url: "/home/info-update",
         },
         {
           title: "Team",
@@ -72,50 +72,58 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 }
 
 export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
-  const { hosts } = useSelector((state: any) => state.zabbixhosts);
   const dispatch = useDispatch();
+
+  const { data: plansData, refetch } = useGetPlansQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const { hosts } = useSelector((state: any) => state.zabbixhosts);
   const { data: ZabbixhostList } = useGetZabixHostesQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
   const [navData, setNavData] = React.useState(getDefaultNavData());
 
-  // Effect to update Redux store when Zabbix data is fetched
   React.useEffect(() => {
     if (ZabbixhostList?.data) {
       dispatch(setHosts(ZabbixhostList.data));
     }
   }, [ZabbixhostList, dispatch]);
 
-  // Effect to update navigation when hosts data changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (hosts && hosts.length > 0) {
       const updatedNavData = { ...getDefaultNavData() };
-
-      // Create items for each host
       const hostItems = hosts.map((host) => ({
         title: host.host,
         url: `/home/zabbixhost/${host.hostid}`,
         key: `host-${host.hostid}`,
       }));
-
-      // Update the Devices section with host items
       updatedNavData.navMain[0].items = hostItems;
       setNavData(updatedNavData);
     }
   }, [hosts]);
-
+  useEffect(() => {
+    refetch();
+    if (plansData) {
+      dispatch(setPlans(plansData));
+    }
+  }, [plansData, dispatch, refetch]);
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+    <Sidebar 
+      collapsible="icon" 
+      className="bg-white border-r border-[#ddd6fe]" 
+      {...props}
+    >
+      <SidebarHeader className="border-b border-[#ddd6fe] px-4 py-3">
         <TeamSwitcher />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="py-4">
         <NavMain items={navData.navMain} />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-[#ddd6fe] px-4 py-3">
         <NavUser />
       </SidebarFooter>
-      <SidebarRail />
+      <SidebarRail className="bg-[#f5f3ff]" />
     </Sidebar>
   );
 }

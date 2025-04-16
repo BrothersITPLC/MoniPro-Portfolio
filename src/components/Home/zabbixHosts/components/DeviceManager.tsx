@@ -29,6 +29,10 @@ export function DeviceManager() {
   const networkDevices = hosts.filter((host) => host.device_type === "network");
 
   const handleSubmit = (data: any) => {
+    if (!data.ip && !data.dns) {
+      toast.error("Please provide either IP address or DNS");
+      return;
+    }
     setPendingData(data);
     setIsConfirmationOpen(true);
     setIsFormOpen(false);
@@ -36,12 +40,12 @@ export function DeviceManager() {
 
   const handleConfirm = async () => {
     try {
-      await createHost(pendingData).unwrap();
-      toast.success(
-        `${
-          deviceType === "vm" ? "Virtual machine" : "Network device"
-        } created successfully`
-      );
+      const result= await createHost(pendingData).unwrap();
+       if (result.status !== "success") {
+        toast.error(result.message ||"Failed to create host");
+        return;
+      }
+      toast.success(result.message || "Device created successfully");
       setIsConfirmationOpen(false);
       setPendingData(null);
     } catch (error) {

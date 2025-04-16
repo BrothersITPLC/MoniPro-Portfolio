@@ -1,8 +1,7 @@
 import { Shield, Zap, Database, Check, Crown } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedPlane } from "@/components/Landing/LandingSlice";
-import { useGetPlansQuery } from "../api";
+import { useGetPlansQuery } from "../../../Landing/api";
+import { setOrganization } from "../companySclice";
 import {
   Card,
   CardContent,
@@ -10,14 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { OrganizationDataInfrence } from "../companySclice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/app/store";
-import { useEffect } from "react";
-
-import { setOrganization } from "../../Home/company/companySclice";
-import type { OrganizationDataInfrence } from "../../Home/company/companySclice";
-
+import { useEffect, useState } from "react";
+import { toast } from "sonner"; 
+import { ArrowLeft, ArrowRight, } from "lucide-react";
 
 const icons = [
   {
@@ -36,15 +34,20 @@ const icons = [
 
 interface PricingProps {
   showSelectedPlan?: boolean;
+  onNext: (step: number) => void;
+  setSelectedPlan: (planId: number) => void; // Add prop type for setSelectedPlanId
 }
 
-export function Pricing({ showSelectedPlan = false }: PricingProps) {
+export function PricingStep({ showSelectedPlan = false, onNext, setSelectedPlan }: PricingProps) {
 
-  const organizationData = useSelector(
-    (state: RootState) => state.companyInfo.organizationData
-  );
+  const selectedPlan = useSelector(
+    (state: RootState) => state.landing.SelectedPlane
+  );  
 
+  const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
+  
   const dispatch = useDispatch();
+
   const {
     data: plansData,
     isLoading,
@@ -53,40 +56,39 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
     refetchOnMountOrArgChange: true,
   });
 
-  const selectedPlan = useSelector(
-    (state: RootState) => state.landing.SelectedPlane
+  const organizationData = useSelector(
+    (state: RootState) => state.companyInfo.organizationData
   );
-  const { isAuthenticated, user } = useSelector(
+
+  const { user } = useSelector(
     (state: RootState) => state.auth
   );
 
-  console.log("this is plan data: ", plansData);
-
-  const handlePlanSelect = (planId: number) => {
-    dispatch(setSelectedPlane(planId));
-    
-    const selectedPlan = sortedPlansData.find(plan => plan.id === planId);
-
-    const type = selectedPlan?.name.toLowerCase() === "Individual plan".toLowerCase();
-    
-    console.log("selected plan: ", selectedPlan);
-    console.log("type: ", type);
-
+ const handlePlanSelect = (planId: number) => {
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
-      is_private: type,
+      organization_payment_plan: planId,
     };
-    
     dispatch(setOrganization(updatedData));
-    console.log("updated data: ", updatedData);
-    
+    setSelectedPlan(planId);
+    setSelectedPlanId(planId); 
   };
 
+  const handleNext = () => {
+    if (!selectedPlanId) {  
+      toast.error("Please select a pricing type to continue.");
+      return;
+    }
+    onNext(4); // Always go to step 4 (Subscription Plan)
+  };
+
+  const onPrevious = () => {
+    onNext(2); // Go back to Information step
+  };
 
   useEffect(() => {
     refetch();
   }, []);
-
 
   if (isLoading || !plansData) {
     return (
@@ -98,27 +100,23 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
 
   const sortedPlansData = plansData.slice().sort((a, b) => a.price - b.price);
 
+  // Filter plans based on organization's privacy status and plan name
+  const filteredPlans = organizationData?.is_private
+    ? sortedPlansData.filter(plan => plan.name.toLowerCase() === 'individual plan')
+    : sortedPlansData.filter(plan => plan.name.toLowerCase() !== 'individual plan');
+      
   return (
     <div
       id="pricing"
       className="py-20 px-4 border-b-[1px] justify-center overflow-hidden bg-white dark:border-b-slate-700 dark:bg-background"
     >
       <div className="max-w-max mx-auto">
-        <h2 className="text-xl md:text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
-          Flexible Plans <br />
-          for Every Need
-        </h2>
-        <p className="text-xl text-gray-900 dark:text-gray-300 mb-12 max-w-2xl mx-auto text-center">
-          Choose the perfect plan that matches your monitoring requirements and
-          scale as you grow.
-        </p>
-
         <div className="flex flex-row justify-center gap-8">
-          {sortedPlansData
+          {filteredPlans
             .filter(
               (plan) =>
                 !(
-                  user?.is_private === false &&
+                  user?.is_private === true &&
                   plan.name.toLowerCase() === "individual plan"
                 )
             )
@@ -127,7 +125,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                 key={plan.id}
                 className={`bg-white dark:bg-background border-[var(--primary)] dark:border-gray-700 transition-all duration-300 hover:scale-105  
                 ${
-                  selectedPlan === plan.id && showSelectedPlan
+                  selectedPlanId === plan.id && showSelectedPlan
                     ? "ring-2 ring-[var(--primary)]"
                     : ""
                 }
@@ -185,35 +183,36 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                     ))}
                   </div>
 
-                  {showSelectedPlan ? (
-                    <Button
-                      className={`w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105 ${
-                        selectedPlan === plan.id ? "bg-[var(--secondary)]" : ""
-                      }`}
-                      onClick={() => handlePlanSelect(plan.id)}
-                    >
-                      {selectedPlan === plan.id ? "Selected" : "Select Plan"}
-                    </Button>
-                  ) : isAuthenticated ? (
-                    <Button
+                  <Button
                       className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
                       onClick={() => handlePlanSelect(plan.id)}
                     >
                       Select Plan
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => handlePlanSelect(plan.id)}
-                      className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
-                      asChild
-                    >
-                      <Link to="/auth">Get Started</Link>
-                    </Button>
-                  )}
+                 </Button>
+
                 </CardContent>
               </Card>
             ))}
+
         </div>
+            <div className="flex justify-between mt-8">
+                <Button
+                      variant="outline"
+                      onClick={onPrevious}
+                      className="flex items-center gap-2"
+                >
+                      <ArrowLeft className="w-4 h-4" />
+                      Previous Step
+                </Button>
+               
+                <Button
+                onClick={handleNext}
+                className="flex items-center gap-2 bg-[var(--secondary)] text-white hover:bg-[var(--secondary)]"
+                >
+                   Next Step
+                   <ArrowRight className="w-4 h-4" />
+                </Button>
+            </div>
       </div>
     </div>
   );

@@ -290,7 +290,7 @@ function UserTableRowEnhanced({
               variant="outline"
               size="sm"
               onClick={() => onEdit(user)}
-              className="h-8 border-gray-200 text-gray-700 hover:bg-[var(--light)] hover:text-[var(--secondary)] hover:border-[var(--accent)]"
+              className="h-8 border-gray-200 text-gray-700 hover:bg-[var(--light)] hover:text-[var(--secondary)] hover:border-[var(--acent)]"
             >
               <Edit className="h-3.5 w-3.5" />
               <span className="sr-only">Edit</span>
@@ -310,7 +310,7 @@ function UserTableRowEnhanced({
       {isExpanded && (
         <TableRow className={isEven ? "bg-[var(--light)]/30" : "bg-[var(--light)]/50"}>
           <td colSpan={6} className="p-4">
-            <div className="rounded-lg bg-white p-4 shadow-sm border border-[var(--accent)]">
+            <div className="rounded-lg bg-white p-4 shadow-sm border border-[var(--acent)]">
               <h4 className="font-medium text-[var(--secondary)] mb-3">User Permissions</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
@@ -364,7 +364,7 @@ function UserTableRowEnhanced({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="text-[var(--secondary)] border-[var(--accent)] hover:bg-[var(--light)] hover:border-[var(--accent)]"
+                  className="text-[var(--secondary)] border-[var(--acent)] hover:bg-[var(--light)] hover:border-[var(--acent)]"
                   onClick={() => onEdit(user)}
                 >
                   Edit Permissions

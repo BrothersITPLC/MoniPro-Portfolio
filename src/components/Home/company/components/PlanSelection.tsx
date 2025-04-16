@@ -1,0 +1,145 @@
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { CheckCircle2, Building2, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "@/app/store";
+import { setOrganization } from "../companySclice";
+import type { OrganizationDataInfrence } from "../companySclice";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { toast } from "sonner";
+
+const subscriptionTypeSchema = z.object({
+  is_private: z.boolean().refine((val) => val !== undefined, {
+    message: "Account type must be selected",
+  }),
+});
+
+interface PlanSelectionProps {
+  onNext: (step: number) => void;
+  onPrevious: () => void;
+}
+
+export function PlanSelection({ onNext }: PlanSelectionProps) {
+  const dispatch = useDispatch();
+  const organizationData = useSelector(
+    (state: RootState) => state.companyInfo.organizationData
+  );
+
+  const [selected, setSelected] = useState<"company" | "individual" | null>(null);
+
+  const form = useForm<z.infer<typeof subscriptionTypeSchema>>({
+    resolver: zodResolver(subscriptionTypeSchema),
+    defaultValues: {
+      is_private: undefined,
+    },
+  });
+
+  const handleAccountTypeSelection = (type: boolean) => {
+    const updatedData: OrganizationDataInfrence = {
+      ...organizationData,
+      is_private: type,
+      payment_provider: organizationData?.payment_provider ?? 0,
+      organization_payment_plan: organizationData?.organization_payment_plan ?? 0,
+      organization_payment_duration: organizationData?.organization_payment_duration ?? 0,
+      user_id: organizationData?.user_id ?? 0,
+      plan_type: organizationData?.plan_type ?? 0,
+      organization_phone: organizationData?.organization_phone ?? "",
+      organization_website: organizationData?.organization_website ?? "",
+      organization_name: organizationData?.organization_name ?? "",
+      first_name: organizationData?.first_name ?? "",
+      last_name: organizationData?.last_name ?? "",
+      organization_description: organizationData?.organization_description ?? "",
+    };
+
+    dispatch(setOrganization(updatedData));
+
+    console.log("this is the updated data:",  updatedData);
+
+    form.setValue("is_private", type, { shouldValidate: true });
+    setSelected(type ? "individual" : "company");
+  };
+
+  const handleNext = () => {
+    form.trigger().then((isValid) => {
+      if (!isValid || selected === null) {
+        toast.error("Please select an account type to continue.");
+        return;
+      }
+      onNext(2); // Always go to step 2 (Information)
+    });
+  };
+
+  return (
+    <>
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold">Select Plan Type</h2>
+        <p className="text-muted-foreground mt-2">
+          Choose the type of plan that best fits your needs
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        {/* Company Plan */}
+        <Card
+          className={`relative group cursor-pointer transition-all duration-300 hover:scale-105 ${
+            selected === "company" ? "bg-[url('/bg-company.png')] bg-cover ring-2 ring-[var(--secondary)]" : "hover:border-[var(--secondary)]"
+          }`}
+          onClick={() => handleAccountTypeSelection(false)}
+        >
+          <div className="p-8">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 flex items-center justify-center bg-[var(--acent)] rounded-lg">
+                <Building2 className="w-8 h-8 text-[var(--secondary)]" />
+              </div>
+              <h3 className="text-xl font-semibold">Company Plan</h3>
+            </div>
+            <p className="text-muted-foreground">
+              For businesses and organizations with multiple users
+            </p>
+            {selected === "company" && (
+              <div className="absolute top-4 right-4">
+                <CheckCircle2 className="w-6 h-6 text-[var(--secondary)]" />
+              </div>
+            )}
+          </div>
+        </Card>
+
+        <Card
+          className={`relative group cursor-pointer transition-all duration-300 hover:scale-105 ${
+            selected === "individual" ? "bg-[url('/bg-individual.png')] bg-cover ring-2 ring-[var(--secondary)]" : "hover:border-[var(--secondary)]"
+          }`}
+          onClick={() => handleAccountTypeSelection(true)}
+        >
+          <div className="p-8">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 flex items-center justify-center bg-[var(--acent)] rounded-lg">
+                <User className="w-8 h-8 text-[var(--secondary)]" />
+              </div>
+              <h3 className="text-xl font-semibold">Individual Plan</h3>
+            </div>
+            <p className="text-muted-foreground">
+              For personal use with a single subscription
+            </p>
+            {selected === "individual" && (
+              <div className="absolute top-4 right-4">
+                <CheckCircle2 className="w-6 h-6 text-[var(--secondary)]" />
+              </div>
+            )}
+          </div>
+        </Card>
+      </div>
+
+      <div className="mt-8 flex justify-center">
+        <Button
+          onClick={handleNext}
+          disabled={selected === null}
+        >
+          Next
+        </Button>
+      </div>
+    </>
+  );
+}
