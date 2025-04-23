@@ -1,5 +1,9 @@
-import { ChevronRight, type LucideIcon } from "lucide-react"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { ChevronRight, type LucideIcon } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -9,25 +13,39 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
-import { Link } from "react-router-dom"
+} from "@/components/ui/sidebar";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 export function NavMain({
   items,
 }: {
   items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
+    title: string;
+    url: string;
+    icon?: LucideIcon;
+    isActive?: boolean;
     items?: {
-      title: string
-      url: string
-      key?: string
-      isActive?: boolean
-    }[]
-  }[]
+      title: string;
+      url: string;
+      key?: string;
+      isActive?: boolean;
+    }[];
+  }[];
 }) {
+  const organizationData = useSelector((state: RootState) => state.auth.user);
+
+  const shouldShowMenuItem = (title: string) => {
+    switch (title) {
+      case "Team":
+        return !organizationData?.is_private && organizationData?.is_admin;
+      // Add more cases for other conditional items
+      default:
+        return true;
+    }
+  };
+
   return (
     <SidebarGroup className="px-4">
       <SidebarGroupLabel className="text-[#7c3aed] text-base font-semibold mb-6 uppercase tracking-wider">
@@ -35,10 +53,10 @@ export function NavMain({
       </SidebarGroupLabel>
       <SidebarMenu className="space-y-2">
         {items.map((item) => (
-          <Collapsible 
-            key={item.title} 
-            asChild 
-            defaultOpen={item.isActive} 
+          <Collapsible
+            key={item.title}
+            asChild
+            defaultOpen={item.isActive}
             className="group/collapsible"
           >
             <SidebarMenuItem>
@@ -52,48 +70,57 @@ export function NavMain({
                   isActive={item.isActive}
                 >
                   {item.icon && (
-                    <item.icon 
+                    <item.icon
                       className={`size-6 ${
                         item.isActive ? "text-[#7c3aed]" : "text-[#8b5cf6]"
-                      }`} 
+                      }`}
                     />
                   )}
-                  <span className={`font-medium text-[15px] ml-3 ${
-                    item.isActive ? "text-[#7c3aed]" : ""
-                  }`}>
+                  <span
+                    className={`font-medium text-[15px] ml-3 ${
+                      item.isActive ? "text-[#7c3aed]" : ""
+                    }`}
+                  >
                     {item.title}
                   </span>
                   <ChevronRight
                     className={`ml-auto size-5 transition-transform duration-300 
                               group-data-[state=open]/collapsible:rotate-90 ${
-                                item.isActive ? "text-[#7c3aed]" : "text-[#8b5cf6]"
+                                item.isActive
+                                  ? "text-[#7c3aed]"
+                                  : "text-[#8b5cf6]"
                               }`}
                   />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub className="ml-8 mt-2 border-l-2 border-[#ddd6fe] pl-4">
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem 
-                      key={subItem.key || `${subItem.title}-${subItem.url}`}
-                      className="mb-1"
-                    >
-                      <SidebarMenuSubButton asChild isActive={subItem.isActive}>
-                        <Link
-                          to={subItem.url}
-                          className="flex items-center py-2.5 px-3 text-[14px] font-medium
+                  {item.items
+                    ?.filter((subItem) => shouldShowMenuItem(subItem.title))
+                    .map((subItem) => (
+                      <SidebarMenuSubItem
+                        key={subItem.key || `${subItem.title}-${subItem.url}`}
+                        className="mb-1"
+                      >
+                        <SidebarMenuSubButton
+                          asChild
+                          isActive={subItem.isActive}
+                        >
+                          <Link
+                            to={subItem.url}
+                            className="flex items-center py-2.5 px-3 text-[14px] font-medium
                                    text-gray-600 hover:text-[#7c3aed] rounded-md
                                    hover:bg-[#f5f3ff] transition-all duration-200
                                    data-[active=true]:text-[#7c3aed] 
                                    data-[active=true]:bg-[#f5f3ff]
                                    data-[active=true]:font-semibold
                                    hover:shadow-sm"
-                        >
-                          <span>{subItem.title}</span>
-                        </Link>
-                      </SidebarMenuSubButton>
-                    </SidebarMenuSubItem>
-                  ))}
+                          >
+                            <span>{subItem.title}</span>
+                          </Link>
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
                 </SidebarMenuSub>
               </CollapsibleContent>
             </SidebarMenuItem>
@@ -101,5 +128,5 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }

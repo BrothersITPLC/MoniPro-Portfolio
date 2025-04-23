@@ -56,3 +56,34 @@ export interface OtpVerificationResponse {
   message?: string;
   data?: any;
 }
+
+export const updateUserProfileSchema = z.object({
+  organization_name: z
+    .string()
+    .min(1, { message: "Organization name is required" })
+    .min(10, {
+      message: "Organization name must be at least 10 characters long",
+    }),
+
+  phone: z.string().regex(/^0[79]\d{8}$/, {
+    message: "Phone number must be 10 digits and start with 09 or 07",
+  }),
+  organization_website: z.string().optional(),
+
+  organization_description: z
+    .string()
+    .min(1, { message: "Organization description is required" })
+    .min(2, {
+      message: "Organization description must be at least 2 characters long",
+    }),
+
+  first_name: z
+    .string()
+    .min(1, { message: "First name is required" })
+    .min(3, { message: "First name must be at least 3 characters long" }),
+
+  last_name: z
+    .string()
+    .min(1, { message: "Last name is required" })
+    .min(3, { message: "Last name must be at least 3 characters long" }),
+});

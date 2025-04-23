@@ -1,13 +1,27 @@
-import { useState } from "react"
-import { PlusCircle, Check, X, ChevronDown, ChevronUp, Edit, Trash2 } from "lucide-react"
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { useSelector } from "react-redux"
-import type { RootState } from "@/app/store"
-import { useCreateTeamMutation } from "../api"
-import { UserForm } from "./user-form"
-import type { User, UserFormData } from "../types"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import {
+  PlusCircle,
+  Check,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Edit,
+  Trash2,
+} from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/app/store";
+import { useCreateTeamMutation } from "../api";
+import { UserForm } from "./UserForm";
+import type { User, UserFormData } from "../types";
+import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,41 +31,37 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 // import { toast } from "@/hooks/use-toast"
-
+import { toast } from "sonner";
 function UserTable() {
-  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set())
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [userToDelete, setUserToDelete] = useState<string | null>(null)
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<string | null>(null);
 
-  const teamMembers = useSelector((state: RootState) => state.team.members)
-  const [createTeam, { isLoading: isCreating }] = useCreateTeamMutation()
+  const teamMembers = useSelector((state: RootState) => state.team.members);
+  const [createTeam, { isLoading: isCreating }] = useCreateTeamMutation();
 
   const toggleRow = (userId: string) => {
-    const newExpandedRows = new Set(expandedRows)
+    const newExpandedRows = new Set(expandedRows);
     if (expandedRows.has(userId)) {
-      newExpandedRows.delete(userId)
+      newExpandedRows.delete(userId);
     } else {
-      newExpandedRows.add(userId)
+      newExpandedRows.add(userId);
     }
-    setExpandedRows(newExpandedRows)
-  }
+    setExpandedRows(newExpandedRows);
+  };
 
   const handleAddUser = async (data: UserFormData) => {
     try {
-      const userData = JSON.parse(localStorage.getItem("userData") || "{}")
-      const organizationId = userData?.user_id
+      const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+      const organizationId = userData?.user_id;
 
       if (!organizationId) {
-        toast({
-          title: "Error",
-          description: "Organization ID not found",
-          variant: "destructive",
-        })
-        return
+        toast.error("Organization ID not found");
+        return;
       }
 
       await createTeam({
@@ -61,54 +71,39 @@ function UserTable() {
         organization: organizationId,
         username: data.username,
         // Add other fields as needed by your API
-      }).unwrap()
+      }).unwrap();
 
-      toast({
-        title: "Success",
-        description: selectedUser ? "User updated successfully" : "User created successfully",
-      })
+      toast.success("User created successfully");
 
-      setIsDialogOpen(false)
-      setSelectedUser(null)
+      setIsDialogOpen(false);
+      setSelectedUser(null);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: `Failed to ${selectedUser ? "update" : "create"} user`,
-        variant: "destructive",
-      })
-      console.error("Failed to handle user:", error)
+      toast.error(`Failed to ${selectedUser ? "update" : "create"} user`);
+      console.error("Failed to handle user:", error);
     }
-  }
+  };
 
   const handleDeleteUser = async () => {
-    if (!userToDelete) return
+    if (!userToDelete) return;
 
     try {
       // Implement your delete API call here
       // await deleteTeamMember(userToDelete).unwrap()
 
-      toast({
-        title: "Success",
-        description: "User deleted successfully",
-      })
+      toast.success("User deleted successfully");
 
-      setIsDeleteDialogOpen(false)
-      setUserToDelete(null)
+      setIsDeleteDialogOpen(false);
+      setUserToDelete(null);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete user",
-        variant: "destructive",
-      })
-      console.error("Failed to delete user:", error)
+      toast.error("Failed to delete user");
+      console.error("Failed to delete user:", error);
     }
-  }
+  };
 
   const handleStatusChange = async (userId: string, currentStatus: boolean) => {
     try {
       // Implement your status change API call here
       // await updateUserStatus({ userId, status: !currentStatus }).unwrap()
-
       // toast({
       //   title: "Success",
       //   description: `User status changed to ${!currentStatus ? "active" : "inactive"}`,
@@ -119,9 +114,9 @@ function UserTable() {
       //   description: "Failed to update user status",
       //   variant: "destructive",
       // })
-      console.error("Failed to update user status:", error)
+      console.error("Failed to update user status:", error);
     }
-  }
+  };
 
   return (
     <div className="space-y-6 p-6  rounded-xl shadow-sm">
@@ -131,8 +126,8 @@ function UserTable() {
         </div>
         <Button
           onClick={() => {
-            setSelectedUser(null)
-            setIsDialogOpen(true)
+            setSelectedUser(null);
+            setIsDialogOpen(true);
           }}
           disabled={isCreating}
           className="bg-[var(--primary)] hover:bg-[var(--secondary)] text-white"
@@ -148,10 +143,18 @@ function UserTable() {
             <TableRow>
               <TableHead className="w-[50px] text-center"></TableHead>
               <TableHead className="font-medium text-gray-700">Email</TableHead>
-              <TableHead className="font-medium text-gray-700">First Name</TableHead>
-              <TableHead className="font-medium text-gray-700">Last Name</TableHead>
-              <TableHead className="font-medium text-gray-700">Status</TableHead>
-              <TableHead className="font-medium text-gray-700 text-right">Actions</TableHead>
+              <TableHead className="font-medium text-gray-700">
+                First Name
+              </TableHead>
+              <TableHead className="font-medium text-gray-700">
+                Last Name
+              </TableHead>
+              <TableHead className="font-medium text-gray-700">
+                Status
+              </TableHead>
+              <TableHead className="font-medium text-gray-700 text-right">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -184,12 +187,12 @@ function UserTable() {
                   isExpanded={expandedRows.has(String(member.id))}
                   onToggleExpand={toggleRow}
                   onEdit={(user) => {
-                    setSelectedUser(user)
-                    setIsDialogOpen(true)
+                    setSelectedUser(user);
+                    setIsDialogOpen(true);
                   }}
                   onDelete={(userId) => {
-                    setUserToDelete(userId)
-                    setIsDeleteDialogOpen(true)
+                    setUserToDelete(userId);
+                    setIsDeleteDialogOpen(true);
                   }}
                   onStatusChange={handleStatusChange}
                   isEven={index % 2 === 0}
@@ -210,25 +213,31 @@ function UserTable() {
       />
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the user and remove their data from our
-              servers.
+              This action cannot be undone. This will permanently delete the
+              user and remove their data from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteUser} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction
+              onClick={handleDeleteUser}
+              className="bg-red-600 hover:bg-red-700"
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  )
+  );
 }
 
 function UserTableRowEnhanced({
@@ -240,13 +249,13 @@ function UserTableRowEnhanced({
   onStatusChange,
   isEven,
 }: {
-  user: User
-  isExpanded: boolean
-  onToggleExpand: (userId: string) => void
-  onEdit: (user: User) => void
-  onDelete: (userId: string) => void
-  onStatusChange: (userId: string, currentStatus: boolean) => void
-  isEven: boolean
+  user: User;
+  isExpanded: boolean;
+  onToggleExpand: (userId: string) => void;
+  onEdit: (user: User) => void;
+  onDelete: (userId: string) => void;
+  onStatusChange: (userId: string, currentStatus: boolean) => void;
+  isEven: boolean;
 }) {
   return (
     <>
@@ -258,7 +267,11 @@ function UserTableRowEnhanced({
             onClick={() => onToggleExpand(user.id)}
             className="h-8 w-8 p-0 text-gray-500"
           >
-            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            {isExpanded ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
           </Button>
         </td>
         <td className="font-medium">{user.email}</td>
@@ -308,45 +321,71 @@ function UserTableRowEnhanced({
         </td>
       </TableRow>
       {isExpanded && (
-        <TableRow className={isEven ? "bg-[var(--light)]/30" : "bg-[var(--light)]/50"}>
+        <TableRow
+          className={isEven ? "bg-[var(--light)]/30" : "bg-[var(--light)]/50"}
+        >
           <td colSpan={6} className="p-4">
             <div className="rounded-lg bg-white p-4 shadow-sm border border-[var(--acent)]">
-              <h4 className="font-medium text-[var(--secondary)] mb-3">User Permissions</h4>
+              <h4 className="font-medium text-[var(--secondary)] mb-3">
+                User Permissions
+              </h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <h5 className="text-sm font-medium text-gray-700">Access Control</h5>
+                  <h5 className="text-sm font-medium text-gray-700">
+                    Access Control
+                  </h5>
                   <div className="flex items-center gap-2">
                     <div
-                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.addVM ? "bg-[var(--secondary)]" : "bg-gray-300"}`}
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        user.permissions.addVM
+                          ? "bg-[var(--secondary)]"
+                          : "bg-gray-300"
+                      }`}
                     ></div>
                     <span className="text-sm">Add VM</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div
-                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.addUser ? "bg-[var(--secondary)]" : "bg-gray-300"}`}
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        user.permissions.addUser
+                          ? "bg-[var(--secondary)]"
+                          : "bg-gray-300"
+                      }`}
                     ></div>
                     <span className="text-sm">Add User</span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <h5 className="text-sm font-medium text-gray-700">Media Types</h5>
+                  <h5 className="text-sm font-medium text-gray-700">
+                    Media Types
+                  </h5>
                   <div className="flex items-center gap-2">
                     <div
-                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.mediaTypes.email ? "bg-[var(--secondary)]" : "bg-gray-300"}`}
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        user.permissions.mediaTypes.email
+                          ? "bg-[var(--secondary)]"
+                          : "bg-gray-300"
+                      }`}
                     ></div>
                     <span className="text-sm">Email</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div
-                      className={`h-2.5 w-2.5 rounded-full ${user.permissions.mediaTypes.telegram ? "bg-[var(--secondary)]" : "bg-gray-300"}`}
+                      className={`h-2.5 w-2.5 rounded-full ${
+                        user.permissions.mediaTypes.telegram
+                          ? "bg-[var(--secondary)]"
+                          : "bg-gray-300"
+                      }`}
                     ></div>
                     <span className="text-sm">Telegram</span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <h5 className="text-sm font-medium text-gray-700">VM Control</h5>
+                  <h5 className="text-sm font-medium text-gray-700">
+                    VM Control
+                  </h5>
                   {user.permissions.controlVM.length > 0 ? (
                     user.permissions.controlVM.map((vm, index) => (
                       <div key={index} className="flex items-center gap-2">
@@ -355,7 +394,9 @@ function UserTableRowEnhanced({
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-gray-500">No VM control permissions</p>
+                    <p className="text-sm text-gray-500">
+                      No VM control permissions
+                    </p>
                   )}
                 </div>
               </div>
@@ -375,8 +416,7 @@ function UserTableRowEnhanced({
         </TableRow>
       )}
     </>
-  )
+  );
 }
 
-export default UserTable
-
+export default UserTable;

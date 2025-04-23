@@ -35,7 +35,7 @@ import { logoutState } from "@/components/Auth/AutSlice";
 export function NavUser() {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
-  
+
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const [logout, { isLoading }] = useLogoutMutation();
@@ -61,7 +61,7 @@ export function NavUser() {
     (state: RootState) => state.landing.SelectedPlane
   );
 
- console.log("this is the selected plane", selectedPlan);
+  console.log("this is the selected plane", selectedPlan);
 
   return (
     <SidebarMenu>
@@ -74,8 +74,8 @@ export function NavUser() {
                          data-[state=open]:bg-[#f5f3ff] data-[state=open]:shadow-md"
             >
               <Avatar className="h-10 w-10 rounded-lg border-2 border-[#7c3aed]">
-                <AvatarImage 
-                  src={user?.user_name} 
+                <AvatarImage
+                  src={user?.profile_picture}
                   alt={user?.user_name}
                   className="object-cover"
                 />
@@ -103,10 +103,10 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-3 p-3 text-left">
                 <Avatar className="h-12 w-12 rounded-lg border-2 border-[#7c3aed]">
-                  <AvatarImage 
-                    src={user?.user_name} 
+                  <AvatarImage
+                    src={user?.profile_picture}
                     alt={user?.user_name}
-                    className="object-cover" 
+                    className="object-cover"
                   />
                   <AvatarFallback className="rounded-lg bg-[#8b5cf6] text-white">
                     <UserRoundCheck className="h-6 w-6" />
@@ -123,11 +123,13 @@ export function NavUser() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-[#ddd6fe]" />
-             <DropdownMenuGroup>
+            <DropdownMenuGroup>
               <Link to="/home/subscription">
-                  <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
+                <DropdownMenuItem
+                  className="py-2.5 px-3 text-[14px] cursor-pointer
                                           hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
-                                          rounded-lg mx-1 my-0.5">
+                                          rounded-lg mx-1 my-0.5"
+                >
                   <Sparkles className="mr-2 h-5 w-5 text-[#7c3aed]" />
                   <span className="font-medium">Update Subscription Plan</span>
                 </DropdownMenuItem>
@@ -135,27 +137,33 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator className="bg-[#ddd6fe]" />
             <DropdownMenuGroup className="p-1">
-              <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
+              <DropdownMenuItem
+                className="py-2.5 px-3 text-[14px] cursor-pointer
                                         hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
-                                        rounded-lg">
+                                        rounded-lg"
+              >
                 <BadgeCheck className="mr-2 h-5 w-5 text-[#8b5cf6]" />
                 <span className="font-medium">Account</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
+              <DropdownMenuItem
+                className="py-2.5 px-3 text-[14px] cursor-pointer
                                         hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
-                                        rounded-lg">
+                                        rounded-lg"
+              >
                 <CreditCard className="mr-2 h-5 w-5 text-[#8b5cf6]" />
                 <span className="font-medium">Billing</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="py-2.5 px-3 text-[14px] cursor-pointer
+              <DropdownMenuItem
+                className="py-2.5 px-3 text-[14px] cursor-pointer
                                         hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
-                                        rounded-lg">
+                                        rounded-lg"
+              >
                 <Bell className="mr-2 h-5 w-5 text-[#8b5cf6]" />
                 <span className="font-medium">Notifications</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator className="bg-[#ddd6fe]" />
-            <DropdownMenuItem 
+            <DropdownMenuItem
               onClick={handleSubmit}
               className="py-2.5 px-3 text-[14px] cursor-pointer
                        hover:bg-red-50 focus:bg-red-50 text-red-600

@@ -24,8 +24,8 @@ import { PerformanceAlerts } from "./components/Home/notification/components/Per
 import { UpdateSubscription } from "./components/Home/company/components/Update";
 import { ResetPassword } from "./pages/ResetPassword";
 import { GoogleCallback } from "./components/Auth/components/GoogleCallback";
-import  {PersonalInfoUpdate}  from "./components/Home/company/components/Infoupdate";
-
+// import  {PersonalInfoUpdate}  from "./components/Home/company/components/Infoupdate";
+import { PersonalInfoUpdate } from "@/components/Auth/components/PersonalInfoUpdate/PersonalInfoUpdate";
 import { Updatebillingcycle } from "./components/Home/company/components/UpdateBillingcycle";
 import { UpdatePricing } from "./components/Home/company/components/UpdatePricingcycle";
 
@@ -69,8 +69,11 @@ function App() {
               <Route path="team" element={<TeamWrapper />} />
               <Route index element={<Navigate to="dashboard" replace />} />
               <Route path="zabbixhost/:hostId" element={<ZabbixHosts />} />
-              <Route path="update_billingcycle" element={<Updatebillingcycle />} />
-              <Route path="update_pricingcycle" element={<UpdatePricing />} />  
+              <Route
+                path="update_billingcycle"
+                element={<Updatebillingcycle />}
+              />
+              <Route path="update_pricingcycle" element={<UpdatePricing />} />
             </Route>
           </Route>
 
