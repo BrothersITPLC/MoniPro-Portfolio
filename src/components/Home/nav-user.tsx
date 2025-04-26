@@ -70,103 +70,108 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="hover:bg-[#f5f3ff] transition-all duration-200 rounded-xl p-2
-                         data-[state=open]:bg-[#f5f3ff] data-[state=open]:shadow-md"
+              className="hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] transition-all duration-200 rounded-xl p-2
+                         data-[state=open]:bg-[var(--light)] dark:data-[state=open]:bg-[var(--neutral-bg)] data-[state=open]:shadow-md"
             >
-              <Avatar className="h-10 w-10 rounded-lg border-2 border-[#7c3aed]">
+              <Avatar className="h-10 w-10 rounded-lg border-2 border-[var(--primary)]">
                 <AvatarImage
                   src={user?.profile_picture}
                   alt={user?.user_name}
                   className="object-cover"
                 />
-                <AvatarFallback className="rounded-lg bg-[#8b5cf6] text-white">
+                <AvatarFallback className="rounded-lg bg-[var(--secondary)] text-[var(--white)]">
                   <UserRoundCheck className="h-5 w-5" />
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight ml-3">
-                <span className="truncate font-semibold text-[15px] text-gray-800">
+                <span className="truncate font-semibold text-[15px] text-[var(--text-heading)]">
                   {user?.user_name}
                 </span>
-                <span className="truncate text-[13px] text-gray-600">
+                <span className="truncate text-[13px] text-[var(--text-muted)]">
                   {user?.user_email}
                 </span>
               </div>
-              <ChevronsUpDown className="ml-auto size-5 text-[#8b5cf6]" />
+              <ChevronsUpDown className="ml-auto size-5 text-[var(--secondary)]" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[280px] rounded-xl shadow-lg border border-[#ddd6fe]"
+            className="w-[280px] rounded-xl shadow-lg border border-[var(--accent)] dark:border-[var(--border-light)]
+                      dark:bg-[var(--bg-dark)]"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={8}
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-3 p-3 text-left">
-                <Avatar className="h-12 w-12 rounded-lg border-2 border-[#7c3aed]">
+                <Avatar className="h-12 w-12 rounded-lg border-2 border-[var(--primary)]">
                   <AvatarImage
                     src={user?.profile_picture}
                     alt={user?.user_name}
                     className="object-cover"
                   />
-                  <AvatarFallback className="rounded-lg bg-[#8b5cf6] text-white">
+                  <AvatarFallback className="rounded-lg bg-[var(--secondary)] text-[var(--white)]">
                     <UserRoundCheck className="h-6 w-6" />
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left leading-tight">
-                  <span className="truncate font-semibold text-[16px] text-gray-800">
+                  <span className="truncate font-semibold text-[16px] text-[var(--text-heading)]">
                     {user?.user_name}
                   </span>
-                  <span className="truncate text-[14px] text-gray-600">
+                  <span className="truncate text-[14px] text-[var(--text-muted)]">
                     {user?.user_email}
                   </span>
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-[#ddd6fe]" />
+            <DropdownMenuSeparator className="bg-[var(--accent)] dark:bg-[var(--border-light)]" />
             <DropdownMenuGroup>
               <Link to="/home/subscription">
                 <DropdownMenuItem
                   className="py-2.5 px-3 text-[14px] cursor-pointer
-                                          hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
-                                          rounded-lg mx-1 my-0.5"
+                            hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] 
+                            focus:bg-[var(--light)] dark:focus:bg-[var(--neutral-bg)]
+                            rounded-lg mx-1 my-0.5"
                 >
-                  <Sparkles className="mr-2 h-5 w-5 text-[#7c3aed]" />
+                  <Sparkles className="mr-2 h-5 w-5 text-[var(--primary)]" />
                   <span className="font-medium">Update Subscription Plan</span>
                 </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator className="bg-[#ddd6fe]" />
+            <DropdownMenuSeparator className="bg-[var(--accent)] dark:bg-[var(--border-light)]" />
             <DropdownMenuGroup className="p-1">
               <DropdownMenuItem
                 className="py-2.5 px-3 text-[14px] cursor-pointer
-                                        hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
-                                        rounded-lg"
+                          hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] 
+                          focus:bg-[var(--light)] dark:focus:bg-[var(--neutral-bg)]
+                          rounded-lg"
               >
-                <BadgeCheck className="mr-2 h-5 w-5 text-[#8b5cf6]" />
+                <BadgeCheck className="mr-2 h-5 w-5 text-[var(--secondary)]" />
                 <span className="font-medium">Account</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="py-2.5 px-3 text-[14px] cursor-pointer
-                                        hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
-                                        rounded-lg"
+                          hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] 
+                          focus:bg-[var(--light)] dark:focus:bg-[var(--neutral-bg)]
+                          rounded-lg"
               >
-                <CreditCard className="mr-2 h-5 w-5 text-[#8b5cf6]" />
+                <CreditCard className="mr-2 h-5 w-5 text-[var(--secondary)]" />
                 <span className="font-medium">Billing</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="py-2.5 px-3 text-[14px] cursor-pointer
-                                        hover:bg-[#f5f3ff] focus:bg-[#f5f3ff]
-                                        rounded-lg"
+                          hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] 
+                          focus:bg-[var(--light)] dark:focus:bg-[var(--neutral-bg)]
+                          rounded-lg"
               >
-                <Bell className="mr-2 h-5 w-5 text-[#8b5cf6]" />
+                <Bell className="mr-2 h-5 w-5 text-[var(--secondary)]" />
                 <span className="font-medium">Notifications</span>
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator className="bg-[#ddd6fe]" />
+            <DropdownMenuSeparator className="bg-[var(--accent)] dark:bg-[var(--border-light)]" />
             <DropdownMenuItem
               onClick={handleSubmit}
               className="py-2.5 px-3 text-[14px] cursor-pointer
-                       hover:bg-red-50 focus:bg-red-50 text-red-600
+                       hover:bg-[var(--error-bg)] focus:bg-[var(--error-bg)] text-[var(--error-text)]
                        rounded-lg mx-1 my-0.5"
             >
               <LogOut className="mr-2 h-5 w-5" />

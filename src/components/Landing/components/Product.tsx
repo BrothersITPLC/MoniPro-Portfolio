@@ -36,13 +36,13 @@ export function Product() {
   return (
     <div
       id="products"
-      className="relative py-20 px-4 border-b-[1px] bg-white dark:border-b-slate-700 dark:bg-background"
+      className="relative py-20 px-4 border-b-[1px] bg-white dark:border-b-[var(--border-dark)] dark:bg-background"
     >
       <div className="max-w-7xl mx-auto">
-        <h4 className="text-3xl md:text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
+        <h4 className="text-3xl md:text-3xl font-bold mb-6 text-center text-[var(--bg-dark)] dark:text-[var(--neutral-bg)]">
           Monitoring Solutions
         </h4>
-        <p className="text-xl text-gray-900 dark:text-gray-300 mb-12 max-w-2xl mx-auto text-center">
+        <p className="text-xl text-[var(--bg-dark)] dark:text-[var(--neutral-bg)] mb-12 max-w-2xl mx-auto text-center">
           Comprehensive monitoring solutions for your infrastructure needs,
           powered by advanced AI technology.
         </p>
@@ -50,7 +50,7 @@ export function Product() {
           {monitoringCards.map((card, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-background text-gray-900 dark:text-gray-300 border border-[var(--primary)] dark:border-gray-700 rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
+              className="bg-white dark:bg-background text-[var(--bg-dark)] dark:text-[var(--neutral-bg)] border border-[var(--primary)] dark:border-[var(--border-dark)] rounded-xl overflow-hidden hover:transform hover:scale-105 transition-all duration-300"
             >
               <div className="h-48 overflow-hidden">
                 <img

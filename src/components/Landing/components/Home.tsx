@@ -7,7 +7,7 @@ import { Footer } from "./Footer";
 function Home() {
   return (
     <div>
-      <div className="min-h-screen bg-gray-100 dark:border-b-slate-700 dark:bg-background text-gray-950 dark:text-gray-100 ">
+      <div className="min-h-screen bg-[var(--neutral-bg)] dark:border-b-[var(--border-dark)] dark:bg-background text-[var(--bg-dark)] dark:text-[var(--neutral-bg)]">
         <Hero />
         <Product />
         <AiFeatures />

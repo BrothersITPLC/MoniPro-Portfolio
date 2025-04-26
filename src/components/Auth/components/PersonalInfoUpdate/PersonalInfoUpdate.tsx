@@ -12,15 +12,15 @@ export function PersonalInfoUpdate() {
   const [activeTab, setActiveTab] = useState<"general" | "password">("general");
 
   return (
-    <div className="container ml-10 pb-10">
-      <Card className="border-[var(--accent)] shadow-md overflow-hidden">
+    <div className="container ml-10 pb-10 ">
+      <Card className="border-[var(--accent)] shadow-md overflow-hidden dark:border-2 dark:bg-[var(--black)] dark:text-[var(--white)]">
         <div className="flex border-b border-[var(--accent)]">
           <button
             onClick={() => setActiveTab("general")}
             className={`py-4 px-6 font-medium text-base transition-colors ${
               activeTab === "general"
-                ? "bg-[var(--light)] text-[var(--primary)] border-b-2 border-[var(--primary)]"
-                : "text-gray-600 hover:bg-gray-50"
+                ? "text-[var(--primary)] border-b-2 border-[var(--primary)]"
+                : "text-[var(--border-dark)]"
             }`}
           >
             General Information
@@ -29,8 +29,8 @@ export function PersonalInfoUpdate() {
             onClick={() => setActiveTab("password")}
             className={`py-4 px-6 font-medium text-base transition-colors ${
               activeTab === "password"
-                ? "bg-[var(--light)] text-[var(--primary)] border-b-2 border-[var(--primary)]"
-                : "text-gray-600 hover:bg-gray-50"
+                ? "text-[var(--primary)] border-b-2 border-[var(--primary)]"
+                : "text-[var(--border-dark)]"
             }`}
           >
             Password Settings
@@ -52,46 +52,3 @@ export function PersonalInfoUpdate() {
     </div>
   );
 }
-
-//   {
-//     "user_id": 1,
-//     "user_name": "Aman Card",
-//     "user_email": "amancard6@gmail.com",
-//     "first_name": "Aman",
-//     "last_name": "Card",
-//     "phone": "0999999999",
-//     "is_private": false,
-//     "is_admin": true,
-//     "organization_info_completed": true,
-//     "user_have_zabbix_credentials": false,
-//     "user_have_zabbix_user": false,
-//     "organization_id": 1,
-//     "organization_name": "Brothers IT PLC",
-//     "organization_phone": "0999999999",
-//     "organization_website": "https://chat.deepseek.com/",
-//     "organization_description": "hi",
-//     "organization_payment_plan": "Basic Plan",
-//     "organization_payment_duration": "yearly"
-// }
-
-// {
-//     "user_id": 4,
-//     "user_name": "",
-//     "user_email": "lonima5380@f5url.com",
-//     "first_name": null,
-//     "last_name": null,
-//     "phone": "0777345678",
-//     "profile_picture": "http://localhost:8000/media/profile_pictures/new_company_1_lonima5380f5url.com_20250422115324.jpg",
-//     "is_private": false,
-//     "is_admin": false,
-//     "organization_info_completed": true,
-//     "user_have_zabbix_credentials": true,
-//     "user_have_zabbix_user": true,
-//     "organization_id": 3,
-//     "organization_name": "new company 1",
-//     "organization_phone": "0777345678",
-//     "organization_website": "https://chat.deepseek.com/",
-//     "organization_description": "it is daynamic company",
-//     "organization_payment_plan": "Basic Plan",
-//     "organization_payment_duration": "yearly"
-// }

@@ -19,21 +19,21 @@ export function UpdateSubscription() {
   return (
     <div className="container mx-auto p-6 space-y-8">
       {selectedPlan !== 4 && (
-        <Card className="overflow-hidden border-[#ddd6fe] shadow-md hover:shadow-lg transition-shadow duration-300">
-          <div className="h-2 bg-gradient-to-r from-[#7c3aed] to-[#8b5cf6]" />
+        <Card className="overflow-hidden border-[var(--acent)] shadow-md hover:shadow-lg transition-shadow duration-300">
+          <div className="h-2 bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)]" />
           <CardHeader className="pb-2">
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle className="text-xl font-bold text-[#7c3aed]">Current Subscription</CardTitle>
-                <CardDescription className="text-[#8b5cf6]">
+                <CardTitle className="text-xl font-bold text-[var(--primary)]">Current Subscription</CardTitle>
+                <CardDescription className="text-[var(--secondary)]">
                   Review and manage your current subscription plan
                 </CardDescription>
               </div>
-              <Badge className="bg-[#ddd6fe] text-[#7c3aed] hover:bg-[#f5f3ff]">Active</Badge>
+              <Badge className="bg-[var(--acent)] text-[var(--primary)] hover:bg-[var(--light)]">Active</Badge>
             </div>
           </CardHeader>
           <CardContent className="pt-4">
-            <div className="p-4 rounded-lg bg-[#f5f3ff] border border-[#ddd6fe]">
+            <div className="p-4 rounded-lg bg-[var(--light)] border border-[var(--acent)]">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-full bg-[#7c3aed] text-white">

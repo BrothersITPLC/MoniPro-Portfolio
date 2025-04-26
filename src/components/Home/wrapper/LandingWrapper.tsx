@@ -17,14 +17,6 @@ import {
 
 import type { User } from "@/components/Auth/AutSlice";
 
-const customStyles = `
-  :root {
-    --primary: #7c3aed !important; 
-    --secondary: #8b5cf6 !important; 
-    --accent: #ddd6fe !important; 
-    --light: #f5f3ff !important;
-  }
-`;
 
 export function LandingWrapper() {
   const user = useSelector((state: any) => state.auth.user);
@@ -158,34 +150,33 @@ export function LandingWrapper() {
 
   return (
     <div className="w-full">
-      <style>{customStyles}</style>
       <Banner />
       <div className="container mx-auto py-8 space-y-8">
         {/* Dashboard Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {/* Total Hosts Card */}
-          <div className="bg-[#f5f3ff] rounded-lg p-4 shadow-sm border border-[#ddd6fe]">
+          <div className="bg-[var(--light)] rounded-lg p-4 shadow-sm border border-[var(--accent)] dark:border-2 dark:bg-black dark:text-white dark:border-[]">
             <div className="flex items-start gap-3">
-              <div className="bg-[#7c3aed] p-3 rounded-full">
+              <div className="bg-[var(--secondary)] p-3 rounded-full">
                 <Database className="size-6 text-white" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">
+                <h3 className="text-sm font-medium text-[var(--text-muted)] dark:text-gray-300">
                   Total Hosts
                 </h3>
-                <p className="text-2xl font-bold text-[#7c3aed]">
+                <p className="text-2xl font-bold text-[var(--primary)] dark:text-[var(--neutral-bg)]">
                   {dashboardData.totalHosts}
                 </p>
                 <div className="mt-2 flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-sm">
-                    <Server className="size-4 text-[#8b5cf6]" />
-                    <span className="text-gray-700">
+                    <Server className="size-4 text-[var(--secondary)]" />
+                    <span className="text-[var(--text-heading)] dark:text-gray-300">
                       {dashboardData.vmCount} Virtual Machines
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Network className="size-4 text-[#8b5cf6]" />
-                    <span className="text-gray-700">
+                    <Network className="size-4 text-[var(--secondary)]" />
+                    <span className="text-[var(--text-heading)] dark:text-gray-300">
                       {dashboardData.networkCount} Network Devices
                     </span>
                   </div>
@@ -195,16 +186,16 @@ export function LandingWrapper() {
           </div>
 
           {/* Total Users Card */}
-          <div className="bg-[#f5f3ff] rounded-lg p-4 shadow-sm border border-[#ddd6fe]">
+          <div className="bg-[var(--light)] rounded-lg p-4 shadow-sm border border-[var(--accent)] dark:border-2 dark:bg-black dark:text-white">
             <div className="flex items-center gap-3">
-              <div className="bg-[#8b5cf6] p-3 rounded-full">
+              <div className="bg-[var(--secondary)] p-3 rounded-full">
                 <Users className="size-6 text-white" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">
+                <h3 className="text-sm font-medium text-[var(--text-muted)] dark:text-gray-300">
                   Total Users
                 </h3>
-                <p className="text-2xl font-bold text-[#8b5cf6]">
+                <p className="text-2xl font-bold text-[var(--secondary)] dark:text-[var(--neutral-bg)]  ">
                   {dashboardData.totalUsers}
                 </p>
               </div>
@@ -212,22 +203,22 @@ export function LandingWrapper() {
           </div>
 
           {/* Recent Problems Card */}
-          <div className="bg-[#f5f3ff] rounded-lg p-4 shadow-sm border border-[#ddd6fe]">
+          <div className="bg-[var(--light)] rounded-lg p-4 shadow-sm border border-[var(--accent)] dark:border-2 dark:bg-black dark:text-white">
             <div className="flex items-start gap-3">
-              <div className="bg-[#7c3aed] p-3 rounded-full">
+              <div className="bg-[var(--secondary)] p-3 rounded-full">
                 <AlertTriangle className="size-6 text-white" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">
+                <h3 className="text-sm font-medium text-[var(--text-muted)] dark:text-gray-300">
                   Recent Problems
                 </h3>
                 <div className="mt-2 space-y-2">
                   {dashboardData.recentProblems.map((problem) => (
                     <div key={problem.id} className="text-sm">
-                      <p className="font-medium text-gray-700">
+                      <p className="font-medium text-[var(--text-heading)] dark:text-white">
                         {problem.name}
                       </p>
-                      <p className="text-xs text-gray-500">{problem.time}</p>
+                      <p className="text-xs text-[var(--text-muted)] dark:text-gray-400">{problem.time}</p>
                     </div>
                   ))}
                 </div>
@@ -236,20 +227,20 @@ export function LandingWrapper() {
           </div>
 
           {/* Recent Tasks Card */}
-          <div className="bg-[#f5f3ff] rounded-lg p-4 shadow-sm border border-[#ddd6fe]">
+          <div className="bg-[var(--light)] rounded-lg p-4 shadow-sm border border-[var(--accent)] dark:text-white dark:border-2 dark:bg-black dark:text-white">
             <div className="flex items-start gap-3">
-              <div className="bg-[#8b5cf6] p-3 rounded-full">
+              <div className="bg-[var(--secondary)] p-3 rounded-full">
                 <ClipboardList className="size-6 text-white" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">
+                <h3 className="text-sm font-medium text-[var(--text-muted)] dark:text-gray-300">
                   Recent Tasks
                 </h3>
                 <div className="mt-2 space-y-2">
                   {dashboardData.recentTasks.map((task) => (
                     <div key={task.id} className="text-sm">
-                      <p className="font-medium text-gray-700">{task.action}</p>
-                      <p className="text-xs text-gray-500">
+                      <p className="font-medium text-[var(--text-heading)] dark:text-white">{task.action}</p>
+                      <p className="text-xs text-[var(--text-muted)] dark:text-gray-400">
                         by {task.user} • {task.time}
                       </p>
                     </div>
@@ -262,8 +253,8 @@ export function LandingWrapper() {
 
         {/* Virtual Machines Section */}
         <section>
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 bg-[#f5f3ff] p-3 rounded-lg">
-            <Server className="size-6 text-[#7c3aed]" />
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 bg-[var(--light)] p-3 rounded-lg dark:text-white dark:border-2 dark:bg-black dark:text-white">
+            <Server className="size-6 text-[var(--primary)]" />
             Virtual Machines
           </h2>
           <InfrastructureShowcase
@@ -275,8 +266,8 @@ export function LandingWrapper() {
 
         {/* Network Devices Section */}
         <section>
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 bg-[#f5f3ff] p-3 rounded-lg">
-            <Network className="size-6 text-[#7c3aed]" />
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 bg-[var(--light)] p-3 rounded-lg dark:border-2 dark:bg-black dark:text-white">
+            <Network className="size-6 text-[var(--primary)]" />
             Network Devices
           </h2>
           <InfrastructureShowcase

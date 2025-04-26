@@ -65,36 +65,36 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
   });
 
   return (
-    <Card className="w-full max-w-2xl  border-none shadow-none">
+    <Card className="w-full max-w-2xl border-none shadow-none ">
       <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100  py-2">
-        <CardTitle className="flex items-center gap-2 text-slate-800">
-          {type === "vm" ? (
-            <Server className="h-5 w-5 text-emerald-500" />
-          ) : (
-            <Network className="h-5 w-5 text-violet-500" />
-          )}
-          {type === "vm" ? "Virtual Machine Setup" : "Network Device Setup"}
-        </CardTitle>
-      </CardHeader>
+         <CardTitle className="flex items-center gap-2 text-slate-800 ">
+           {type === "vm" ? (
+             <Server className="h-5 w-5 text-emerald-500" />
+           ) : (
+             <Network className="h-5 w-5 text-violet-500" />
+           )}
+           {type === "vm" ? "Virtual Machine Setup" : "Network Device Setup"}
+         </CardTitle>
+     </CardHeader>
       <CardContent className="p-4">
-        <Tabs value={type} onValueChange={onTypeChange} className="mb-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="vm" className="flex items-center gap-2">
-              <Server className="h-4 w-4" />
-              <span>Virtual Machine</span>
-            </TabsTrigger>
-            <TabsTrigger value="network" className="flex items-center gap-2">
-              <Network className="h-4 w-4" />
-              <span>Network Device</span>
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+         <Tabs value={type} onValueChange={onTypeChange} className="mb-4">
+           <TabsList className="grid w-full grid-cols-2">
+             <TabsTrigger value="vm" className="flex items-center gap-2">
+               <Server className="h-4 w-4" />
+               <span>Virtual Machine</span>
+             </TabsTrigger>
+             <TabsTrigger value="network" className="flex items-center gap-2">
+               <Network className="h-4 w-4" />
+               <span>Network Device</span>
+             </TabsTrigger>
+           </TabsList>
+         </Tabs>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-            <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-              <h3 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
-                <Database className="h-4 w-4 text-slate-500" />
+            <div className="bg-[var(--slate-50)] p-3 rounded-lg border border-[var(--slate-100)]">
+              <h3 className="text-sm font-medium text-[var(--slate-700)] mb-2 flex items-center gap-2">
+                <Database className="h-4 w-4 text-[var(--slate-500)]" />
                 Device Information
               </h3>
               <div className="space-y-3">
@@ -103,17 +103,17 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                   name="host"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700">
-                        Host Name <span className="text-red-300">*</span>
+                      <FormLabel className="text-[var(--slate-700)]">
+                        Host Name <span className="text-[var(--red-300)]">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           placeholder="Enter host name"
-                          className="focus-visible:ring-emerald-500 h-9"
+                          className="focus-visible:ring-[var(--emerald-500)] h-9"
                         />
                       </FormControl>
-                      <FormMessage className="text-red-500" />
+                      <FormMessage className="text-[var(--red-500)]" />
                     </FormItem>
                   )}
                 />
@@ -124,17 +124,17 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                     name="ip"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-700">
+                        <FormLabel className="text-[var(--slate-700)]">
                           IP Address (Optional)
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="192.168.1.1"
-                            className="focus-visible:ring-emerald-500 h-9"
+                            className="focus-visible:ring-[var(--emerald-500)] h-9"
                           />
                         </FormControl>
-                        <FormMessage className="text-red-500" />
+                        <FormMessage className="text-[var(--red-500)]" />
                       </FormItem>
                     )}
                   />
@@ -144,17 +144,17 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                     name="dns"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-700">
+                        <FormLabel className="text-[var(--slate-700)]">
                           DNS (Optional)
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="dns.example.com"
-                            className="focus-visible:ring-emerald-500 h-9"
+                            className="focus-visible:ring-[var(--emerald-500)] h-9"
                           />
                         </FormControl>
-                        <FormMessage className="text-red-500" />
+                        <FormMessage className="text-[var(--red-500)]" />
                       </FormItem>
                     )}
                   />
@@ -166,7 +166,7 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                     name="network_device_type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-700">
+                        <FormLabel className="text-[var(--slate-700)]">
                           Device Type
                         </FormLabel>
                         <Select
@@ -174,7 +174,7 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                           value={field.value}
                         >
                           <FormControl>
-                            <SelectTrigger className="focus-visible:ring-emerald-500 h-9">
+                            <SelectTrigger className="focus-visible:ring-[var(--emerald-500)] h-9">
                               <SelectValue placeholder="Select device type" />
                             </SelectTrigger>
                           </FormControl>
@@ -187,7 +187,7 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                             </SelectItem>
                           </SelectContent>
                         </Select>
-                        <FormMessage className="text-red-500" />
+                        <FormMessage className="text-[var(--red-500)]" />
                       </FormItem>
                     )}
                   />
@@ -195,9 +195,9 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
               </div>
             </div>
 
-            <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-              <h3 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
-                <Key className="h-4 w-4 text-slate-500" />
+            <div className="bg-[var(--slate-50)] p-3 rounded-lg border border-[var(--slate-100)]">
+              <h3 className="text-sm font-medium text-[var(--slate-700)] mb-2 flex items-center gap-2">
+                <Key className="h-4 w-4 text-[var(--slate-500)]" />
                 Authentication
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -206,17 +206,17 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                   name="username"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700">
-                        Username <span className="text-red-300">*</span>
+                      <FormLabel className="text-[var(--slate-700)]">
+                        Username <span className="text-[var(--red-300)]">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           placeholder="admin"
-                          className="focus-visible:ring-emerald-500 h-9"
+                          className="focus-visible:ring-[var(--emerald-500)] h-9"
                         />
                       </FormControl>
-                      <FormMessage className="text-red-500" />
+                      <FormMessage className="text-[var(--red-500)]" />
                     </FormItem>
                   )}
                 />
@@ -226,27 +226,27 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-slate-700">
-                        Password <span className="text-red-300">*</span>
+                      <FormLabel className="text-[var(--slate-700)]">
+                        Password <span className="text-[var(--red-300)]">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="password"
                           {...field}
                           placeholder="••••••••"
-                          className="focus-visible:ring-emerald-500 h-9"
+                          className="focus-visible:ring-[var(--emerald-500)] h-9"
                         />
                       </FormControl>
-                      <FormMessage className="text-red-500" />
+                      <FormMessage className="text-[var(--red-500)]" />
                     </FormItem>
                   )}
                 />
               </div>
             </div>
 
-            <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-              <h3 className="text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
-                <Globe className="h-4 w-4 text-slate-500" />
+            <div className="bg-[var(--slate-50)] p-3 rounded-lg border border-[var(--slate-100)]">
+              <h3 className="text-sm font-medium text-[var(--slate-700)] mb-2 flex items-center gap-2">
+                <Globe className="h-4 w-4 text-[var(--slate-500)]" />
                 Network Configuration
               </h3>
               <FormField
@@ -254,12 +254,12 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                 name="network_type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-slate-700">
-                      Network Type <span className="text-red-300">*</span>
+                    <FormLabel className="text-[var(--slate-700)]">
+                      Network Type <span className="text-[var(--red-300)]">*</span>
                     </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
                       <FormControl>
-                        <SelectTrigger className="focus-visible:ring-emerald-500 h-9">
+                        <SelectTrigger className="focus-visible:ring-[var(--emerald-500)] h-9">
                           <SelectValue placeholder="Select network type" />
                         </SelectTrigger>
                       </FormControl>
@@ -268,24 +268,25 @@ export function DeviceForm({ onSubmit, type, onTypeChange }: DeviceFormProps) {
                         <SelectItem value="private">Private</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--red-500)]" />
                   </FormItem>
                 )}
               />
             </div>
 
             <div className="flex justify-end gap-4 pt-2">
+
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => form.reset()}
-                className="border-slate-300 hover:bg-slate-50 text-slate-700"
+                className="border-[var(--gray-300)] hover:bg-[var(--gray-50)] text-[var(--gray-700)]"
               >
                 Reset
               </Button>
               <Button
                 type="submit"
-                className="bg-emerald-600 hover:bg-emerald-700"
+                className="bg-[var(--primary)] text-[var(--white)] hover:bg-[var(--secondary)]"
               >
                 Create Device
               </Button>

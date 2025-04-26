@@ -14,9 +14,10 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import { useEffect, useState } from "react";
 
 export function NavMain({
   items,
@@ -35,6 +36,33 @@ export function NavMain({
   }[];
 }) {
   const organizationData = useSelector((state: RootState) => state.auth.user);
+  const location = useLocation();
+  const [activeItems, setActiveItems] = useState<{[key: string]: boolean}>({});
+
+  // Update active state based on current URL
+  useEffect(() => {
+    const newActiveItems: {[key: string]: boolean} = {};
+    
+    items.forEach(item => {
+      // Only mark as active if it's an exact URL match (not just startsWith)
+      const mainItemActive = item.url === location.pathname;
+      
+      newActiveItems[item.title] = mainItemActive || item.isActive || false;
+      
+      // Check if any sub-items are active
+      if (item.items) {
+        item.items.forEach(subItem => {
+          const subItemActive = subItem.url === location.pathname;
+          if (subItemActive) {
+            newActiveItems[item.title] = true; // Parent should be active if child is active
+            newActiveItems[`${item.title}-${subItem.title}`] = true;
+          }
+        });
+      }
+    });
+    
+    setActiveItems(newActiveItems);
+  }, [location.pathname, items]);
 
   const shouldShowMenuItem = (title: string) => {
     switch (title) {
@@ -48,7 +76,7 @@ export function NavMain({
 
   return (
     <SidebarGroup className="px-4">
-      <SidebarGroupLabel className="text-[#7c3aed] text-base font-semibold mb-6 uppercase tracking-wider">
+      <SidebarGroupLabel className="text-[var(--primary)] dark:text-[var(--primary-dark)] text-base font-semibold mb-6 uppercase tracking-wider">
         Platform
       </SidebarGroupLabel>
       <SidebarMenu className="space-y-2">
@@ -56,29 +84,36 @@ export function NavMain({
           <Collapsible
             key={item.title}
             asChild
-            defaultOpen={item.isActive}
+            defaultOpen={activeItems[item.title] || item.isActive}
             className="group/collapsible"
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton
                   tooltip={item.title}
-                  className="hover:bg-[#f5f3ff] text-gray-700 hover:text-[#7c3aed] 
-                           data-[active=true]:bg-[#f5f3ff] data-[active=true]:text-[#7c3aed] 
+                  className="hover:bg-[var(--light)] dark:hover:bg-[var(--dark-accent)] 
+                           text-[var(--text-heading)] dark:text-[var(--text-heading-dark)]
+                           hover:text-[var(--primary)] dark:hover:text-[var(--primary-dark)]
+                           data-[active=true]:bg-[var(--light)] dark:data-[active=true]:bg-[var(--neutral-bg)]
+                           data-[active=true]:text-[var(--primary)] dark:data-[active=true]:text-[var(--primary-dark)]
                            rounded-lg transition-all duration-200 py-3 px-4
-                           hover:shadow-sm"
-                  isActive={item.isActive}
+                           hover:shadow-sm dark:hover:shadow-none"
+                  isActive={activeItems[item.title] || item.isActive}
                 >
                   {item.icon && (
                     <item.icon
                       className={`size-6 ${
-                        item.isActive ? "text-[#7c3aed]" : "text-[#8b5cf6]"
+                        activeItems[item.title] || item.isActive 
+                          ? "text-[var(--primary)] dark:text-[var(--primary-dark)]" 
+                          : "text-[var(--secondary)] dark:text-[var(--secondary-dark)]"
                       }`}
                     />
                   )}
                   <span
                     className={`font-medium text-[15px] ml-3 ${
-                      item.isActive ? "text-[#7c3aed]" : ""
+                      activeItems[item.title] || item.isActive 
+                        ? "text-[var(--primary)] dark:text-[var(--primary-dark)]" 
+                        : ""
                     }`}
                   >
                     {item.title}
@@ -86,15 +121,15 @@ export function NavMain({
                   <ChevronRight
                     className={`ml-auto size-5 transition-transform duration-300 
                               group-data-[state=open]/collapsible:rotate-90 ${
-                                item.isActive
-                                  ? "text-[#7c3aed]"
-                                  : "text-[#8b5cf6]"
+                                activeItems[item.title] || item.isActive
+                                  ? "text-[var(--primary)] dark:text-[var(--primary-dark)]"
+                                  : "text-[var(--secondary)] dark:text-[var(--secondary-dark)]"
                               }`}
                   />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
-                <SidebarMenuSub className="ml-8 mt-2 border-l-2 border-[#ddd6fe] pl-4">
+                <SidebarMenuSub className="ml-8 mt-2 border-l-2 border-[var(--accent)] dark:border-[var(--accent-dark)] pl-4">
                   {item.items
                     ?.filter((subItem) => shouldShowMenuItem(subItem.title))
                     .map((subItem) => (
@@ -104,17 +139,20 @@ export function NavMain({
                       >
                         <SidebarMenuSubButton
                           asChild
-                          isActive={subItem.isActive}
+                          isActive={activeItems[`${item.title}-${subItem.title}`] || subItem.isActive}
                         >
                           <Link
                             to={subItem.url}
                             className="flex items-center py-2.5 px-3 text-[14px] font-medium
-                                   text-gray-600 hover:text-[#7c3aed] rounded-md
-                                   hover:bg-[#f5f3ff] transition-all duration-200
-                                   data-[active=true]:text-[#7c3aed] 
-                                   data-[active=true]:bg-[#f5f3ff]
+                                   text-[var(--text-muted)] dark:text-[var(--text-muted-dark)]
+                                   hover:text-[var(--primary)] dark:hover:text-[var(--primary-dark)]
+                                   rounded-md
+                                   hover:bg-[var(--light)] dark:hover:bg-[var(--dark-accent)]
+                                   transition-all duration-200
+                                   data-[active=true]:text-[var(--primary)] dark:data-[active=true]:text-[var(--primary-dark)]
+                                   data-[active=true]:bg-[var(--light)] dark:data-[active=true]:bg-[var(--neutral-bg)]
                                    data-[active=true]:font-semibold
-                                   hover:shadow-sm"
+                                   hover:shadow-sm dark:hover:shadow-none"
                           >
                             <span>{subItem.title}</span>
                           </Link>

@@ -42,16 +42,16 @@ const dockerContainers = [
 ];
 
 function MetricCard({ title, icon: Icon, value, subtitle }: { title: string; icon: any; value: string; subtitle?: string }) {
-  return (
-    <div className="bg-white rounded-xl p-6 shadow-lg">
+
+    <div className="bg-[var(--card)] rounded-xl p-6 shadow-lg">
       <div className="flex items-center gap-4 mb-2">
-        <Icon className="w-6 h-6 text-indigo-600" />
-        <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
+        <Icon className="w-6 h-6 text-[var(--primary)]" />
+        <h3 className="text-lg font-semibold text-[var(--foreground)]">{title}</h3>
       </div>
-      <p className="text-3xl font-bold text-gray-900">{value}</p>
-      {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+      <p className="text-3xl font-bold text-[var(--foreground)]">{value}</p>
+      {subtitle && <p className="text-sm text-[var(--muted-foreground)] mt-1">{subtitle}</p>}
     </div>
-  );
+  
 }
 
 function TimeIntervalSelector({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -59,7 +59,7 @@ function TimeIntervalSelector({ value, onChange }: { value: string; onChange: (v
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="bg-white border border-gray-300 rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      className="bg-[var(--card)] border border-input rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
     >
       {timeIntervals.map((interval) => (
         <option key={interval.value} value={interval.value}>
@@ -72,34 +72,34 @@ function TimeIntervalSelector({ value, onChange }: { value: string; onChange: (v
 
 function DockerContainersTable() {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-        <Box className="w-5 h-5 text-indigo-600" />
+    <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
+      <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
+        <Box className="w-5 h-5 text-[var(--primary)]" />
         Docker Containers
       </h3>
       <div className="overflow-x-auto">
-        <table className="min-w-full">
+        <table className="min-w-full dark:border-2 dark:bg-black dark:text-white">
           <thead>
-            <tr className="bg-gray-50">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Container</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ports</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CPU</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Memory</th>
+            <tr className="bg-gray-50 dark:bg-[var(--neutral-text)] ">
+              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">Container</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">Ports</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">CPU</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">Memory</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {dockerContainers.map((container) => (
               <tr key={container.name}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{container.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[var(--bg-dark)] dark:border-2 dark:bg-black dark:text-white">{container.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-muted)] dark:border-2 dark:bg-black dark:text-white">
+                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-[var(--success-text)]">
                     {container.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{container.ports}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{container.cpu}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{container.memory}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-muted)] dark:border-2 dark:bg-black dark:text-white">{container.ports}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-muted)] dark:border-2 dark:bg-black dark:text-white">{container.cpu}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-muted)] dark:border-2 dark:bg-black dark:text-white">{container.memory}</td>
               </tr>
             ))}
           </tbody>
@@ -117,7 +117,7 @@ export function ZabbixHosts() {
     <div className="min-h-screen  p-8">
       <div className="">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">System Performance Dashboard</h1>
+          <h1 className="text-3xl font-bold text-[var(--bg-dark)] dark:text-[var(--border-dark)]">System Performance Dashboard</h1>
           <TimeIntervalSelector value={timeInterval} onChange={setTimeInterval} />
         </div>
         
@@ -150,9 +150,9 @@ export function ZabbixHosts() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* CPU Usage Chart */}
-          <div className="bg-white p-6 rounded-xl shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <Activity className="w-5 h-5 text-indigo-600" />
+          <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
+            <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-[var(--primary)]" />
               CPU Utilization
             </h3>
             <div className="h-[300px]">
@@ -169,9 +169,9 @@ export function ZabbixHosts() {
           </div>
 
           {/* Memory Usage Chart */}
-          <div className="bg-white p-6 rounded-xl shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <Memory className="w-5 h-5 text-indigo-600" />
+          <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
+            <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
+              <Memory className="w-5 h-5 text-[var(--primary)]" />
               Memory Usage
             </h3>
             <div className="h-[300px]">
@@ -189,9 +189,9 @@ export function ZabbixHosts() {
           </div>
 
           {/* Network Traffic Chart */}
-          <div className="bg-white p-6 rounded-xl shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <Network className="w-5 h-5 text-indigo-600" />
+          <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
+            <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
+              <Network className="w-5 h-5 text-[var(--primary)]" />
               Network Traffic
             </h3>
             <div className="h-[300px]">
@@ -209,25 +209,25 @@ export function ZabbixHosts() {
           </div>
 
           {/* Security Overview */}
-          <div className="bg-white p-6 rounded-xl shadow-lg">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-              <Shield className="w-5 h-5 text-indigo-600" />
+          <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
+            <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
+              <Shield className="w-5 h-5 text-[var(--primary)]" />
               Security Overview
             </h3>
             <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-600">Failed Login Attempts (24h)</span>
-                  <span className="text-red-600 font-semibold">3</span>
+              <div className="bg-gray-50 p-4 rounded-lg dark:border-2 dark:bg-black dark:text-white">
+                <div className="flex justify-between items-center mb-2 ">
+                  <span className="text-[var(--border-dark)]">Failed Login Attempts (24h)</span>
+                  <span className="text-[var(--error-text)] font-semibold">3</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-200 rounded-full h-2 ">
                   <div className="bg-red-500 h-2 rounded-full" style={{ width: '15%' }}></div>
                 </div>
               </div>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 rounded-lg dark:border-2 dark:bg-black dark:text-white">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-600">Successful Logins (24h)</span>
-                  <span className="text-green-600 font-semibold">42</span>
+                  <span className="text-[var(--border-dark)]">Successful Logins (24h)</span>
+                  <span className="text-[var(--success-text)] font-semibold">42</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div className="bg-green-500 h-2 rounded-full" style={{ width: '85%' }}></div>

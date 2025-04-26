@@ -69,24 +69,24 @@ export function PasswordUpdate() {
   };
   return (
     <>
-      <CardHeader className="bg-[var(--light)] py-8">
+      <CardHeader className="bg-[var(--neutral-bg)] py-8 dark:bg-[var(--bg-dark)]">
         <div className="flex flex-col items-center mb-4">
           <div className="w-16 h-16 rounded-full bg-[var(--primary)]/10 flex items-center justify-center mb-4">
             <Shield className="h-8 w-8 text-[var(--primary)]" />
           </div>
-          <CardTitle className="text-2xl font-bold text-primary">
+          <CardTitle className="text-2xl font-bold text-[var(--primary)]">
             Password Settings
           </CardTitle>
         </div>
       </CardHeader>
 
-      <CardContent className="p-8 bg-white">
+      <CardContent className="p-8 bg-[var(--white)] dark:bg-[var(--bg-dark)]">
         <div className="max-w-md mx-auto">
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+          <div className="bg-[var(--amber-50)] border-l-4 border-[var(--amber-400)] p-4 mb-6 dark:bg-[var(--amber-950)]/30 dark:border-[var(--amber-800)]">
             <div className="flex">
               <div className="flex-shrink-0">
                 <svg
-                  className="h-5 w-5 text-yellow-400"
+                  className="h-5 w-5 text-[var(--amber-400)] dark:text-[var(--amber-300)]"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -98,7 +98,7 @@ export function PasswordUpdate() {
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-yellow-700">
+                <p className="text-sm text-[var(--amber-700)] dark:text-[var(--amber-300)]">
                   Make sure to use a strong password that you don't use
                   elsewhere.
                 </p>
@@ -113,7 +113,7 @@ export function PasswordUpdate() {
                 name="old_password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-base font-medium text-[var(--text-heading)]">
                       <Lock className="h-5 w-5 text-[var(--primary)]" />
                       Current Password
                     </FormLabel>
@@ -122,10 +122,10 @@ export function PasswordUpdate() {
                         type="password"
                         placeholder="Enter your current password"
                         {...field}
-                        className="border-[var(--accent)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
+                        className="border-[var(--border-light)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--error-text)]" />
                   </FormItem>
                 )}
               />
@@ -135,7 +135,7 @@ export function PasswordUpdate() {
                 name="new_password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-base font-medium text-[var(--text-heading)]">
                       <Lock className="h-5 w-5 text-[var(--primary)]" />
                       New Password
                     </FormLabel>
@@ -144,10 +144,10 @@ export function PasswordUpdate() {
                         type="password"
                         placeholder="Enter new password"
                         {...field}
-                        className="border-[var(--accent)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
+                        className="border-[var(--border-light)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--error-text)]" />
                   </FormItem>
                 )}
               />
@@ -157,7 +157,7 @@ export function PasswordUpdate() {
                 name="confirm_password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-base font-medium text-[var(--text-heading)]">
                       <Lock className="h-5 w-5 text-[var(--primary)]" />
                       Confirm New Password
                     </FormLabel>
@@ -166,10 +166,10 @@ export function PasswordUpdate() {
                         type="password"
                         placeholder="Confirm new password"
                         {...field}
-                        className="border-[var(--accent)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
+                        className="border-[var(--border-light)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--error-text)]" />
                   </FormItem>
                 )}
               />
@@ -177,7 +177,7 @@ export function PasswordUpdate() {
               <div className="pt-4 flex justify-end">
                 <Button
                   type="submit"
-                  className="flex items-center gap-2 bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] hover:opacity-90 text-white rounded-lg px-6 py-2.5 h-auto shadow-md"
+                  className="flex items-center gap-2 bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] hover:opacity-90 text-[var(--white)] rounded-lg px-6 py-2.5 h-auto shadow-md"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? (
@@ -189,7 +189,6 @@ export function PasswordUpdate() {
                     "Update Password"
                   )}
                 </Button>
-                ;
               </div>
             </form>
           </Form>

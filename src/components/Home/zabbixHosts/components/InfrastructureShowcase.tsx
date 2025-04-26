@@ -29,14 +29,14 @@ export function InfrastructureShowcase({ devices, type, isLoading }: DeviceListP
   const getStatusBadge = (status: string) => {
     if (status === "Enabled") {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--success-bg)] text-[var(--success-text)]">
           <CheckCircle className="w-3 h-3 mr-1" />
           Enabled
         </span>
       )
     }
     return (
-      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--error-bg)] text-[var(--error-text)]">
         <AlertCircle className="w-3 h-3 mr-1" />
         Disabled
       </span>
@@ -46,13 +46,13 @@ export function InfrastructureShowcase({ devices, type, isLoading }: DeviceListP
   const getAvailabilityBadge = (availability: string) => {
     if (availability === "ZBX") {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--error-bg)] text-[var(--error-text)]">
           ZBX
         </span>
       )
     } else if (availability === "ZBX ") {
       return (
-        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--success-bg)] text-[var(--success-text)]">
           ZBX
         </span>
       )
@@ -72,9 +72,9 @@ export function InfrastructureShowcase({ devices, type, isLoading }: DeviceListP
     return (
       <div className="text-center p-8 border border-dashed rounded-lg">
         {type === "vm" ? (
-          <Server className="mx-auto h-12 w-12 text-gray-400" />
+          <Server className="mx-auto h-12 w-12 text-[var(--icon-muted)]" />
         ) : (
-          <Network className="mx-auto h-12 w-12 text-gray-400" />
+          <Network className="mx-auto h-12 w-12 text-[var(--icon-muted)]" />
         )}
         <h3 className="mt-2 text-lg font-medium">No {type === "vm" ? "Virtual Machines" : "Network Devices"}</h3>
         <p className="mt-1 text-sm text-gray-500">Add a device to start monitoring</p>
@@ -85,21 +85,22 @@ export function InfrastructureShowcase({ devices, type, isLoading }: DeviceListP
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse">
-        <thead className="bg-[#f5f3ff]">
+        <thead className="bg-[var(--light)] dark:border-2 dark:bg-black ">
           <tr>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Name</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Items</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Triggers</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Graphs</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">IP/DNS</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Agent</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Availability</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-[var(--text-heading)] dark:text-[var(--neutral-bg)] ">Name</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-[var(--text-heading)] dark:text-[var(--neutral-bg)] ">Items</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-[var(--text-heading)] dark:text-[var(--neutral-bg)] ">Triggers</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-[var(--text-heading)] dark:text-[var(--neutral-bg)] ">Graphs</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-[var(--text-heading)] dark:text-[var(--neutral-bg)] ">IP/DNS</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-[var(--text-heading)] dark:text-[var(--neutral-bg)] ">Agent</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-[var(--text-heading)] dark:text-[var(--neutral-bg)] ">Status</th>
+            <th className="px-4 py-2 text-left text-sm font-medium text-[var(--text-heading)] dark:text-[var(--neutral-bg)] ">Availability</th>
           </tr>
         </thead>
         <tbody>
           {devices.map((device) => (
-            <tr key={device.hostid} className="border-b hover:bg-[#f5f3ff] transition-colors">
+            <tr key={device.hostid} className="border-b hover:bg-[var(--light)] dark:hover:text-black hover:bg-[var(--white)] transition-colors">
+
               <td className="px-4 py-3">
                 <Link
                   // to={`/home/zabbixhost/${device.hostid}`}
@@ -111,17 +112,17 @@ export function InfrastructureShowcase({ devices, type, isLoading }: DeviceListP
                 </Link>
               </td>
               <td className="px-4 py-3 text-sm">
-                <Link to={`/items/${device.hostid}`} className="text-[#8b5cf6] hover:underline">
+                <Link to={`/items/${device.hostid}`} className="text-[var(--secondary)] hover:underline">
                   Items {device.items_count || ""}
                 </Link>
               </td>
               <td className="px-4 py-3 text-sm">
-                <Link to={`/triggers/${device.hostid}`} className="text-[#8b5cf6] hover:underline">
+                <Link to={`/triggers/${device.hostid}`} className="text-[var(--secondary)] hover:underline">
                   Triggers {device.triggers_count || ""}
                 </Link>
               </td>
               <td className="px-4 py-3 text-sm">
-                <Link to={`/graphs/${device.hostid}`} className="text-[#8b5cf6] hover:underline">
+                <Link to={`/graphs/${device.hostid}`} className="text-[var(--secondary)] hover:underline">
                   Graphs {device.graphs_count || ""}
                 </Link>
               </td>
@@ -129,6 +130,7 @@ export function InfrastructureShowcase({ devices, type, isLoading }: DeviceListP
               <td className="px-4 py-3 text-sm">{device.agent_type || "Linux by Zabbix agent"}</td>
               <td className="px-4 py-3 text-sm">{getStatusBadge(device.status || "Enabled")}</td>
               <td className="px-4 py-3 text-sm">{getAvailabilityBadge(device.availability || "ZBX")}</td>
+
             </tr>
           ))}
         </tbody>

@@ -53,7 +53,9 @@ export function Banner() {
           </div>
           <div className="px-6 pb-6 space-y-6">
             <div className="grid gap-4 md:grid-cols-2">
+
               <div className="flex items-center gap-3 bg-[var(--light)]  p-3 rounded-lg dark:border-2  dark:bg-black ">
+                
                 <Phone className="h-5 w-5 text-[var(--secondary)] dark:text-[var(--secondary)]" />
                 <span className="text-gray-700 dark:text-white dark:text-white">{user.organization_phone}</span>
               </div>

@@ -76,21 +76,21 @@ export function OrganizationAdminGeneralInfoUpdate() {
   };
 
   return (
-    <>
-      <CardHeader className="bg-[var(--light)] py-8">
+    <div className="rounded-lg border border-[var(--border-light)] dark:border-[var(--border-dark)] dark:bg-[var(--bg-dark)] dark:text-[var(--white)]">
+      <CardHeader className="bg-[var(--neutral-bg)] py-8">
         <div className="flex flex-col items-center mb-4">
           <ProfilePictureUpdate
             profilePicture={organizationData?.profile_picture}
             firstName={organizationData?.first_name}
             lastName={organizationData?.last_name}
           />
-          <CardTitle className="text-2xl font-bold text-primary">
+          <CardTitle className="text-2xl font-bold text-[var(--primary)]">
             Personal Information
           </CardTitle>
         </div>
       </CardHeader>
 
-      <CardContent className="p-8 bg-white">
+      <CardContent className="p-8 bg-[var(--white)] dark:bg-[var(--bg-dark)]">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -102,7 +102,7 @@ export function OrganizationAdminGeneralInfoUpdate() {
                 name="first_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-base font-medium text-[var(--text-heading)]">
                       <User className="h-5 w-5 text-[var(--primary)]" />
                       First Name
                     </FormLabel>
@@ -110,10 +110,10 @@ export function OrganizationAdminGeneralInfoUpdate() {
                       <Input
                         placeholder="Enter your first name"
                         {...field}
-                        className="border-[var(--accent)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
+                        className="border-[var(--border-light)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--error-text)]" />
                   </FormItem>
                 )}
               />
@@ -122,7 +122,7 @@ export function OrganizationAdminGeneralInfoUpdate() {
                 name="last_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-base font-medium text-[var(--text-heading)]">
                       <User className="h-5 w-5 text-[var(--primary)]" />
                       Last Name
                     </FormLabel>
@@ -130,10 +130,10 @@ export function OrganizationAdminGeneralInfoUpdate() {
                       <Input
                         placeholder="Enter your last name"
                         {...field}
-                        className="border-[var(--accent)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
+                        className="border-[var(--border-light)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--error-text)]" />
                   </FormItem>
                 )}
               />
@@ -145,7 +145,7 @@ export function OrganizationAdminGeneralInfoUpdate() {
                 name="organization_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-base font-medium text-[var(--text-heading)]">
                       <Building2 className="h-5 w-5 text-[var(--primary)]" />
                       Organization Name
                     </FormLabel>
@@ -153,10 +153,10 @@ export function OrganizationAdminGeneralInfoUpdate() {
                       <Input
                         placeholder="Enter organization name"
                         {...field}
-                        className="border-[var(--accent)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
+                        className="border-[var(--border-light)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--error-text)]" />
                   </FormItem>
                 )}
               />
@@ -167,7 +167,7 @@ export function OrganizationAdminGeneralInfoUpdate() {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-base font-medium text-[var(--text-heading)]">
                       <Phone className="h-5 w-5 text-[var(--primary)]" />
                       Phone Number
                     </FormLabel>
@@ -175,10 +175,10 @@ export function OrganizationAdminGeneralInfoUpdate() {
                       <Input
                         placeholder="e.g., 09123456789"
                         {...field}
-                        className="border-[var(--accent)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
+                        className="border-[var(--border-light)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--error-text)]" />
                   </FormItem>
                 )}
               />
@@ -187,34 +187,34 @@ export function OrganizationAdminGeneralInfoUpdate() {
                 name="organization_website"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-base font-medium text-[var(--text-heading)]">
                       <Globe className="h-5 w-5 text-[var(--primary)]" />
-                      company Website
+                      Company Website
                     </FormLabel>
                     <FormControl>
                       <Input
                         placeholder="https://yourwebsite.com"
                         {...field}
-                        className="border-[var(--accent)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
+                        className="border-[var(--border-light)] focus-visible:ring-[var(--primary)]/20 h-12 text-base rounded-lg"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--error-text)]" />
                   </FormItem>
                 )}
               />
             </div>
 
-            <div className="bg-[var(--light)] p-6 rounded-lg border border-[var(--accent)]">
+            <div className="bg-[var(--neutral-bg)] p-6 rounded-lg border border-[var(--border-light)]">
               <FormField
                 control={form.control}
                 name="organization_description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="flex items-center gap-2 text-base font-medium text-gray-700">
+                    <FormLabel className="flex items-center gap-2 text-base font-medium text-[var(--text-heading)]">
                       <FileText className="h-5 w-5 text-[var(--primary)]" />
                       About your company
                     </FormLabel>
-                    <div className="flex items-center gap-2 mb-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-2 mb-2 text-sm text-[var(--text-muted)]">
                       <Info className="h-4 w-4 text-[var(--secondary)]" />
                       <span>Tell us about your company</span>
                     </div>
@@ -222,10 +222,10 @@ export function OrganizationAdminGeneralInfoUpdate() {
                       <Textarea
                         placeholder="Tell us about company..."
                         {...field}
-                        className="border-[var(--accent)] focus-visible:ring-[var(--primary)]/20 min-h-[150px] bg-white rounded-lg"
+                        className="border-[var(--border-light)] focus-visible:ring-[var(--primary)]/20 min-h-[150px] bg-[var(--white)] dark:bg-[var(--bg-dark)] rounded-lg"
                       />
                     </FormControl>
-                    <FormMessage className="text-red-500" />
+                    <FormMessage className="text-[var(--error-text)]" />
                   </FormItem>
                 )}
               />
@@ -234,7 +234,7 @@ export function OrganizationAdminGeneralInfoUpdate() {
             <div className="pt-2 flex justify-end">
               <Button
                 type="submit"
-                className="flex items-center gap-2 bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] hover:opacity-90 text-white rounded-lg px-6 py-2.5 h-auto shadow-md"
+                className="flex items-center gap-2 bg-gradient-to-r from-[var(--secondary)] to-[var(--primary)] hover:opacity-90 text-[var(--white)] rounded-lg px-6 py-2.5 h-auto shadow-md"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (
@@ -250,6 +250,6 @@ export function OrganizationAdminGeneralInfoUpdate() {
           </form>
         </Form>
       </CardContent>
-    </>
+    </div>
   );
 }
