@@ -1,19 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/app/store";
-import { User, Mail, Lock, MessageSquare } from "lucide-react";
+import { User, Mail, Phone, ShieldCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Form,
   FormControl,
@@ -23,63 +14,29 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import type { User as UserType, UserFormData } from "../types";
+import { TeamMember } from "../teamSlice";
 
-const formSchema = z
-  .object({
-    username: z.string().min(2, "Username must be at least 2 characters"),
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
-    status: z.boolean().default(true),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
-    mediaTypes: z.object({
-      email: z.boolean().default(false),
-      telegram: z.boolean().default(false),
-    }),
-    email: z
-      .string()
-      .email("Invalid email address")
-      .optional()
-      .or(z.literal("")),
-    telegramusername: z.string().optional().or(z.literal("")),
-    // Add permissions fields if needed
-    permissions: z
-      .object({
-        addVM: z.boolean().default(false),
-        addUser: z.boolean().default(false),
-        controlVM: z.array(z.string()).default([]),
-      })
-      .optional(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  })
-  .refine(
-    (data) => {
-      if (data.mediaTypes.email && !data.email) return false;
-      if (data.mediaTypes.telegram && !data.telegramusername) return false;
-      return true;
-    },
-    {
-      message: "Required field for selected media type",
-      path: ["email"],
-    }
-  );
+// Form schema matches the required fields for user creation
+const formSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  is_admin: z.boolean().default(false),
+});
 
+// Use TeamMember type from slice
 interface UserFormProps {
-  onSubmit: (data: UserFormData) => void;
-  user: UserType | null;
+  onSubmit: (data: z.infer<typeof formSchema>) => void;
+  user: TeamMember | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   isEditing?: boolean;
@@ -92,103 +49,38 @@ export function UserForm({
   onOpenChange,
   isEditing = false,
 }: UserFormProps) {
-  const { user: currentUser } = useSelector((state: RootState) => state.auth);
-  const [selectedMediaType, setSelectedMediaType] = useState<string | null>(
-    null
-  );
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      firstName: "",
-      lastName: "",
-      status: true,
-      password: "",
-      confirmPassword: "",
-      mediaTypes: {
-        email: false,
-        telegram: false,
-      },
       email: "",
-      telegramusername: "",
-      permissions: {
-        addVM: false,
-        addUser: false,
-        controlVM: [],
-      },
+      first_name: "",
+      last_name: "",
+      phone: "",
+      is_admin: false,
     },
   });
 
   // Update form when user changes
   useEffect(() => {
     if (user && open) {
-      // Determine selected media type
-      let mediaType = null;
-      if (user.permissions.mediaTypes.email) mediaType = "email";
-      else if (user.permissions.mediaTypes.telegram) mediaType = "telegram";
-
-      setSelectedMediaType(mediaType);
-
       form.reset({
-        username: user.firstName.toLowerCase() + user.lastName.toLowerCase(), // Example username generation
-        firstName: user.firstName,
-        lastName: user.lastName,
-        status: user.status,
-        password: "", // Don't prefill password for security
-        confirmPassword: "",
-        mediaTypes: user.permissions.mediaTypes,
         email: user.email || "",
-        telegramusername: "", // Add if available in your user object
-        permissions: {
-          addVM: user.permissions.addVM,
-          addUser: user.permissions.addUser,
-          controlVM: user.permissions.controlVM,
-        },
+        first_name: user.first_name,
+        last_name: user.last_name,
+        phone: user.phone || "",
+        is_admin: user.is_admin,
       });
     } else if (!user && open) {
       // Reset form for new user
       form.reset({
-        username: "",
-        firstName: "",
-        lastName: "",
-        status: true,
-        password: "",
-        confirmPassword: "",
-        mediaTypes: {
-          email: false,
-          telegram: false,
-        },
         email: "",
-        telegramusername: "",
-        permissions: {
-          addVM: false,
-          addUser: false,
-          controlVM: [],
-        },
+        first_name: "",
+        last_name: "",
+        phone: "",
+        is_admin: false,
       });
-      setSelectedMediaType(null);
     }
   }, [user, open, form]);
-
-  const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    onSubmit(data as UserFormData);
-  };
-
-  const handleMediaTypeChange = (value: string) => {
-    setSelectedMediaType(value);
-
-    // Reset the other field when switching media types
-    if (value === "email") {
-      form.setValue("telegramusername", "");
-      form.setValue("mediaTypes.email", true);
-      form.setValue("mediaTypes.telegram", false);
-    } else if (value === "telegram") {
-      form.setValue("email", "");
-      form.setValue("mediaTypes.email", false);
-      form.setValue("mediaTypes.telegram", true);
-    }
-  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -202,13 +94,13 @@ export function UserForm({
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(handleSubmit)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-6"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="firstName"
+                name="first_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
@@ -229,7 +121,7 @@ export function UserForm({
 
               <FormField
                 control={form.control}
-                name="lastName"
+                name="last_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
@@ -251,16 +143,17 @@ export function UserForm({
 
             <FormField
               control={form.control}
-              name="username"
+              name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex items-center gap-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    Username
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    Email Address
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="johndoe"
+                      type="email"
+                      placeholder="john.doe@example.com"
                       {...field}
                       className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
                     />
@@ -270,55 +163,30 @@ export function UserForm({
               )}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Lock className="h-4 w-4 text-muted-foreground" />
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="******"
-                        {...field}
-                        className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Lock className="h-4 w-4 text-muted-foreground" />
-                      Confirm Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="******"
-                        {...field}
-                        className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    Phone Number
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="+1234567890"
+                      {...field}
+                      className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
-              name="status"
+              name="is_admin"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                   <FormControl>
@@ -328,82 +196,15 @@ export function UserForm({
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Active Status</FormLabel>
+                    <FormLabel className="flex items-center gap-2">
+                      <ShieldCheck className="h-4 w-4 text-muted-foreground" />
+                      Admin Access
+                    </FormLabel>
                   </div>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            <div className="space-y-4">
-              <FormItem>
-                <FormLabel className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                  Select Media Type
-                </FormLabel>
-                <Select
-                  onValueChange={handleMediaTypeChange}
-                  value={selectedMediaType || ""}
-                >
-                  <FormControl>
-                    <SelectTrigger className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4">
-                      <SelectValue placeholder="Select media type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="email">Email</SelectItem>
-                    <SelectItem value="telegram">Telegram</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormItem>
-
-              {selectedMediaType === "email" && (
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
-                        Email Address
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="john.doe@example.com"
-                          {...field}
-                          className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-
-              {selectedMediaType === "telegram" && (
-                <FormField
-                  control={form.control}
-                  name="telegramusername"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex items-center gap-2">
-                        <MessageSquare className="h-4 w-4 text-muted-foreground" />
-                        Telegram Username
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="@johndoe"
-                          {...field}
-                          className="transition-all focus-visible:ring-[var(--secondary)]/20 focus-visible:ring-4"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )}
-            </div>
 
             <DialogFooter className="pt-4">
               <Button
@@ -425,27 +226,5 @@ export function UserForm({
         </Form>
       </DialogContent>
     </Dialog>
-  );
-}
-
-export function AddEditUserDialog({
-  open,
-  onOpenChange,
-  user,
-  onSubmit,
-}: {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  user: UserType | null;
-  onSubmit: (data: UserFormData) => void;
-}) {
-  return (
-    <UserForm
-      open={open}
-      onOpenChange={onOpenChange}
-      user={user}
-      onSubmit={onSubmit}
-      isEditing={!!user}
-    />
   );
 }

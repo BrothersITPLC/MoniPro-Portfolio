@@ -21,7 +21,11 @@ const initialState: GlobalState = {
   isAuthenticated: localStorage.getItem("isAuthenticated") === "true",
   selectedPlan: null,
 };
-
+export type APIError = {
+  data?: {
+    message?: string;
+  };
+};
 const globalSlice = createSlice({
   name: "global",
   initialState,

@@ -1,6 +1,16 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "@/lib/baseQuery";
 import { TeamMember } from "./teamSlice";
+
+// Define the create user request type based on TeamMember fields
+export interface CreateTeamUserRequest {
+  email: string;
+  first_name: string;
+  last_name: string;
+  is_admin: boolean;
+  phone: string;
+}
+
 export const teamApi = createApi({
   reducerPath: "teamApi",
   baseQuery: baseQueryWithReauth,
@@ -8,48 +18,34 @@ export const teamApi = createApi({
   endpoints: (builder) => ({
     // Get team members
     getTeamMembers: builder.query<TeamMember[], void>({
-      query: () => "/team",
+      query: () => "/get-team-users/",
       providesTags: ["Team"],
     }),
-
-    // Create team member
-    createTeam: builder.mutation<TeamMember, void>({
+    createTeamUser: builder.mutation<TeamMember, CreateTeamUserRequest>({
       query: (body) => ({
-        url: "/team",
+        url: "/add-team-user/",
         method: "POST",
         body,
       }),
       invalidatesTags: ["Team"],
     }),
 
-    // Update team member
-    updateTeamMember: builder.mutation<
+    activeDeactiveTeamUser: builder.mutation<
       TeamMember,
-      Partial<TeamMember> & { id: number }
+      { id: number; is_active: boolean }
     >({
-      query: ({ id, ...patch }) => ({
-        url: `/team/${id}`,
+      query: (body) => ({
+        url: "/set-active/",
         method: "PATCH",
-        body: patch,
-      }),
-      invalidatesTags: ["Team"],
-    }),
-
-    // Delete team member
-    deleteTeamMember: builder.mutation<void, number>({
-      query: (id) => ({
-        url: `/team/${id}`,
-        method: "DELETE",
+        body,
       }),
       invalidatesTags: ["Team"],
     }),
   }),
 });
 
-// Export hooks for usage in components
 export const {
   useGetTeamMembersQuery,
-  useCreateTeamMutation,
-  useUpdateTeamMemberMutation,
-  useDeleteTeamMemberMutation,
+  useCreateTeamUserMutation,
+  useActiveDeactiveTeamUserMutation,
 } = teamApi;

@@ -7,6 +7,8 @@ import {
   ChevronUp,
   Edit,
   Trash2,
+  Phone,
+  ShieldCheck,
 } from "lucide-react";
 import {
   Table,
@@ -16,33 +18,44 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/app/store";
-import { useCreateTeamMutation } from "../api";
-import { UserForm } from "./UserForm";
-import type { User, UserFormData } from "../types";
-import { Badge } from "@/components/ui/badge";
+
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-// import { toast } from "@/hooks/use-toast"
+  useGetTeamMembersQuery,
+  useCreateTeamUserMutation,
+  useActiveDeactiveTeamUserMutation,
+} from "@/components/Home/team/api";
+import { APIError } from "@/app/global";
+import { UserForm } from "./UserForm";
+import { TeamMember } from "../teamSlice";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import * as z from "zod";
+
+// Form schema matches the required fields for user creation
+const formSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  first_name: z.string().min(1, "First name is required"),
+  last_name: z.string().min(1, "Last name is required"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  is_admin: z.boolean().default(false),
+});
+
 function UserTable() {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<TeamMember | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<string | null>(null);
 
-  const teamMembers = useSelector((state: RootState) => state.team.members);
-  const [createTeam, { isLoading: isCreating }] = useCreateTeamMutation();
+  const {
+    data: teamMembersResponse = { status: "", data: [] },
+    isLoading,
+    refetch,
+  } = useGetTeamMembersQuery();
+
+  // Extract team members from the correct response structure
+  const teamMembers = teamMembersResponse?.data || [];
+
+  const [createTeam, { isLoading: isCreating }] = useCreateTeamUserMutation();
+  const [activeDeactiveUser] = useActiveDeactiveTeamUserMutation();
 
   const toggleRow = (userId: string) => {
     const newExpandedRows = new Set(expandedRows);
@@ -54,72 +67,41 @@ function UserTable() {
     setExpandedRows(newExpandedRows);
   };
 
-  const handleAddUser = async (data: UserFormData) => {
+  const handleAddUser = async (data: z.infer<typeof formSchema>) => {
     try {
-      const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-      const organizationId = userData?.user_id;
-
-      if (!organizationId) {
-        toast.error("Organization ID not found");
-        return;
-      }
-
-      await createTeam({
-        email: data.email,
-        first_name: data.firstName,
-        last_name: data.lastName,
-        organization: organizationId,
-        username: data.username,
-        // Add other fields as needed by your API
-      }).unwrap();
-
+      await createTeam(data).unwrap();
+      refetch();
       toast.success("User created successfully");
-
       setIsDialogOpen(false);
       setSelectedUser(null);
     } catch (error) {
-      toast.error(`Failed to ${selectedUser ? "update" : "create"} user`);
-      console.error("Failed to handle user:", error);
+      const ererror = error as APIError;
+      const errorMessage =
+        ererror?.data?.message ||
+        `Failed to ${selectedUser ? "update" : "create"} user`;
+      toast.error(errorMessage);
     }
   };
 
-  const handleDeleteUser = async () => {
-    if (!userToDelete) return;
-
+  const handleStatusChange = async (userId: number, currentStatus: boolean) => {
     try {
-      // Implement your delete API call here
-      // await deleteTeamMember(userToDelete).unwrap()
+      await activeDeactiveUser({
+        id: userId,
+        is_active: !currentStatus,
+      }).unwrap();
 
-      toast.success("User deleted successfully");
-
-      setIsDeleteDialogOpen(false);
-      setUserToDelete(null);
+      refetch();
+      toast.success(
+        `User status changed to ${!currentStatus ? "active" : "inactive"}`
+      );
     } catch (error) {
-      toast.error("Failed to delete user");
-      console.error("Failed to delete user:", error);
-    }
-  };
-
-  const handleStatusChange = async (userId: string, currentStatus: boolean) => {
-    try {
-      // Implement your status change API call here
-      // await updateUserStatus({ userId, status: !currentStatus }).unwrap()
-      // toast({
-      //   title: "Success",
-      //   description: `User status changed to ${!currentStatus ? "active" : "inactive"}`,
-      // })
-    } catch (error) {
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to update user status",
-      //   variant: "destructive",
-      // })
+      toast.error("Failed to update user status");
       console.error("Failed to update user status:", error);
     }
   };
 
   return (
-    <div className="space-y-6 p-6  rounded-xl shadow-sm">
+    <div className="space-y-6 p-6 rounded-xl shadow-sm">
       <div className="flex items-center justify-between border-b border-gray-100 pb-4">
         <div>
           <h1 className="text-2xl font-bold">User Management</h1>
@@ -149,6 +131,8 @@ function UserTable() {
               <TableHead className="font-medium text-gray-700">
                 Last Name
               </TableHead>
+              <TableHead className="font-medium text-gray-700">Phone</TableHead>
+              <TableHead className="font-medium text-gray-700">Role</TableHead>
               <TableHead className="font-medium text-gray-700">
                 Status
               </TableHead>
@@ -158,41 +142,28 @@ function UserTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {teamMembers.length === 0 ? (
+            {isLoading ? (
               <TableRow>
-                <td colSpan={6} className="text-center py-8 text-gray-500">
+                <td colSpan={8} className="text-center py-8 text-gray-500">
+                  Loading team members...
+                </td>
+              </TableRow>
+            ) : teamMembers.length === 0 ? (
+              <TableRow>
+                <td colSpan={8} className="text-center py-8 text-gray-500">
                   No team members found. Add your first user to get started.
                 </td>
               </TableRow>
             ) : (
               teamMembers.map((member, index) => (
-                <UserTableRowEnhanced
+                <UserTableRow
                   key={member.id}
-                  user={{
-                    id: String(member.id),
-                    email: member.email,
-                    firstName: member.first_name,
-                    lastName: member.last_name,
-                    status: true,
-                    permissions: {
-                      addVM: false,
-                      addUser: false,
-                      mediaTypes: {
-                        email: false,
-                        telegram: false,
-                      },
-                      controlVM: [],
-                    },
-                  }}
+                  user={member}
                   isExpanded={expandedRows.has(String(member.id))}
-                  onToggleExpand={toggleRow}
+                  onToggleExpand={(id) => toggleRow(id)}
                   onEdit={(user) => {
                     setSelectedUser(user);
                     setIsDialogOpen(true);
-                  }}
-                  onDelete={(userId) => {
-                    setUserToDelete(userId);
-                    setIsDeleteDialogOpen(true);
                   }}
                   onStatusChange={handleStatusChange}
                   isEven={index % 2 === 0}
@@ -211,50 +182,23 @@ function UserTable() {
         onSubmit={handleAddUser}
         isEditing={!!selectedUser}
       />
-
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the
-              user and remove their data from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteUser}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }
 
-function UserTableRowEnhanced({
+function UserTableRow({
   user,
   isExpanded,
   onToggleExpand,
   onEdit,
-  onDelete,
   onStatusChange,
   isEven,
 }: {
-  user: User;
+  user: TeamMember;
   isExpanded: boolean;
   onToggleExpand: (userId: string) => void;
-  onEdit: (user: User) => void;
-  onDelete: (userId: string) => void;
-  onStatusChange: (userId: string, currentStatus: boolean) => void;
+  onEdit: (user: TeamMember) => void;
+  onStatusChange: (userId: number, currentStatus: boolean) => void;
   isEven: boolean;
 }) {
   return (
@@ -264,7 +208,7 @@ function UserTableRowEnhanced({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onToggleExpand(user.id)}
+            onClick={() => onToggleExpand(String(user.id))}
             className="h-8 w-8 p-0 text-gray-500"
           >
             {isExpanded ? (
@@ -275,18 +219,36 @@ function UserTableRowEnhanced({
           </Button>
         </td>
         <td className="font-medium">{user.email}</td>
-        <td>{user.firstName}</td>
-        <td>{user.lastName}</td>
+        <td>{user.first_name}</td>
+        <td>{user.last_name}</td>
+        <td>{user.phone}</td>
         <td>
           <Badge
             className={
-              user.status
+              user.is_admin
+                ? "bg-purple-100 text-purple-800 hover:bg-purple-100"
+                : "bg-blue-100 text-blue-800 hover:bg-blue-100"
+            }
+          >
+            {user.is_admin ? (
+              <>
+                <ShieldCheck className="mr-1 h-3 w-3" /> Admin
+              </>
+            ) : (
+              "User"
+            )}
+          </Badge>
+        </td>
+        <td>
+          <Badge
+            className={
+              user.is_active
                 ? "bg-green-100 text-green-800 hover:bg-green-100 cursor-pointer"
                 : "bg-red-100 text-red-800 hover:bg-red-100 cursor-pointer"
             }
-            onClick={() => onStatusChange(user.id, user.status)}
+            onClick={() => onStatusChange(user.id, user.is_active)}
           >
-            {user.status ? (
+            {user.is_active ? (
               <>
                 <Check className="mr-1 h-3 w-3" /> Active
               </>
@@ -308,15 +270,6 @@ function UserTableRowEnhanced({
               <Edit className="h-3.5 w-3.5" />
               <span className="sr-only">Edit</span>
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onDelete(user.id)}
-              className="h-8 border-gray-200 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200"
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              <span className="sr-only">Delete</span>
-            </Button>
           </div>
         </td>
       </TableRow>
@@ -324,80 +277,44 @@ function UserTableRowEnhanced({
         <TableRow
           className={isEven ? "bg-[var(--light)]/30" : "bg-[var(--light)]/50"}
         >
-          <td colSpan={6} className="p-4">
+          <td colSpan={8} className="p-4">
             <div className="rounded-lg bg-white p-4 shadow-sm border border-[var(--acent)]">
               <h4 className="font-medium text-[var(--secondary)] mb-3">
-                User Permissions
+                User Details
               </h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <h5 className="text-sm font-medium text-gray-700">
-                    Access Control
+                    Contact Information
                   </h5>
                   <div className="flex items-center gap-2">
-                    <div
-                      className={`h-2.5 w-2.5 rounded-full ${
-                        user.permissions.addVM
-                          ? "bg-[var(--secondary)]"
-                          : "bg-gray-300"
-                      }`}
-                    ></div>
-                    <span className="text-sm">Add VM</span>
+                    <Phone className="h-4 w-4 text-gray-500" />
+                    <span className="text-sm">
+                      {user.phone || "No phone number"}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div
-                      className={`h-2.5 w-2.5 rounded-full ${
-                        user.permissions.addUser
-                          ? "bg-[var(--secondary)]"
-                          : "bg-gray-300"
-                      }`}
-                    ></div>
-                    <span className="text-sm">Add User</span>
+                    <ShieldCheck className="h-4 w-4 text-gray-500" />
+                    <span className="text-sm">
+                      {user.is_admin ? "Administrator" : "Regular User"}
+                    </span>
                   </div>
                 </div>
 
                 <div className="space-y-2">
                   <h5 className="text-sm font-medium text-gray-700">
-                    Media Types
+                    Account Status
                   </h5>
                   <div className="flex items-center gap-2">
                     <div
                       className={`h-2.5 w-2.5 rounded-full ${
-                        user.permissions.mediaTypes.email
-                          ? "bg-[var(--secondary)]"
-                          : "bg-gray-300"
+                        user.is_active ? "bg-green-500" : "bg-red-500"
                       }`}
                     ></div>
-                    <span className="text-sm">Email</span>
+                    <span className="text-sm">
+                      {user.is_active ? "Active" : "Inactive"}
+                    </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`h-2.5 w-2.5 rounded-full ${
-                        user.permissions.mediaTypes.telegram
-                          ? "bg-[var(--secondary)]"
-                          : "bg-gray-300"
-                      }`}
-                    ></div>
-                    <span className="text-sm">Telegram</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <h5 className="text-sm font-medium text-gray-700">
-                    VM Control
-                  </h5>
-                  {user.permissions.controlVM.length > 0 ? (
-                    user.permissions.controlVM.map((vm, index) => (
-                      <div key={index} className="flex items-center gap-2">
-                        <div className="h-2.5 w-2.5 rounded-full bg-[var(--secondary)]"></div>
-                        <span className="text-sm">{vm}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-gray-500">
-                      No VM control permissions
-                    </p>
-                  )}
                 </div>
               </div>
 
@@ -408,7 +325,7 @@ function UserTableRowEnhanced({
                   className="text-[var(--secondary)] border-[var(--acent)] hover:bg-[var(--light)] hover:border-[var(--acent)]"
                   onClick={() => onEdit(user)}
                 >
-                  Edit Permissions
+                  Edit User
                 </Button>
               </div>
             </div>
