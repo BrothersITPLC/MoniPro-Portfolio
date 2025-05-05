@@ -96,7 +96,7 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
       const updatedNavData = { ...getDefaultNavData() };
       const hostItems = hosts.map((host) => ({
         title: host.host,
-        url: `/home/zabbixhost/${host.hostid}`,
+        url: `/home/host/${host.hostid}`,
         key: `host-${host.hostid}`,
       }));
       updatedNavData.navMain[0].items = hostItems;

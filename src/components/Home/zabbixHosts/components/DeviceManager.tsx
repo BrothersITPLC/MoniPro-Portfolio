@@ -40,9 +40,9 @@ export function DeviceManager() {
 
   const handleConfirm = async () => {
     try {
-      const result= await createHost(pendingData).unwrap();
-       if (result.status !== "success") {
-        toast.error(result.message ||"Failed to create host");
+      const result = await createHost(pendingData).unwrap();
+      if (result.status !== "success") {
+        toast.error(result.message || "Failed to create host");
         return;
       }
       toast.success(result.message || "Device created successfully");

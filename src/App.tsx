@@ -15,6 +15,7 @@ import {
 import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
 import { ZabbixHosts } from "./components/Home/zabbixHosts/components/zabbixhosts";
+import { ItemWrapper } from "./components/Home/zabbixHosts/components/ItemWrapper";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
 
 import { NotificationWrapper } from "./components/Home/wrapper/NotificationWrapper";
@@ -68,7 +69,8 @@ function App() {
               </Route>
               <Route path="team" element={<TeamWrapper />} />
               <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="zabbixhost/:hostId" element={<ZabbixHosts />} />
+              {/* <Route path="host/:hostId" element={<ZabbixHosts />} /> */}
+              <Route path="host/:hostId" element={<ItemWrapper />} />
               <Route
                 path="update_billingcycle"
                 element={<Updatebillingcycle />}
