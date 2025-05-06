@@ -44,12 +44,12 @@ const routeList: RouteProps[] = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
-    <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
+    <header className="sticky top-0 z-40 w-full bg-gradient-to-br from-slate-900 to-slate-800 py-2 text-white shadow-lg">
       <NavigationMenu className="mx-auto">
-        <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between ">
+        <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between">
           <NavigationMenuItem className="font-bold flex">
             <Link to="/" className="flex items-center">
-              <Activity className="h-8 w-8 text-violet-500" />
+              <Activity className="h-8 w-8 text-[var(--primary)]" />
               <span className="ml-2 text-xl font-bold">MoniPro</span>
             </Link>
           </NavigationMenuItem>
@@ -119,7 +119,7 @@ export function Navbar() {
           <div className="hidden md:flex gap-2">
             <Link
               to="/auth"
-              className={`text-white border ${buttonVariants({ variant: "secondary" })}`}
+              className={`text-[var(--white)] text-white border ${buttonVariants({ variant: "secondary" })}`}
             >
               Login{" "}
             </Link>

@@ -70,20 +70,20 @@ export function PaymentStep({ onNext, selectedPlanId }: PlanSelectionProps) {
   const handleConfirmSubmit = async () => {
     setIsLoading(true);
     try {
-      // Submit the complete organization data to the backend
-      const response = await organizationInfo(organizationData).unwrap();
-
-      // Dispatch selected plan before handling response
       dispatch(setSelectedPlane(selectedPlanId));
+      
+      const response = await organizationInfo(organizationData).unwrap();
 
       setIsLoading(false);
       setShowConfirmDialog(false);
 
-      // Check response status
       if (response.status === "success") {
         toast.success(response.message || "Profile updated successfully");
         console.log("this is the final data to be sent", response);
-        navigate("/home/dashboard");
+        
+        setTimeout(() => {
+          navigate("/home/dashboard");
+        }, 300);
       } else {
         toast.error(response.message || "An error occurred during submission");
         onNext(1);

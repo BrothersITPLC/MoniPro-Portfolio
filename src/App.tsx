@@ -15,6 +15,7 @@ import {
 import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
 import { ZabbixHosts } from "./components/Home/zabbixHosts/components/zabbixhosts";
+import { ItemWrapper } from "./components/Home/zabbixHosts/components/ItemWrapper";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
 
 import { NotificationWrapper } from "./components/Home/wrapper/NotificationWrapper";
@@ -24,8 +25,8 @@ import { PerformanceAlerts } from "./components/Home/notification/components/Per
 import { UpdateSubscription } from "./components/Home/company/components/Update";
 import { ResetPassword } from "./pages/ResetPassword";
 import { GoogleCallback } from "./components/Auth/components/GoogleCallback";
-import  {PersonalInfoUpdate}  from "./components/Home/company/components/Infoupdate";
-
+// import  {PersonalInfoUpdate}  from "./components/Home/company/components/Infoupdate";
+import { PersonalInfoUpdate } from "@/components/Auth/components/PersonalInfoUpdate/PersonalInfoUpdate";
 import { Updatebillingcycle } from "./components/Home/company/components/UpdateBillingcycle";
 import { UpdatePricing } from "./components/Home/company/components/UpdatePricingcycle";
 
@@ -68,9 +69,13 @@ function App() {
               </Route>
               <Route path="team" element={<TeamWrapper />} />
               <Route index element={<Navigate to="dashboard" replace />} />
-              <Route path="zabbixhost/:hostId" element={<ZabbixHosts />} />
-              <Route path="update_billingcycle" element={<Updatebillingcycle />} />
-              <Route path="update_pricingcycle" element={<UpdatePricing />} />  
+              {/* <Route path="host/:hostId" element={<ZabbixHosts />} /> */}
+              <Route path="host/:hostId" element={<ItemWrapper />} />
+              <Route
+                path="update_billingcycle"
+                element={<Updatebillingcycle />}
+              />
+              <Route path="update_pricingcycle" element={<UpdatePricing />} />
             </Route>
           </Route>
 

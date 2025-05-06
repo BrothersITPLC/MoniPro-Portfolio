@@ -40,9 +40,9 @@ export function DeviceManager() {
 
   const handleConfirm = async () => {
     try {
-      const result= await createHost(pendingData).unwrap();
-       if (result.status !== "success") {
-        toast.error(result.message ||"Failed to create host");
+      const result = await createHost(pendingData).unwrap();
+      if (result.status !== "success") {
+        toast.error(result.message || "Failed to create host");
         return;
       }
       toast.success(result.message || "Device created successfully");
@@ -56,7 +56,7 @@ export function DeviceManager() {
   return (
     <div className="container mx-auto py-8">
       <Tabs defaultValue="vm" className="w-full">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 dark:border-2 dark:bg-black dark:text-white">
           <TabsList>
             <TabsTrigger value="vm">Virtual Machines</TabsTrigger>
             <TabsTrigger value="network">Network Devices</TabsTrigger>

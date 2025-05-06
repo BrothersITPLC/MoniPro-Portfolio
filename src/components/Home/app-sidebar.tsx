@@ -1,4 +1,4 @@
-import  React,{useEffect} from "react";
+import { useEffect, useState, ComponentProps } from "react";
 import { Settings2, Monitor, Bell } from "lucide-react";
 import { NavMain } from "@/components/Home/nav-main";
 import { NavUser } from "@/components/Home/nav-user";
@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setHosts } from "./zabbixHosts/zabbixSlice";
 import { useGetPlansQuery } from "@/components/Landing/api";
 import { setPlans } from "@/components/Landing/LandingSlice";
-
+import { RootState } from "@/app/store";
 const getDefaultNavData = () => ({
   navMain: [
     {
@@ -67,12 +67,13 @@ const getDefaultNavData = () => ({
   ],
 });
 
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+interface AppSidebarProps extends ComponentProps<typeof Sidebar> {
   deviceList?: InfrastructerList;
 }
 
 export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
   const dispatch = useDispatch();
+  const organizationData = useSelector((state: RootState) => state.auth.user);
 
   const { data: plansData, refetch } = useGetPlansQuery(undefined, {
     refetchOnMountOrArgChange: true,
@@ -82,9 +83,9 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
   const { data: ZabbixhostList } = useGetZabixHostesQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-  const [navData, setNavData] = React.useState(getDefaultNavData());
+  const [navData, setNavData] = useState(getDefaultNavData());
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (ZabbixhostList?.data) {
       dispatch(setHosts(ZabbixhostList.data));
     }
@@ -95,7 +96,7 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
       const updatedNavData = { ...getDefaultNavData() };
       const hostItems = hosts.map((host) => ({
         title: host.host,
-        url: `/home/zabbixhost/${host.hostid}`,
+        url: `/home/host/${host.hostid}`,
         key: `host-${host.hostid}`,
       }));
       updatedNavData.navMain[0].items = hostItems;
@@ -109,9 +110,9 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
     }
   }, [plansData, dispatch, refetch]);
   return (
-    <Sidebar 
-      collapsible="icon" 
-      className="bg-white border-r border-[#ddd6fe]" 
+    <Sidebar
+      collapsible="icon"
+      className="bg-white border-r border-[#ddd6fe]"
       {...props}
     >
       <SidebarHeader className="border-b border-[#ddd6fe] px-4 py-3">

@@ -1,36 +1,30 @@
 import { Separator } from "@/components/ui/separator";
 import { Github, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
+
+
 export const Footer = () => {
   return (
-    <footer className="relative py-20 px-4 border-b-[1px] bg-white dark:border-b-slate-700 dark:bg-background">
+    <footer className="relative py-20 px-4 border-b-[1px] text-white ">
       <div className="max-w-7xl mx-auto space-y-8">
-        <div className="text-center mb-12">
-          <h2 className="text-xl md:text-3xl font-bold mb-6 text-center text-gray-900 dark:text-gray-300">
-            Connect With Us
-          </h2>
-          <p className="text-xl text-gray-900 dark:text-gray-300 mb-12 max-w-2xl mx-auto text-center">
-            Stay updated with our latest features and community updates
-          </p>
-        </div>
 
         <div className="flex justify-between w-full">
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-300">
+            <h3 className="text-xl font-semibold text-white">
               Follow Us
             </h3>
             <div className="flex flex-col space-y-2">
               <a
                 target="_blank"
                 href="https://github.com/BrothersITPLC"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
               >
                 <Github className="h-4 w-4 mr-2" /> Github
               </a>
               <a
                 target="_blank"
                 href="https://x.com/"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
                   <svg
@@ -49,7 +43,7 @@ export const Footer = () => {
               <a
                 target="_blank"
                 href="https://discord.com/"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
                   <svg
@@ -69,20 +63,20 @@ export const Footer = () => {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-300">
+            <h3 className="text-xl font-semibold text-white">
               Platforms
             </h3>
             <div className="flex flex-col space-y-2">
               <a
                 href="#"
-                className="text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
+                className="text-sm text-white hover:text-[var(--secondary)] transition-colors"
               >
                 Web
               </a>
               <a
                 target="_blank"
                 href="https://play.google.com/store/games"
-                className="text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
+                className="text-sm text-white hover:text-[var(--secondary)] transition-colors"
               >
                 Mobile
               </a>
@@ -90,21 +84,21 @@ export const Footer = () => {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-300">
+            <h3 className="text-xl font-semibold text-white">
               Community
             </h3>
             <div className="flex flex-col space-y-2">
               <a
                 target="_blank"
                 href="https://www.youtube.com/"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
               >
                 <Youtube className="h-4 w-4 mr-2" /> Youtube
               </a>
               <a
                 target="_blank"
                 href="https://telegram.org/"
-                className="flex items-center text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <svg
@@ -122,7 +116,7 @@ export const Footer = () => {
               </a>
               <Link
                 to="/faq"
-                className="text-sm text-gray-900 dark:text-gray-300 hover:text-[var(--secondary)] transition-colors"
+                className="text-sm text-white hover:text-[var(--secondary)] transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <svg
@@ -144,10 +138,10 @@ export const Footer = () => {
           </div>
         </div>
 
-        <Separator className="my-8 bg-gray-200 dark:bg-gray-700" />
+        <Separator className="my-8 bg-gray-200 " />
 
         <div className="text-center">
-          <p className="text-gray-900 dark:text-gray-300">
+          <p className="text-white">
             &copy; {new Date().getFullYear()} Powered By{" "}
             <a
               href="https://www.brothersitplc.com/"

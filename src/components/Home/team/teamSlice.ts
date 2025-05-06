@@ -6,7 +6,9 @@ export interface TeamMember {
   first_name: string;
   last_name: string;
   email: string;
-  organization: number;
+  is_admin: boolean;
+  is_active: boolean;
+  phone: string;
 }
 
 // Define the state structure

@@ -1,37 +1,34 @@
+import { TeamMember } from "./teamSlice";
+
+// User type for the UI components
 export interface User {
-  id: string
-  email: string
-  firstName: string
-  lastName: string
-  status: boolean
-  permissions: {
-    addVM: boolean
-    addUser: boolean
-    mediaTypes: {
-      email: boolean
-      telegram: boolean
-    }
-    controlVM: string[]
-  }
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  status: boolean;
+  isAdmin: boolean;
+  phone: string;
 }
-  
-  export interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    children: React.ReactNode;
-  }
-  
-  export interface UserFormData {
-    username: string
-    firstName: string
-    lastName: string
-    status: boolean
-    password: string
-    confirmPassword: string
-    mediaTypes: {
-      email: boolean
-      telegram: boolean
-    }
-    email: string
-    telegramusername: string
-  }
+
+// Form data for creating/updating users
+export interface UserFormData {
+  email: string;
+  firstName: string;
+  lastName: string;
+  username?: string;
+  password?: string;
+  isAdmin: boolean;
+  phone: string;
+}
+
+// Convert TeamMember to User for UI
+export const teamMemberToUser = (member: TeamMember): User => ({
+  id: String(member.id),
+  email: member.email,
+  firstName: member.first_name,
+  lastName: member.last_name,
+  status: member.is_active,
+  isAdmin: member.is_admin,
+  phone: member.phone || "",
+});

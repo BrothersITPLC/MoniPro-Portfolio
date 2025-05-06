@@ -5,12 +5,58 @@ html {
 @plugin "tailwindcss-animate";
 @custom-variant dark (&:is(.dark *));
 :root {
+  /* Primary color palette */
   --primary: #7c3aed !important; 
   --secondary: #8b5cf6 !important; 
-  --acent: #ddd6fe !important; 
+  --accent: #ddd6fe !important;
   --light: #f5f3ff !important; 
 
+  /* Semantic colors */
+  --icon-muted: #9ca3af !important;      
+  --text-heading: #374151 !important;   
+  --success-bg: #dcfce7 !important;      
+  --success-text: #166534 !important;    
+  --error-bg: #fee2e2 !important;        
+  --error-text: #991b1b !important; 
+  --neutral-bg: #f3f4f6 !important;      /* gray-100 */
+  --neutral-text: #1f2937 !important;    /* gray-800 */
+  --text-muted: #6b7280 !important;      /* gray-500 */
+  --border-light: #e5e7eb !important;    /* gray-200 */
+  --border-dark: #4b5563 !important;     /* gray-600 */
+  --bg-dark: #111827 !important;         /* gray-900 */
+  
+  /* Common colors */
+  --white: #ffffff !important;
+  --black: #000000 !important;
+  --gray-50: #f9fafb !important;
+  --gray-100: #f3f4f6 !important;
+  --gray-200: #e5e7eb !important;
+  --gray-300: #d1d5db !important;
+  --gray-400: #9ca3af !important;
+  --gray-500: #6b7280 !important;
+  --gray-600: #4b5563 !important;
+  --gray-700: #374151 !important;
+  --gray-800: #1f2937 !important;
+  --gray-900: #111827 !important;
+  --gray-950: #030712 !important;
+  
+  /* Alert/Status colors */
+  --red-50: #fef2f2 !important;
+  --red-100: #fee2e2 !important;
+  --red-500: #ef4444 !important;
+  --red-600: #dc2626 !important;
+  --red-700: #b91c1c !important;
+  --amber-50: #fffbeb !important;
+  --amber-100: #fef3c7 !important;
+  --amber-300: #fcd34d !important;
+  --amber-400: #fbbf24 !important;
+  --amber-700: #b45309 !important;
+  --amber-800: #92400e !important;
+  --amber-950: #451a03 !important;
+  
+  /* Other system variables */
   --radius: 0.625rem;
+  
   --white: #ffffff;
   --gray-100: #f3f4f6;
   --gray-950: #030712;
@@ -62,6 +108,22 @@ html {
   --sidebar-ring: oklch(0.708 0 0);
 }
 .dark {
+  /* Dark mode overrides for semantic colors */
+  --text-heading: #f9fafb !important;
+  --text-muted: #9ca3af !important;
+  --border-light: #374151 !important;
+  --border-dark: #d1d5db !important;
+  --neutral-bg: #1f2937 !important;
+  --neutral-text: #f3f4f6 !important;
+  --amber-50: #451a03 !important;
+  --amber-100: #92400e !important;
+  --amber-300: #b45309 !important;
+  --amber-400: #fbbf24 !important;
+  --amber-700: #fef3c7 !important;
+  --amber-800: #fffbeb !important;
+  --amber-950: #fffbeb !important;
+  
+  /* UI Theme variables - dark mode */
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -76,29 +138,21 @@ html {
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+  
+  /* Chart colors - dark mode */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
+  
+  /* Sidebar variables - dark mode */
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-accent: oklch(0.269 0 0);

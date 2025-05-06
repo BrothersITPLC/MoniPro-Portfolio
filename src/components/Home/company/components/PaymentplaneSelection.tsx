@@ -40,9 +40,9 @@ interface PricingProps {
 
 export function PricingStep({ showSelectedPlan = false, onNext, setSelectedPlan }: PricingProps) {
 
-  const selectedPlan = useSelector(
-    (state: RootState) => state.landing.SelectedPlane
-  );  
+//   const selectedPlan = useSelector(
+//     (state: RootState) => state.landing.SelectedPlane
+//   );  
 
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
   

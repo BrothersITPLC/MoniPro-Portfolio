@@ -13,19 +13,14 @@ export const hostApi = createApi({
       }),
     }),
     getHostItems: builder.query({
-      query: (hostids) => ({
-        url: "/zabbix/host-items/",
-        method: "POST",
-        body: { hostids },
+      query: (params) => ({
+        url: `/host-items/?hostids=${params.hostids}&name=${
+          params.name || "CPU"
+        }`,
+        method: "GET",
       }),
     }),
-    zabbixGetRealTimeData: builder.query({
-      query: (itemids) => ({
-        url: "/zabbix/real-time-data/",
-        method: "POST",
-        body: { itemids },
-      }),
-    }),
+
     createHost: builder.mutation({
       query: (HostData) => ({
         url: "/zabbix-hosts/",
@@ -38,6 +33,5 @@ export const hostApi = createApi({
 export const {
   useGetZabixHostesQuery,
   useGetHostItemsQuery,
-  useZabbixGetRealTimeDataQuery,
-  useCreateHostMutation
+  useCreateHostMutation,
 } = hostApi;
