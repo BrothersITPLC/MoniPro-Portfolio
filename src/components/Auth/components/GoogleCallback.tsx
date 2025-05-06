@@ -22,7 +22,7 @@ export function GoogleCallback() {
         setStatus("error");
         setErrorMessage("Authorization code is missing");
         toast.error("Authorization code missing");
-        setTimeout(() => window.close(), 2000);
+        setTimeout(() => window.close(), 20000);
         return;
       }
 
@@ -43,7 +43,7 @@ export function GoogleCallback() {
             // Then force a reload of the opener window after a short delay to ensure message is processed
             setTimeout(() => {
               window.opener.location.reload();
-            }, 500);
+            }, 50000);
           }
 
           toast.success("Google Authentication successful!");
@@ -51,7 +51,7 @@ export function GoogleCallback() {
           // Close this window after a short delay
           setTimeout(() => {
             window.close();
-          }, 1500);
+          }, 150000);
         } else {
           throw new Error(response.message || "Authentication failed");
         }
@@ -67,7 +67,7 @@ export function GoogleCallback() {
 
         setTimeout(() => {
           window.close();
-        }, 3000);
+        }, 300000);
       }
     };
 
