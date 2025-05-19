@@ -57,12 +57,6 @@ export function NavUser() {
     }
   };
 
-  const selectedPlan = useSelector(
-    (state: RootState) => state.landing.SelectedPlane
-  );
-
-  console.log("this is the selected plane", selectedPlan);
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>

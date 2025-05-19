@@ -13,17 +13,30 @@ interface DeviceListProps {
   devices: any[];
   type: "vm" | "network";
   isLoading: boolean;
+  onEdit: (device: any) => void;
+  onDelete: (deviceId: string) => void;
 }
 
-export function DeviceList({ devices, type, isLoading }: DeviceListProps) {
+export function DeviceList({
+  devices,
+  type,
+  isLoading,
+  onEdit,
+  onDelete,
+}: DeviceListProps) {
   const getIcon = (deviceType: string) => {
     if (type === "network") {
       switch (deviceType) {
-        case "router": return "🌐";
-        case "switch": return "🔄";
-        case "firewall": return "🔒";
-        case "loadbalancer": return "⚖️";
-        default: return "📱";
+        case "router":
+          return "🌐";
+        case "switch":
+          return "🔄";
+        case "firewall":
+          return "🔒";
+        case "loadbalancer":
+          return "⚖️";
+        default:
+          return "📱";
       }
     }
     return null;
@@ -36,10 +49,17 @@ export function DeviceList({ devices, type, isLoading }: DeviceListProps) {
   if (devices.length === 0) {
     return (
       <div className="text-center p-8 border border-dashed rounded-lg">
-        {type === "vm" ? <Server className="mx-auto h-12 w-12 text-gray-400" /> 
-          : <Network className="mx-auto h-12 w-12 text-gray-400" />}
-        <h3 className="mt-2 text-lg font-medium">No {type === "vm" ? "Virtual Machines" : "Network Devices"}</h3>
-        <p className="mt-1 text-sm text-gray-500">Add a device to start monitoring</p>
+        {type === "vm" ? (
+          <Server className="mx-auto h-12 w-12 text-gray-400" />
+        ) : (
+          <Network className="mx-auto h-12 w-12 text-gray-400" />
+        )}
+        <h3 className="mt-2 text-lg font-medium">
+          No {type === "vm" ? "Virtual Machines" : "Network Devices"}
+        </h3>
+        <p className="mt-1 text-sm text-gray-500">
+          Add a device to start monitoring
+        </p>
       </div>
     );
   }
@@ -47,7 +67,7 @@ export function DeviceList({ devices, type, isLoading }: DeviceListProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {devices.map((device) => (
-        <Card key={device.hostid}>
+        <Card key={device.id}>
           <CardHeader>
             <CardTitle>
               {type === "network" && getIcon(device.network_device_type)}
@@ -70,11 +90,15 @@ export function DeviceList({ devices, type, isLoading }: DeviceListProps) {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end gap-2">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={() => onEdit(device)}>
               <Edit className="h-4 w-4 mr-2" />
               Edit
             </Button>
-            <Button variant="destructive" size="sm">
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => onDelete(device.id)}
+            >
               <Trash2 className="h-4 w-4 mr-2" />
               Delete
             </Button>

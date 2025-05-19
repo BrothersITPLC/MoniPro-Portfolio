@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,248 +8,256 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Lightbulb, AlertCircle, AlertTriangle } from "lucide-react";
+import { AlertCircle, AlertTriangle, Info, Bot } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { Brain, Sparkles, Bot } from "lucide-react"; // Add these imports
-interface Insight {
-  title: string;
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  useGetAlertListQuery,
+  useGetAiExplanationMutation,
+} from "@/components/Home/notification/api";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import ReactMarkdown from "react-markdown";
+
+interface Alert {
+  id: string;
   description: string;
-  severity: "critical" | "warning" | "info";
-  vm: string;
-  lastUpdated: string;
-  aiConfidence: number;
-  category: "performance" | "security" | "optimization" | "maintenance";
-  suggestedAction: string;
+  severity: string;
+  comments: string;
+  timestamp: string;
 }
 
-const insights: Insight[] = [
-  {
-    title: "Critical CPU Usage Pattern",
-    description:
-      "AI has detected an unusual CPU usage pattern indicating potential resource contention.",
-    severity: "critical",
-    vm: "uimes-prod",
-    lastUpdated: "5 minutes ago",
-    aiConfidence: 95,
-    category: "performance",
-    suggestedAction:
-      "Scale up CPU resources by 2 cores based on workload analysis",
-  },
-  {
-    title: "Memory Leak Detected",
-    description:
-      "Gradual memory increase detected in Java process. Investigate application memory management and consider implementing garbage collection optimization.",
-    severity: "critical",
-    vm: "orc-main",
-    lastUpdated: "10 minutes ago",
-    aiConfidence: 92,
-    category: "performance",
-    suggestedAction:
-      "Implement memory leak detection and optimize garbage collection cycles",
-  },
-  {
-    title: "Disk Space Warning",
-    description:
-      "System drive reaching 85% capacity. Clean up temporary files and consider expanding storage capacity.",
-    severity: "warning",
-    vm: "osta-vm-2",
-    lastUpdated: "15 minutes ago",
-    aiConfidence: 88,
-    category: "maintenance",
-    suggestedAction: "Schedule disk cleanup and plan storage expansion",
-  },
-  {
-    title: "Network Latency Spike",
-    description:
-      "Unusual network latency detected in the last hour. Monitor network traffic patterns and check for potential bottlenecks.",
-    severity: "warning",
-    vm: "uimes-dev",
-    lastUpdated: "20 minutes ago",
-    aiConfidence: 85,
-    category: "performance",
-    suggestedAction:
-      "Analyze network traffic patterns and optimize routing configuration",
-  },
-  {
-    title: "Database Performance",
-    description:
-      "Slow query execution times observed. Review and optimize database queries, consider adding appropriate indexes.",
-    severity: "warning",
-    vm: "orc-backup",
-    lastUpdated: "25 minutes ago",
-    aiConfidence: 90,
-    category: "optimization",
-    suggestedAction:
-      "Review and optimize database queries, add missing indexes",
-  },
-  {
-    title: "SSL Certificate Expiry",
-    description:
-      "SSL certificate will expire in 15 days. Plan for certificate renewal to avoid service interruption.",
-    severity: "info",
-    vm: "osta-vm-1",
-    lastUpdated: "30 minutes ago",
-    aiConfidence: 100,
-    category: "maintenance",
-    suggestedAction: "Schedule SSL certificate renewal within next 7 days",
-  },
-  {
-    title: "Backup Validation",
-    description:
-      "Recent backup completed successfully but took longer than usual. Review backup configuration and storage performance.",
-    severity: "info",
-    vm: "uimes-qa",
-    lastUpdated: "35 minutes ago",
-    aiConfidence: 87,
-    category: "maintenance",
-    suggestedAction:
-      "Optimize backup configuration and verify storage performance",
-  },
-];
+interface AlertGroup {
+  [hostName: string]: {
+    active: Alert[];
+    inactive: Alert[];
+  };
+}
 
 export function InsightSuggestion() {
-  const getIcon = (severity: Insight["severity"]) => {
+  const { data: alertData } = useGetAlertListQuery();
+  const [selectedHost, setSelectedHost] = useState<string>("all");
+  const [getAiExplanation] = useGetAiExplanationMutation();
+  const [aiExplanations, setAiExplanations] = useState<Record<string, string>>(
+    {}
+  );
+  const [loadingExplanations, setLoadingExplanations] = useState<
+    Record<string, boolean>
+  >({});
+
+  const handleGetAiExplanation = async (alertId: string) => {
+    if (aiExplanations[alertId]) return;
+
+    setLoadingExplanations((prev) => ({ ...prev, [alertId]: true }));
+    try {
+      const response = await getAiExplanation(alertId).unwrap();
+      setAiExplanations((prev) => ({ ...prev, [alertId]: response.insight }));
+    } catch (error) {
+      console.error("Failed to fetch AI explanation:", error);
+      setAiExplanations((prev) => ({
+        ...prev,
+        [alertId]: "Failed to load AI explanation. Please try again.",
+      }));
+    } finally {
+      setLoadingExplanations((prev) => ({ ...prev, [alertId]: false }));
+    }
+  };
+
+  const getIcon = (severity: string) => {
     switch (severity) {
-      case "critical":
+      case "Disaster":
+      case "High":
         return <AlertCircle className="h-5 w-5 text-destructive" />;
-      case "warning":
+      case "Average":
+      case "Warning":
         return <AlertTriangle className="h-5 w-5 text-orange-400" />;
-      case "info":
-        return <Lightbulb className="h-5 w-5 text-blue-400" />;
+      default:
+        return <Info className="h-5 w-5 text-blue-400" />;
     }
   };
 
-  const getCategoryColor = (category: Insight["category"]): string => {
-    switch (category) {
-      case "performance":
-        return "text-purple-500";
-      case "security":
-        return "text-blue-500";
-      case "optimization":
-        return "text-green-500";
-      case "maintenance":
-        return "text-orange-400";
+  const getSeverityColor = (severity: string): string => {
+    switch (severity) {
+      case "Disaster":
+        return "text-red-700 bg-red-100";
+      case "High":
+        return "text-red-500 bg-red-50";
+      case "Average":
+        return "text-orange-500 bg-orange-50";
+      case "Warning":
+        return "text-yellow-600 bg-yellow-50";
+      case "Information":
+        return "text-blue-500 bg-blue-50";
+      default:
+        return "text-gray-500 bg-gray-50";
     }
   };
 
-  const criticalInsights = insights.filter((i) => i.severity === "critical");
-  const warningInsights = insights.filter((i) => i.severity === "warning");
-  const infoInsights = insights.filter((i) => i.severity === "info");
+  // Add this function to get unique hosts
+  const getUniqueHosts = (data: AlertGroup | undefined) => {
+    if (!data) return [];
+    return ["all", ...Object.keys(data)];
+  };
+
+  // Modify getAllAlerts to filter by host
+  const getAllAlerts = (data: AlertGroup | undefined) => {
+    if (!data) return [];
+    return Object.entries(data).flatMap(([hostName, hostData]) => {
+      if (selectedHost !== "all" && selectedHost !== hostName) return [];
+      return [...hostData.active, ...hostData.inactive].map((alert) => ({
+        ...alert,
+        hostName,
+      }));
+    });
+  };
+
+  const uniqueHosts = getUniqueHosts(alertData);
+  const allAlerts = getAllAlerts(alertData);
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center gap-2 mb-6">
-          <Brain className="h-6 w-6 text-primary" />
+          <AlertCircle className="h-6 w-6 text-primary" />
           <div>
-            <CardTitle className="text-2xl">AI Insights</CardTitle>
+            <CardTitle className="text-2xl">Zabbix Alerts</CardTitle>
             <CardDescription>
-              Machine Learning-powered system analysis and recommendations
+              System monitoring alerts and notifications
             </CardDescription>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-4">
-          <Badge variant="destructive">
-            {criticalInsights.length} Critical
-          </Badge>
-          <Badge variant="secondary">{warningInsights.length} Warnings</Badge>
-          <Badge variant="default">{infoInsights.length} Insights</Badge>
+        <div className="flex items-center gap-4 mt-4">
+          <Select value={selectedHost} onValueChange={setSelectedHost}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select host" />
+            </SelectTrigger>
+            <SelectContent>
+              {uniqueHosts.map((host) => (
+                <SelectItem key={host} value={host}>
+                  {host === "all" ? "All Hosts" : host}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </CardHeader>
 
       <CardContent>
         <Tabs defaultValue="all" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 gap-4">
-            <TabsTrigger value="all">All Insights</TabsTrigger>
-            <TabsTrigger value="critical">Critical</TabsTrigger>
-            <TabsTrigger value="warning">Warning</TabsTrigger>
-            <TabsTrigger value="info">Info</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-6 gap-2">
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="Average">Average</TabsTrigger>
+            <TabsTrigger value="Warning">Warning</TabsTrigger>
+            <TabsTrigger value="Information">Info</TabsTrigger>
+            <TabsTrigger value="Disaster">Disaster</TabsTrigger>
+            <TabsTrigger value="High">High</TabsTrigger>
           </TabsList>
 
-          {["all", "critical", "warning", "info"].map((tab) => (
-            <TabsContent key={tab} value={tab}>
-              <ScrollArea className="h-[70vh]">
-                <div className="space-y-4">
-                  {insights
-                    .filter(
-                      (insight) => tab === "all" || insight.severity === tab
-                    )
-                    .map((insight, index) => (
-                      <Card
-                        key={index}
-                        className="border-2 hover:shadow-md transition-shadow"
-                      >
-                        <CardHeader className="p-4">
-                          <div className="flex items-center gap-2">
-                            {getIcon(insight.severity)}
-                            <CardTitle className="text-lg">
-                              {insight.title}
-                            </CardTitle>
-                            <div className="ml-auto flex items-center gap-2">
-                              <Bot className="h-4 w-4 text-primary" />
-                              <span className="text-sm text-muted-foreground">
-                                {insight.aiConfidence}% confidence
-                              </span>
-                            </div>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="p-4 pt-0">
-                          <div className="space-y-4">
-                            <HoverCard>
-                              <HoverCardTrigger asChild>
-                                <div className="flex items-center justify-between rounded-lg bg-muted p-3 cursor-pointer">
-                                  <div className="flex items-center gap-2">
-                                    <Sparkles className="h-4 w-4" />
-                                    <span
-                                      className={getCategoryColor(
-                                        insight.category
+          {["all", "Disaster", "High", "Average", "Warning", "Information"].map(
+            (tab) => (
+              <TabsContent key={tab} value={tab}>
+                <ScrollArea className="h-[70vh]">
+                  <div className="space-y-4">
+                    {allAlerts.filter(
+                      (alert) => tab === "all" || alert.severity === tab
+                    ).length === 0 ? (
+                      <div className="flex flex-col items-center justify-center py-8 text-center">
+                        <Info className="h-12 w-12 text-muted-foreground mb-4" />
+                        <p className="text-lg font-medium text-muted-foreground">
+                          No {tab === "all" ? "alerts" : `${tab} alerts`} found
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          All systems are running normally
+                        </p>
+                      </div>
+                    ) : (
+                      allAlerts
+                        .filter(
+                          (alert) => tab === "all" || alert.severity === tab
+                        )
+                        .map((alert, index) => (
+                          <Card
+                            key={index}
+                            className="border-2 hover:shadow-md transition-shadow"
+                          >
+                            <CardHeader className="p-4">
+                              <div className="flex items-center gap-2">
+                                {getIcon(alert.severity)}
+                                <div className="flex-1">
+                                  <CardTitle className="text-lg">
+                                    {alert.description}
+                                  </CardTitle>
+                                  <div className="flex items-center gap-2 mt-2">
+                                    <Badge variant="outline">
+                                      {alert.hostName}
+                                    </Badge>
+                                    <Badge
+                                      className={getSeverityColor(
+                                        alert.severity
                                       )}
                                     >
-                                      {insight.category
-                                        .charAt(0)
-                                        .toUpperCase() +
-                                        insight.category.slice(1)}
-                                    </span>
+                                      {alert.severity}
+                                    </Badge>
                                   </div>
-                                  <Badge variant="outline">{insight.vm}</Badge>
                                 </div>
-                              </HoverCardTrigger>
-                              <HoverCardContent>
-                                <div className="space-y-2">
-                                  <h4 className="text-sm font-semibold">
-                                    AI Analysis
-                                  </h4>
-                                  <p className="text-sm">
-                                    {insight.description}
-                                  </p>
-                                </div>
-                              </HoverCardContent>
-                            </HoverCard>
-
-                            <div className="bg-muted/50 p-3 rounded-lg">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Bot className="h-4 w-4 text-primary" />
-                                <span className="font-medium">
-                                  Suggested Action
-                                </span>
                               </div>
-                              <p className="text-sm">
-                                {insight.suggestedAction}
-                              </p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                </div>
-              </ScrollArea>
-            </TabsContent>
-          ))}
+                            </CardHeader>
+                            <CardContent className="p-4 pt-0">
+                              {alert.comments && (
+                                <p className="text-sm text-muted-foreground mb-4">
+                                  {alert.comments}
+                                </p>
+                              )}
+
+                              <Accordion type="single" collapsible>
+                                <AccordionItem value="ai-explanation">
+                                  <AccordionTrigger
+                                    className="flex items-center gap-2"
+                                    onClick={() =>
+                                      handleGetAiExplanation(alert.id)
+                                    }
+                                  >
+                                    <Bot className="h-4 w-4" />
+                                    <span>AI Explanation</span>
+                                  </AccordionTrigger>
+                                  <AccordionContent>
+                                    <div className="text-sm p-4 bg-muted rounded-lg">
+                                      {loadingExplanations[alert.id] ? (
+                                        <div className="flex items-center justify-center py-2">
+                                          <span className="animate-pulse">
+                                            Loading AI explanation...
+                                          </span>
+                                        </div>
+                                      ) : aiExplanations[alert.id] ? (
+                                        <ReactMarkdown>
+                                          {aiExplanations[alert.id] || ""}
+                                        </ReactMarkdown>
+                                      ) : (
+                                        <p>Click to load AI explanation</p>
+                                      )}
+                                    </div>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              </Accordion>
+                            </CardContent>
+                          </Card>
+                        ))
+                    )}
+                  </div>
+                </ScrollArea>
+              </TabsContent>
+            )
+          )}
         </Tabs>
       </CardContent>
     </Card>
