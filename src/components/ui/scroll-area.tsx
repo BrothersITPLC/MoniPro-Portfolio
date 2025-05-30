@@ -4,7 +4,12 @@ interface ScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export const ScrollArea: React.FC<ScrollAreaProps> = ({ className, onScroll, children, ...props }) => {
+export const ScrollArea: React.FC<ScrollAreaProps> = ({
+  className,
+  onScroll,
+  children,
+  ...props
+}) => {
   return (
     <div
       className={`overflow-y-auto ${className} custom-scrollbar`}
@@ -12,7 +17,7 @@ export const ScrollArea: React.FC<ScrollAreaProps> = ({ className, onScroll, chi
       {...props}
     >
       {children}
-      <style jsx>{`
+      <style>{`
         .custom-scrollbar {
           scrollbar-width: none; /* Firefox */
           -ms-overflow-style: none; /* IE 10+ */

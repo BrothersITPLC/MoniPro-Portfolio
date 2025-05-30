@@ -19,19 +19,18 @@ import { useEffect, useState } from "react";
 import { setOrganization } from "../../Home/company/companySclice";
 import type { OrganizationDataInfrence } from "../../Home/company/companySclice";
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
-type Position = "center" | "left1" | "left" | "right" | "right1"
+type Position = "center" | "left1" | "left" | "right" | "right1";
 
 // Define the type for the image variants
 type ImageVariants = {
   [key in Position]: {
-    x: string
-    scale: number
-    zIndex: number
-  }
-}
-
+    x: string;
+    scale: number;
+    zIndex: number;
+  };
+};
 
 const icons = [
   {
@@ -53,35 +52,40 @@ interface PricingProps {
 }
 
 export function Pricing({ showSelectedPlan = false }: PricingProps) {
+  // Type the state as an array of numbers
+  const [positionIndexes, setPositionIndexes] = useState<number[]>([
+    0, 1, 2, 3, 4,
+  ]);
 
-    // Type the state as an array of numbers
-    const [positionIndexes, setPositionIndexes] = useState<number[]>([0, 1, 2, 3, 4])
+  const handleNext = (): void => {
+    setPositionIndexes((prevIndexes) => {
+      const updatedIndexes = prevIndexes.map(
+        (prevIndex) => (prevIndex + 1) % 5
+      );
+      return updatedIndexes;
+    });
+  };
 
-    const handleNext = (): void => {
-      setPositionIndexes((prevIndexes) => {
-        const updatedIndexes = prevIndexes.map((prevIndex) => (prevIndex + 1) % 5)
-        return updatedIndexes
-      })
-    }
-  
-    const handleBack = (): void => {
-      setPositionIndexes((prevIndexes) => {
-        const updatedIndexes = prevIndexes.map((prevIndex) => (prevIndex + 4) % 5)
-        return updatedIndexes
-      })
-    }
+  const handleBack = (): void => {
+    setPositionIndexes((prevIndexes) => {
+      const updatedIndexes = prevIndexes.map(
+        (prevIndex) => (prevIndex + 4) % 5
+      );
+      return updatedIndexes;
+    });
+  };
 
-      // Type the positions array
-  const positions: Position[] = ["center", "left1", "left", "right", "right1"]
+  // Type the positions array
+  const positions: Position[] = ["center", "left1", "left", "right", "right1"];
 
-    // Type the imageVariants object
-    const imageVariants: ImageVariants = {
-      center: { x: "0%", scale: 1, zIndex: 5 },
-      left1: { x: "-50%", scale: 0.7, zIndex: 3 },
-      left: { x: "-90%", scale: 0.5, zIndex: 2 },
-      right: { x: "90%", scale: 0.5, zIndex: 1 },
-      right1: { x: "50%", scale: 0.7, zIndex: 3 },
-    }
+  // Type the imageVariants object
+  const imageVariants: ImageVariants = {
+    center: { x: "0%", scale: 1, zIndex: 5 },
+    left1: { x: "-50%", scale: 0.7, zIndex: 3 },
+    left: { x: "-90%", scale: 0.5, zIndex: 2 },
+    right: { x: "90%", scale: 0.5, zIndex: 1 },
+    right1: { x: "50%", scale: 0.7, zIndex: 3 },
+  };
 
   const organizationData = useSelector(
     (state: RootState) => state.companyInfo.organizationData
@@ -103,15 +107,14 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
     (state: RootState) => state.auth
   );
 
-  console.log("this is plan data: ", plansData);
-
   const handlePlanSelect = (planId: number) => {
     dispatch(setSelectedPlane(planId));
-    
-    const selectedPlan = sortedPlansData.find(plan => plan.id === planId);
 
-    const type = selectedPlan?.name.toLowerCase() === "Individual plan".toLowerCase();
-    
+    const selectedPlan = sortedPlansData.find((plan) => plan.id === planId);
+
+    const type =
+      selectedPlan?.name.toLowerCase() === "Individual plan".toLowerCase();
+
     console.log("selected plan: ", selectedPlan);
     console.log("type: ", type);
 
@@ -119,24 +122,17 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
       ...organizationData!,
       is_private: type,
     };
-    
+
     dispatch(setOrganization(updatedData));
     console.log("updated data: ", updatedData);
-    
   };
-
 
   useEffect(() => {
     refetch();
   }, []);
 
-
   if (isLoading || !plansData) {
-    return (
-      <div className="text-center py-12 text-white">
-        Loading plans...
-      </div>
-    );
+    return <div className="text-center py-12 text-white">Loading plans...</div>;
   }
 
   const sortedPlansData = plansData.slice().sort((a, b) => a.price - b.price);
@@ -179,7 +175,9 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                       ? "ring-2 ring-[var(--primary)]"
                       : ""
                   }
-                  ${!showSelectedPlan ? "hover:border-[var(--secondary)]" : ""}`}
+                  ${
+                    !showSelectedPlan ? "hover:border-[var(--secondary)]" : ""
+                  }`}
                   style={{
                     height: "80%",
                     width: "100%",
@@ -205,7 +203,9 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                   <CardContent>
                     <div className="text-center mb-6">
                       <div className="flex items-baseline justify-center text-white">
-                        <span className="text-4xl font-bold">${plan.price}</span>
+                        <span className="text-4xl font-bold">
+                          ${plan.price}
+                        </span>
                         <span className="ml-2">/month</span>
                       </div>
                       <div className="space-y-2 mt-4">
@@ -226,9 +226,7 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                       {plan.features.map((feature, featureIndex) => (
                         <div key={featureIndex} className="flex items-center">
                           <Check className="w-5 h-5 text-[var(--primary)] mr-3" />
-                          <span className="text-sm text-white">
-                            {feature}
-                          </span>
+                          <span className="text-sm text-white">{feature}</span>
                         </div>
                       ))}
                     </div>
@@ -236,7 +234,9 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                     {showSelectedPlan ? (
                       <Button
                         className={`w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105 ${
-                          selectedPlan === plan.id ? "bg-[var(--secondary)]" : ""
+                          selectedPlan === plan.id
+                            ? "bg-[var(--secondary)]"
+                            : ""
                         }`}
                         onClick={() => handlePlanSelect(plan.id)}
                       >
@@ -265,10 +265,16 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
         </div>
 
         <div className="flex flex-row justify-between mt-150">
-          <button className="text-white bg-indigo-400 rounded-md py-2 px-4" onClick={handleBack}>
+          <button
+            className="text-white bg-indigo-400 rounded-md py-2 px-4"
+            onClick={handleBack}
+          >
             Back
           </button>
-          <button className="text-white bg-indigo-400 rounded-md py-2 px-4" onClick={handleNext}>
+          <button
+            className="text-white bg-indigo-400 rounded-md py-2 px-4"
+            onClick={handleNext}
+          >
             Next
           </button>
         </div>

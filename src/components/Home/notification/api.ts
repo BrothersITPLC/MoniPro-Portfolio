@@ -19,7 +19,18 @@ export const AlertApi = createApi({
         body: { triggerid: item_id },
       }),
     }),
+    sendSms: builder.mutation<{}, { phone_number: string; message: string }>({
+      query: (data) => ({
+        url: "/send-sms/",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useGetAlertListQuery, useGetAiExplanationMutation } = AlertApi;
+export const {
+  useGetAlertListQuery,
+  useGetAiExplanationMutation,
+  useSendSmsMutation,
+} = AlertApi;

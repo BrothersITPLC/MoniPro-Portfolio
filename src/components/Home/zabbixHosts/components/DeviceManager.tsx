@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ import {
   useCreateLocalHostMutation,
   useUpdateLocalHostMutation,
   useDeleteLocalHostMutation,
+  useLazyCheckHostAvailabilityQuery,
 } from "../api";
 import { DeviceCreationForm } from "@/components/Home/zabbixHosts/components/Forms/DeviceCreationForm";
 import {
@@ -38,6 +40,10 @@ type Hosts = {
   device_type: string;
   network_device_type: string;
   host_group: number;
+};
+type availabilityResponse = {
+  status: string;
+  message: string;
 };
 
 export function DeviceManager() {
@@ -76,6 +82,7 @@ export function DeviceManager() {
     if (editingDevice) {
       handleUpdate(formattedData);
     } else {
+      handleAvailabilityCheck(formattedData.ip, formattedData.dns);
       setPendingData(formattedData);
       setIsConfirmDialogOpen(true);
     }
@@ -84,6 +91,7 @@ export function DeviceManager() {
   const handleCreate = async () => {
     try {
       const result = await createHost(pendingData).unwrap();
+
       if (result.status !== "success") {
         toast.error(result.message || "Failed to create host");
         return;
@@ -91,8 +99,11 @@ export function DeviceManager() {
       toast.success(result.message || "Device created successfully");
       setPendingData(null);
       setIsConfirmDialogOpen(false);
-    } catch (error) {
-      toast.error("Failed to create device");
+    } catch (error: any) {
+      console.error(error);
+      toast.error(
+        error.data?.message || error.error || "Failed to create device"
+      );
     }
   };
 
@@ -153,6 +164,42 @@ export function DeviceManager() {
   const openDeleteDialog = (deviceId: string) => {
     setDeletingDeviceId(deviceId);
     setIsDeleteDialogOpen(true);
+  };
+
+  const [
+    triggerCheckHostAvailability,
+    {
+      data: isAvailabilityData,
+      error: availabilityError,
+      isLoading: isAvailabilityLoading,
+    },
+  ] = useLazyCheckHostAvailabilityQuery();
+
+  const handleAvailabilityCheck = async (ip: string, dns: string) => {
+    let is_domain = true;
+    let host = "";
+
+    if (!ip && !dns) {
+      toast.error("Please provide either IP address or DNS");
+      return;
+    }
+
+    host = ip || dns;
+    is_domain = !ip;
+
+    try {
+      const result = await triggerCheckHostAvailability({
+        host,
+        isDomain: is_domain,
+      }).unwrap();
+      if (result.status !== "success") {
+        toast.error(result.message || "Failed to check availability");
+        return;
+      }
+      toast.success(result.message || "Host availability checked successfully");
+    } catch (err: any) {
+      toast.error(err?.data.message || "Failed to check availability.");
+    }
   };
 
   return (
@@ -222,24 +269,67 @@ export function DeviceManager() {
 
       {/* Confirmation Dialog for Create */}
       <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirm Device Creation</DialogTitle>
-            <DialogDescription>
-              Please review and confirm that you want to create this device.
-            </DialogDescription>
-          </DialogHeader>
-          <p>Are you sure you want to create this device?</p>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsConfirmDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleCreate}>Create</Button>
-          </DialogFooter>
-        </DialogContent>
+        {isAvailabilityLoading ? (
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                Confirming if the host is Availible or the Dns will get resolved
+              </DialogTitle>
+              <DialogDescription>
+                Confirming if the host is Availible or the Dns will get resolved{" "}
+              </DialogDescription>
+            </DialogHeader>
+            <Spinner className="h-12 w-12 text-primary" />
+          </DialogContent>
+        ) : isAvailabilityData ? (
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{isAvailabilityData?.message}</DialogTitle>
+              <DialogDescription>
+                {isAvailabilityData?.message}
+              </DialogDescription>
+            </DialogHeader>
+
+            <p className="text-green-500">
+              The host is available or the DNS has been resolved
+              successfully.you can proceed with creating the device.
+            </p>
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsConfirmDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleCreate}>Create</Button>
+            </DialogFooter>
+          </DialogContent>
+        ) : availabilityError ? (
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Error</DialogTitle>
+              <DialogDescription>
+                {availabilityError?.data?.message}
+              </DialogDescription>
+            </DialogHeader>
+            <p className="text-red-500">
+              The host is not available or the DNS could not be resolved.But you
+              can still proceed with creating the device.
+            </p>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setIsConfirmDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button onClick={handleCreate}>Proceed</Button>
+            </DialogFooter>
+          </DialogContent>
+        ) : (
+          ""
+        )}
       </Dialog>
 
       {/* Confirmation Dialog for Delete */}

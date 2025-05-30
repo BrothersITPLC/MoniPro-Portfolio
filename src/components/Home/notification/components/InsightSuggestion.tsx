@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertCircle, AlertTriangle, Info, Bot } from "lucide-react";
+import { AlertCircle, AlertTriangle, Info, Bot, Phone } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Accordion,
@@ -19,6 +19,7 @@ import {
 import {
   useGetAlertListQuery,
   useGetAiExplanationMutation,
+  useSendSmsMutation,
 } from "@/components/Home/notification/api";
 import {
   Select,
@@ -28,6 +29,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ReactMarkdown from "react-markdown";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface Alert {
   id: string;
@@ -48,6 +51,7 @@ export function InsightSuggestion() {
   const { data: alertData } = useGetAlertListQuery();
   const [selectedHost, setSelectedHost] = useState<string>("all");
   const [getAiExplanation] = useGetAiExplanationMutation();
+  const [sendSms, { isLoading: isSendingSms }] = useSendSmsMutation();
   const [aiExplanations, setAiExplanations] = useState<Record<string, string>>(
     {}
   );
@@ -123,6 +127,24 @@ export function InsightSuggestion() {
 
   const uniqueHosts = getUniqueHosts(alertData);
   const allAlerts = getAllAlerts(alertData);
+
+  const handleSms = async (
+    host: string,
+    severity: string,
+    comments: string
+  ) => {
+    // const phone_number = "+251965917665";
+    const phone_number = "+251916527428";
+    const message = `alert your host ${host} has ${severity} severity with the following comments: ${comments}`;
+
+    try {
+      await sendSms({ phone_number, message }).unwrap();
+      toast.success("SMS alert sent successfully");
+    } catch (error) {
+      console.error("Failed to send SMS:", error);
+      toast.error("Failed to send SMS alert. Please try again.");
+    }
+  };
 
   return (
     <Card>
@@ -249,6 +271,22 @@ export function InsightSuggestion() {
                                   </AccordionContent>
                                 </AccordionItem>
                               </Accordion>
+
+                              {tab === "Warning" && (
+                                <Button
+                                  className=""
+                                  onClick={() =>
+                                    handleSms(
+                                      alert.hostName,
+                                      alert.severity,
+                                      alert.comments
+                                    )
+                                  }
+                                  disabled={isSendingSms}
+                                >
+                                  {isSendingSms ? "Sending..." : "Send SMS"}
+                                </Button>
+                              )}
                             </CardContent>
                           </Card>
                         ))

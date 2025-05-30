@@ -1,7 +1,7 @@
 import { Shield, Zap, Database, Check, Crown } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetPlansQuery } from "../../../Landing/api";
-import { setOrganization } from "../companySclice";
+import { useGetPlansQuery } from "../../../../Landing/api";
+import { setOrganization } from "../../companySclice";
 import {
   Card,
   CardContent,
@@ -9,13 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { OrganizationDataInfrence } from "../companySclice";
+import type { OrganizationDataInfrence } from "../../companySclice";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/app/store";
 import { useEffect, useState } from "react";
-import { toast } from "sonner"; 
-import { ArrowLeft, ArrowRight, } from "lucide-react";
+import { toast } from "sonner";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const icons = [
   {
@@ -35,17 +35,20 @@ const icons = [
 interface PricingProps {
   showSelectedPlan?: boolean;
   onNext: (step: number) => void;
-  setSelectedPlan: (planId: number) => void; // Add prop type for setSelectedPlanId
+  setSelectedPlan: (planId: number) => void;
 }
 
-export function PricingStep({ showSelectedPlan = false, onNext, setSelectedPlan }: PricingProps) {
-
-//   const selectedPlan = useSelector(
-//     (state: RootState) => state.landing.SelectedPlane
-//   );  
+export function PricingStep({
+  showSelectedPlan = false,
+  onNext,
+  setSelectedPlan,
+}: PricingProps) {
+  //   const selectedPlan = useSelector(
+  //     (state: RootState) => state.landing.SelectedPlane
+  //   );
 
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
-  
+
   const dispatch = useDispatch();
 
   const {
@@ -60,22 +63,20 @@ export function PricingStep({ showSelectedPlan = false, onNext, setSelectedPlan 
     (state: RootState) => state.companyInfo.organizationData
   );
 
-  const { user } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { user } = useSelector((state: RootState) => state.auth);
 
- const handlePlanSelect = (planId: number) => {
+  const handlePlanSelect = (planId: number) => {
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
       organization_payment_plan: planId,
     };
     dispatch(setOrganization(updatedData));
     setSelectedPlan(planId);
-    setSelectedPlanId(planId); 
+    setSelectedPlanId(planId);
   };
 
   const handleNext = () => {
-    if (!selectedPlanId) {  
+    if (!selectedPlanId) {
       toast.error("Please select a pricing type to continue.");
       return;
     }
@@ -102,9 +103,13 @@ export function PricingStep({ showSelectedPlan = false, onNext, setSelectedPlan 
 
   // Filter plans based on organization's privacy status and plan name
   const filteredPlans = organizationData?.is_private
-    ? sortedPlansData.filter(plan => plan.name.toLowerCase() === 'individual plan')
-    : sortedPlansData.filter(plan => plan.name.toLowerCase() !== 'individual plan');
-      
+    ? sortedPlansData.filter(
+        (plan) => plan.name.toLowerCase() === "individual plan"
+      )
+    : sortedPlansData.filter(
+        (plan) => plan.name.toLowerCase() !== "individual plan"
+      );
+
   return (
     <div
       id="pricing"
@@ -184,35 +189,33 @@ export function PricingStep({ showSelectedPlan = false, onNext, setSelectedPlan 
                   </div>
 
                   <Button
-                      className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
-                      onClick={() => handlePlanSelect(plan.id)}
-                    >
-                      Select Plan
-                 </Button>
-
+                    className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
+                    onClick={() => handlePlanSelect(plan.id)}
+                  >
+                    Select Plan
+                  </Button>
                 </CardContent>
               </Card>
             ))}
-
         </div>
-            <div className="flex justify-between mt-8">
-                <Button
-                      variant="outline"
-                      onClick={onPrevious}
-                      className="flex items-center gap-2"
-                >
-                      <ArrowLeft className="w-4 h-4" />
-                      Previous Step
-                </Button>
-               
-                <Button
-                onClick={handleNext}
-                className="flex items-center gap-2 bg-[var(--secondary)] text-white hover:bg-[var(--secondary)]"
-                >
-                   Next Step
-                   <ArrowRight className="w-4 h-4" />
-                </Button>
-            </div>
+        <div className="flex justify-between mt-8">
+          <Button
+            variant="outline"
+            onClick={onPrevious}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Previous Step
+          </Button>
+
+          <Button
+            onClick={handleNext}
+            className="flex items-center gap-2 bg-[var(--secondary)] text-white hover:bg-[var(--secondary)]"
+          >
+            Next Step
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

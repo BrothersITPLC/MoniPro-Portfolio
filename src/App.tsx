@@ -13,6 +13,9 @@ import {
   Navigate,
 } from "react-router-dom";
 import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
+import { PaymentStep } from "@/components/Home/company/components/PaymentStep";
+import { PaymentVerification } from "@/components/Home/company/components/PaymentVerification";
+
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
 import { ZabbixHosts } from "./components/Home/zabbixHosts/components/zabbixhosts";
 import { ItemWrapper } from "./components/Home/zabbixHosts/components/ItemWrapper";
@@ -46,6 +49,7 @@ function App() {
               path="/social/auth/google/callback"
               element={<GoogleCallback />}
             />
+            {/* Add the new payment verification route */}
           </Route>
 
           {/* Protected Routes - Accessible only when authenticated */}
@@ -56,6 +60,11 @@ function App() {
                 path="subscription"
                 element={<UpdateSubscription />}
               />{" "}
+              <Route path="payment" element={<PaymentStep />} />
+              <Route
+                path="payment-verification/:uuid"
+                element={<PaymentVerification />}
+              />
               <Route path="comp-info" element={<CompanyInfo />} />
               <Route path="info-update" element={<PersonalInfoUpdate />} />
               <Route path="device-mangment" element={<DeviceWrapper />} />

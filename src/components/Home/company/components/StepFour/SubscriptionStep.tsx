@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -7,8 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store";
-import { setOrganization } from "../companySclice";
-import type { OrganizationDataInfrence } from "../companySclice";
+import { setOrganization } from "../../companySclice";
+import { useNavigate } from "react-router-dom";
+import type { OrganizationDataInfrence } from "../../companySclice";
 import { toast } from "sonner";
 import {
   Calendar,
@@ -18,39 +18,57 @@ import {
   CalendarDays,
   CalendarCheck,
 } from "lucide-react";
-import { ChangePayment } from "./ChangePaymentplan";
-import { useGetPlansQuery } from "../../../Landing/api";
+import { ChangePayment } from "../ChangePaymentplan";
+import { useGetPlansQuery } from "../../../../Landing/api";
+import { useOrganizationInfoMutation } from "../../api";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface PlanSelectionProps {
   onNext: (step: number) => void;
-  selectedPlanId: number | null; 
+  selectedPlanId: number | null;
 }
 
-
 const subscriptionSchema = z.object({
-  organization_payment_duration: z.number().min(1, "Payment duration is required"),
+  organization_payment_duration: z
+    .number()
+    .min(1, "Payment duration is required"),
 });
 
-export function SubscriptionStep({ onNext, selectedPlanId }: PlanSelectionProps) {
-  
+export function SubscriptionStep({
+  onNext,
+  selectedPlanId,
+}: PlanSelectionProps) {
   const selectedPlan = useSelector(
     (state: RootState) => state.landing.SelectedPlane
-  );  
-  
+  );
 
   const dispatch = useDispatch();
   const organizationData = useSelector(
     (state: RootState) => state.companyInfo.organizationData
   );
 
-  const {
-    data: plansData,
-    isLoading,
-  } = useGetPlansQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
+  const { data: plansData, isLoading: isPlanDataLoading } = useGetPlansQuery(
+    undefined,
+    {
+      refetchOnMountOrArgChange: true,
+    }
+  );
+  const navigate = useNavigate();
 
   const [showPricing, setShowPricing] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [selectedDuration, setSelectedDuration] = useState<number>(
     organizationData?.organization_payment_duration || 0
   );
@@ -63,49 +81,72 @@ export function SubscriptionStep({ onNext, selectedPlanId }: PlanSelectionProps)
     },
   });
 
-  const selectedPlanData = plansData?.find(plan => plan.id === selectedPlanId);
+  const selectedPlanData = plansData?.find(
+    (plan) => plan.id === selectedPlanId
+  );
 
   const handleDurationSelect = (durationId: number) => {
     setSelectedDuration(durationId);
-    console.log("this is selected duration id id: ", selectedDuration )
-    console.log("this is selected duration id: ", durationId )
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
       organization_payment_duration: durationId,
     };
-     
 
     dispatch(setOrganization(updatedData));
     form.setValue("organization_payment_duration", durationId);
   };
 
-  const handleNext = () => {
-    if (!selectedDuration) {
-      toast.error("Please select a subscription duration to continue.");
-      return;
-    }
-    onNext(selectedPlan === 0 ? 5 : 3); // If selectedPlan is 0, go to step 5, else go to step 3
-  };
-
   const onPrevious = () => {
-    onNext(selectedPlan === 0 ? 3 : 1); // If selectedPlan is 0, go back to Payment Plan, else go back to Information
+    onNext(selectedPlan === 0 ? 3 : 1);
   };
 
   const handleChangePlan = () => {
     setShowPricing(true);
-    
-    
-
   };
 
-  if (isLoading || !selectedPlanData) {
+  if (isPlanDataLoading || !selectedPlanData) {
     return <div>Loading plan details...</div>;
   }
 
+  //////////////////////////////////////////////////////////
+  const [organizationInfo, { isLoading: isSubmitting }] =
+    useOrganizationInfoMutation();
+
+  const handleConfirmSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const response = await organizationInfo(organizationData).unwrap();
+
+      setIsLoading(false);
+      setShowConfirmDialog(false);
+
+      if (response.status === "success") {
+        toast.success(response.message || "Profile updated successfully");
+
+        setTimeout(() => {
+          navigate("/home/payment");
+        }, 300);
+      } else {
+        toast.error(response.message || "An error occurred during submission");
+        onNext(1);
+      }
+    } catch (error: any) {
+      setIsLoading(false);
+      setShowConfirmDialog(false);
+
+      const errorMessage =
+        error?.data?.message ||
+        "Failed to process your request. Please try again.";
+      toast.error(errorMessage);
+
+      onNext(1);
+    }
+  };
+
+  //////////////////////////////////////////////////
   if (showPricing) {
     return (
       <div className="max-w-7xl mx-auto py-6">
-        
         <div className="flex justify-center">
           <Button
             variant="outline"
@@ -123,8 +164,7 @@ export function SubscriptionStep({ onNext, selectedPlanId }: PlanSelectionProps)
 
   return (
     <div className="max-w-3xl mx-auto py-10 mt-12">
-
-      { selectedPlan!=0 &&
+      {selectedPlan != 0 && (
         <div className="mb-4">
           <Button
             variant="outline"
@@ -135,7 +175,7 @@ export function SubscriptionStep({ onNext, selectedPlanId }: PlanSelectionProps)
             Change Selected Plan
           </Button>
         </div>
-      }
+      )}
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-center mb-3 flex items-center justify-center gap-2"></h2>
         <div className="text-center mb-4 bg-[var(--light)] dark:bg-neutral-800 dark:border-2 dark:text-white py-3 rounded-lg">
@@ -259,15 +299,44 @@ export function SubscriptionStep({ onNext, selectedPlanId }: PlanSelectionProps)
           <ArrowLeft className="w-4 h-4" />
           Previous Step
         </Button>
+
         <Button
-          onClick={handleNext}
-          disabled={!selectedDuration}
-          className="flex items-center gap-2 bg-[var(--secondary)] text-white hover:bg-[var(--secondary)]"
+          type="submit"
+          disabled={isLoading || isSubmitting || !selectedDuration}
+          onClick={() => setShowConfirmDialog(true)}
+          className="flex items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--primary)] text-white"
         >
-          Next Step
+          {isLoading || isSubmitting ? "Processing..." : "Complete Setup"}
           <ArrowRight className="w-4 h-4" />
         </Button>
       </div>
+
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Subscription</AlertDialogTitle>
+            <AlertDialogDescription>
+              You are about to complete your First subscription setup.The next
+              step is to complete the payment process.Are you sure you want to
+              proceed?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isLoading || isSubmitting}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmSubmit}
+              disabled={isLoading || isSubmitting}
+              className="bg-[var(--secondary)] hover:bg-[var(--primary)]"
+            >
+              {isLoading || isSubmitting
+                ? "Processing..."
+                : "Confirm and Complete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
