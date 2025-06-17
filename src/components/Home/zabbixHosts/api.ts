@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "@/lib/baseQuery";
-import { url } from "inspector";
 
 export const hostApi = createApi({
   reducerPath: "hostApi",
@@ -19,6 +18,13 @@ export const hostApi = createApi({
         url: `/host-items/?hostids=${params.hostids}&name=${
           params.name || "CPU"
         }`,
+        method: "GET",
+      }),
+    }),
+
+    getTemplateNames: builder.query({
+      query: (params) => ({
+        url: `/template-name/?hostids=${params.hostids}`,
         method: "GET",
       }),
     }),
@@ -64,27 +70,9 @@ export const hostApi = createApi({
       }),
       invalidatesTags: ["LocalHosts"],
     }),
-    getSimpleCheckItemList: builder.query({
+    getMonitoringCategoryAndTemplates: builder.query({
       query: () => ({
-        url: "/simple-check-item-list/",
-        method: "GET",
-      }),
-    }),
-    getNetworkProtocolMonitoringItemList: builder.query({
-      query: () => ({
-        url: "/simple-check-item-list/",
-        method: "GET",
-      }),
-    }),
-    getAgentBasedItemList: builder.query({
-      query: () => ({
-        url: "/agent-monitoring-item-list/",
-        method: "GET",
-      }),
-    }),
-    getMonitoringCategory: builder.query({
-      query: () => ({
-        url: "/monitoring-category-list/",
+        url: "/monitoring-category-templates/",
         method: "GET",
       }),
     }),
@@ -98,6 +86,13 @@ export const hostApi = createApi({
         },
       }),
     }),
+    PostHostCreation: builder.mutation({
+      query: (hostData) => ({
+        url: "/post-host-creation/",
+        method: "POST",
+        body: hostData,
+      }),
+    }),
   }),
 });
 export const {
@@ -108,10 +103,9 @@ export const {
   useCreateLocalHostMutation,
   useUpdateLocalHostMutation,
   useDeleteLocalHostMutation,
-  useGetMonitoringCategoryQuery,
-  useLazyGetSimpleCheckItemListQuery,
-  useLazyGetAgentBasedItemListQuery,
-  useLazyGetNetworkProtocolMonitoringItemListQuery,
   useCheckHostAvailabilityQuery,
   useLazyCheckHostAvailabilityQuery,
+  useGetMonitoringCategoryAndTemplatesQuery,
+  usePostHostCreationMutation,
+  useGetTemplateNamesQuery,
 } = hostApi;

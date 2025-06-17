@@ -87,13 +87,13 @@ export function DeviceCreationForm({
   };
 
   return (
-    <Card className="w-full max-w-2xl border-none shadow-none ">
-      <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100  py-2">
-        <CardTitle className="flex items-center gap-2 text-slate-800 ">
+    <Card className="w-full max-w-2xl border-none shadow-none">
+      <CardHeader className="bg-muted py-2">
+        <CardTitle className="flex items-center gap-2 text-foreground">
           {type === "vm" ? (
-            <Server className="h-5 w-5 text-emerald-500" />
+            <Server className="h-5 w-5 text-primary" />
           ) : (
-            <Network className="h-5 w-5 text-violet-500" />
+            <Network className="h-5 w-5 text-primary" />
           )}
           {type === "vm" ? "Virtual Machine Setup" : "Network Device Setup"}
         </CardTitle>
@@ -116,9 +116,9 @@ export function DeviceCreationForm({
             onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-3"
           >
-            <div className="bg-[var(--slate-50)] p-3 rounded-lg border border-[var(--slate-100)]">
-              <h3 className="text-sm font-medium text-[var(--slate-700)] mb-2 flex items-center gap-2">
-                <Database className="h-4 w-4 text-[var(--slate-500)]" />
+            <div className="bg-muted p-3 rounded-lg border">
+              <h3 className="text-sm font-medium text-foreground mb-2 flex items-center gap-2">
+                <Database className="h-4 w-4 text-muted-foreground" />
                 Device Information
               </h3>
               <div className="space-y-3">
@@ -128,17 +128,16 @@ export function DeviceCreationForm({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Host Name{" "}
-                        <span className="text-[var(--red-300)]">*</span>
+                        Host Name <span className="text-destructive">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
                           placeholder="Enter host name"
-                          className="focus-visible:ring-[var(--emerald-500)] h-9"
+                          className="focus-visible:ring-primary h-9"
                         />
                       </FormControl>
-                      <FormMessage className="text-[var(--red-500)]" />
+                      <FormMessage className="text-destructive" />
                     </FormItem>
                   )}
                 />
@@ -148,17 +147,17 @@ export function DeviceCreationForm({
                     name="ip"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-[var(--slate-700)]">
+                        <FormLabel className="text-foreground">
                           IP Address (Optional)
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="192.168.1.1"
-                            className="focus-visible:ring-[var(--emerald-500)] h-9"
+                            className="focus-visible:ring-primary h-9"
                           />
                         </FormControl>
-                        <FormMessage className="text-[var(--red-500)]" />
+                        <FormMessage className="text-destructive" />
                       </FormItem>
                     )}
                   />
@@ -168,17 +167,17 @@ export function DeviceCreationForm({
                     name="dns"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-[var(--slate-700)]">
+                        <FormLabel className="text-foreground">
                           DNS (Optional)
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="dns.example.com"
-                            className="focus-visible:ring-[var(--emerald-500)] h-9"
+                            className="focus-visible:ring-primary h-9"
                           />
                         </FormControl>
-                        <FormMessage className="text-[var(--red-500)]" />
+                        <FormMessage className="text-destructive" />
                       </FormItem>
                     )}
                   />
@@ -222,13 +221,13 @@ export function DeviceCreationForm({
                 type="button"
                 variant="outline"
                 onClick={() => form.reset()}
-                className="border-[var(--gray-300)] hover:bg-[var(--gray-50)] text-[var(--gray-700)]"
+                className="border-input hover:bg-accent text-muted-foreground"
               >
                 Reset
               </Button>
               <Button
                 type="submit"
-                className="bg-[var(--primary)] text-[var(--white)] hover:bg-[var(--secondary)]"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 {initialData ? "Update Device" : "Create Device"}
               </Button>

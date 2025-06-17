@@ -13,7 +13,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -26,9 +25,13 @@ import {
 } from "@/components/ui/tooltip";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-import { useGetMonitoringCategoryQuery } from "@/components/Home/zabbixHosts/api";
-
-import { ItemSelection } from "./ItemSelection";
+import {
+  useGetMonitoringCategoryAndTemplatesQuery,
+  usePostHostCreationMutation,
+} from "@/components/Home/zabbixHosts/api";
+import { ItemSelection } from "@/components/Home/zabbixHosts/components/ItemSelection";
+import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 
 interface DeviceListProps {
   devices: any[];
@@ -40,9 +43,14 @@ interface DeviceListProps {
 
 type SingleMoniteringType = {
   id: number;
-  title: string;
-  description: string;
-  long_description: string;
+  name: string;
+  category_description: string;
+  category_long_description: string;
+  template: Array<{
+    name: string;
+    template_description: string;
+    template_id: number;
+  }>;
 };
 
 export function DeviceList({
@@ -53,10 +61,22 @@ export function DeviceList({
   onDelete,
 }: DeviceListProps) {
   const [isSecondDialogOpen, setIsSecondDialogOpen] = useState(false);
-
-  const [SelectedMonitoringType, setSelectedMonitoringTypeState] =
-    useState<SingleMoniteringType[]>();
-
+  const [ispostHostCreationSuccess, setIsPostHostCreationSuccess] =
+    useState(false);
+  const [postHostCreationMessage, setPostHostCreationMessage] = useState("");
+  const [SelectedMonitoringType, setSelectedMonitoringTypeState] = useState<
+    SingleMoniteringType[]
+  >([]);
+  const [localHostId, setLocalHostId] = useState(0);
+  const {
+    data: monitoringCategoryResponse,
+    isLoading: monitoringCategoryIsLoading,
+    isError: monitoringCategoryIsError,
+  } = useGetMonitoringCategoryAndTemplatesQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  const [postHostCreation, { isLoading: isPostHostCreationLoading }] =
+    usePostHostCreationMutation();
   const getIcon = (deviceType: string) => {
     if (type === "network") {
       switch (deviceType) {
@@ -76,43 +96,39 @@ export function DeviceList({
   };
 
   if (isLoading) {
-    return <div className="text-center py-8">Loading devices...</div>;
+    return (
+      <div className="text-center py-8 text-foreground">Loading devices...</div>
+    );
   }
 
   if (devices.length === 0) {
     return (
-      <div className="text-center p-8 border border-dashed rounded-lg">
+      <div className="text-center p-8 border border-border rounded-lg bg-background">
         {type === "vm" ? (
-          <Server className="mx-auto h-12 w-12 text-gray-400" />
+          <Server className="mx-auto h-12 w-12 text-muted-foreground" />
         ) : (
-          <Network className="mx-auto h-12 w-12 text-gray-400" />
+          <Network className="mx-auto h-12 w-12 text-muted-foreground" />
         )}
-        <h3 className="mt-2 text-lg font-medium">
+        <h3 className="mt-2 text-lg font-medium text-foreground">
           No {type === "vm" ? "Virtual Machines" : "Network Devices"}
         </h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           Add a device to start monitoring
         </p>
       </div>
     );
   }
 
-  const {
-    data: monitoringCategoryResponse,
-    isLoading: monitoringCategoryIsLoading,
-    isError: monitoringCategoryIsError,
-  } = useGetMonitoringCategoryQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
-
   const monitoringCategory =
     monitoringCategoryResponse?.status === "success"
       ? monitoringCategoryResponse.data
       : [];
 
-  const handleMonitoringType = (id: number) => {
+  const handleMonitoringType = (id: number, local_host_id: number) => {
+    setIsPostHostCreationSuccess(false);
+
     setIsSecondDialogOpen(true);
-    // Use the local monitoringCategory array if API response is not available
+    setLocalHostId(local_host_id);
     const selectedCategory =
       monitoringCategoryResponse?.status === "success"
         ? monitoringCategoryResponse.data.filter(
@@ -125,18 +141,46 @@ export function DeviceList({
     setSelectedMonitoringTypeState(selectedCategory);
   };
 
+  const handlePostHostCreation = async (data: any) => {
+    try {
+      setPostHostCreationMessage(
+        "post hos creation workflow have started, if it is scucessfull you will se the result on Devices tab shortly"
+      );
+      const response = await postHostCreation(data).unwrap();
+      if (response.status === "success") {
+        setIsPostHostCreationSuccess(true);
+        toast.success(
+          response.message || "Post Host creation strated successfully"
+        );
+      }
+    } catch (error: any) {
+      setPostHostCreationMessage(
+        "post hos creation workflow have failed,you can retray by selecting a catagory again"
+      );
+      setIsPostHostCreationSuccess(true);
+      toast.error(
+        error.data?.message || error.error || "Failed to create device"
+      );
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {devices.map((device) => (
-        <Card key={device.id}>
+        <Card
+          key={device.id}
+          className="bg-card text-card-foreground border-border"
+        >
           <Dialog>
             <DialogTrigger>
               <CardHeader className="cursor-pointer">
-                <CardTitle>
+                <CardTitle className="text-foreground">
                   {type === "network" && getIcon(device.network_device_type)}
                   {device.host}
                 </CardTitle>
-                <CardDescription>{device.ip || device.dns}</CardDescription>
+                <CardDescription className="text-muted-foreground">
+                  {device.ip || device.dns}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
@@ -145,18 +189,20 @@ export function DeviceList({
                       <span className="text-muted-foreground">
                         Device Type:
                       </span>{" "}
-                      {device.network_device_type}
+                      <span className="text-foreground">
+                        {device.network_device_type}
+                      </span>
                     </div>
                   )}
                 </div>
               </CardContent>
             </DialogTrigger>
-            <DialogContent className=" min-w-1/2 max-w-3/4">
+            <DialogContent className="min-w-1/2 max-w-3/4 bg-background border-border">
               <DialogHeader>
-                <DialogTitle>
-                  please choose the type of monitering you want for your device
+                <DialogTitle className="text-foreground">
+                  Please choose the type of monitoring you want for your device
                 </DialogTitle>
-                <DialogDescription>
+                <DialogDescription className="text-muted-foreground">
                   You can choose between CPU, Memory, Disk, Network and Load
                   Average
                 </DialogDescription>
@@ -164,11 +210,13 @@ export function DeviceList({
               <div className="my-4 p-4 flex flex-row gap-4">
                 <div className="">
                   {monitoringCategoryIsLoading ? (
-                    <p>Loading monitoring categories...</p>
+                    <p className="text-muted-foreground">
+                      Loading monitoring categories...
+                    </p>
                   ) : monitoringCategoryIsError ? (
                     <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
+                      <AlertDescription className="text-destructive-foreground">
                         Error loading monitoring categories. Please try again
                         later.
                       </AlertDescription>
@@ -176,7 +224,7 @@ export function DeviceList({
                   ) : monitoringCategory.length === 0 ? (
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
+                      <AlertDescription className="text-foreground">
                         No monitoring categories available.
                       </AlertDescription>
                     </Alert>
@@ -190,16 +238,16 @@ export function DeviceList({
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
-                                className="cursor-pointer"
+                                className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90"
                                 onClick={() =>
-                                  handleMonitoringType(category.id)
+                                  handleMonitoringType(category.id, device.id)
                                 }
                               >
-                                {category.title}
+                                {category.name}
                               </Button>
                             </TooltipTrigger>
-                            <TooltipContent>
-                              <p>{category.description}</p>
+                            <TooltipContent className="bg-popover text-popover-foreground border-border">
+                              <p>{category.category_description}</p>
                             </TooltipContent>
                           </Tooltip>
                         </TooltipProvider>
@@ -207,23 +255,34 @@ export function DeviceList({
                     ))
                   )}
                 </div>
-
-                <div className="w-2 h-[100%] bg-black rounded-lg"></div>
-
-                {isSecondDialogOpen && (
-                  <div className="">
-                    <ItemSelection moniteringTypes={SelectedMonitoringType} />
-                  </div>
+                <div className="w-2 h-[100%] bg-border rounded-lg"></div>
+                {isPostHostCreationLoading ? (
+                  <Spinner className="block mx-auto h-12 w-12 text-primary" />
+                ) : ispostHostCreationSuccess ? (
+                  <p className="text-foreground">{postHostCreationMessage}</p>
+                ) : (
+                  isSecondDialogOpen &&
+                  SelectedMonitoringType.length > 0 && (
+                    <div className="">
+                      <ItemSelection
+                        handlePostHostCreation={handlePostHostCreation}
+                        moniteringTypes={SelectedMonitoringType}
+                        local_host_id={localHostId}
+                      />
+                    </div>
+                  )
                 )}
               </div>
-              <DialogFooter>
-                <Button className="cursor-pointer">Confirm</Button>
-              </DialogFooter>
             </DialogContent>
           </Dialog>
 
           <CardFooter className="flex justify-end gap-2">
-            <Button variant="outline" size="sm" onClick={() => onEdit(device)}>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onEdit(device)}
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/80"
+            >
               <Edit className="h-4 w-4 mr-2" />
               Edit
             </Button>
@@ -231,6 +290,7 @@ export function DeviceList({
               variant="destructive"
               size="sm"
               onClick={() => onDelete(device.id)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               <Trash2 className="h-4 w-4 mr-2" />
               Delete

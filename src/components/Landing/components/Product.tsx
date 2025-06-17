@@ -1,155 +1,109 @@
-import { Activity, Server, Cloud, Code } from "lucide-react";
-import { motion } from "framer-motion";
-import { useRef, useEffect } from "react";
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { AnimatedBackground } from "./AnimatedBackground"; // Assuming AnimatedBackground is in the same directory
+import {
+  Activity,
+  AlertCircle,
+  Cloud,
+  LayoutDashboard,
+  Shield,
+  FileText,
+} from "lucide-react"; // Importing relevant icons
 
-import Ai from "@/components/asset/ai.png";
-
-const monitoringCards = [
-  {
-    title: "Network Monitoring",
-    icon: <Activity className="w-8 h-8 text-[var(--secondary)]" />,
-    description:
-      "Real-time network performance monitoring with AI-powered insights",
-    image:
-      "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=2000",
-  },
-  {
-    title: "Server Monitoring",
-    icon: <Server className="w-8 h-8 text-[var(--secondary)]" />,
-    description:
-      "Comprehensive server health monitoring and predictive maintenance",
-    image:
-      "https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&q=80&w=2000",
-  },
-  {
-    title: "Cloud Monitoring",
-    icon: <Cloud className="w-8 h-8 text-[var(--secondary)]" />,
-    description: "Multi-cloud infrastructure monitoring and optimization",
-    image:
-      "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&q=80&w=2000",
-  },
-  {
-    title: "Application Monitoring",
-    icon: <Code className="w-8 h-8 text-[var(--secondary)]" />,
-    description: "End-to-end application performance monitoring and debugging",
-    image:
-      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=2000",
-  },
-];
-export function Product() {
-  const productRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLHeadingElement>(null);
-
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            headingRef.current?.classList.remove("typing-animation");
-            void headingRef.current?.offsetWidth; // Trigger reflow
-            headingRef.current?.classList.add("typing-animation");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (headingRef.current) {
-      observer.observe(headingRef.current);
-    }
-
-    return () => {
-      if (headingRef.current) {
-        observer.unobserve(headingRef.current);
-      }
-    };
-  }, []);
+export const ProductSection: React.FC = () => {
+  const products = [
+    {
+      icon: LayoutDashboard,
+      title: "Real-time Dashboards",
+      description:
+        "Visualize your infrastructure and application health with customizable, interactive dashboards.",
+    },
+    {
+      icon: AlertCircle,
+      title: "Intelligent Alerting",
+      description:
+        "Receive proactive, AI-driven alerts for anomalies and critical events, minimizing downtime.",
+    },
+    {
+      icon: FileText,
+      title: "Comprehensive Log Management",
+      description:
+        "Centralized collection, analysis, and storage of logs for quick troubleshooting and auditing.",
+    },
+    {
+      icon: Activity,
+      title: "Performance Analytics",
+      description:
+        "Deep insights into application performance metrics to identify bottlenecks and optimize efficiency.",
+    },
+    {
+      icon: Shield,
+      title: "Security Monitoring",
+      description:
+        "Detect and respond to security threats and vulnerabilities across your entire stack.",
+    },
+    {
+      icon: Cloud,
+      title: "Cloud & Hybrid Integration",
+      description:
+        "Monitor seamlessly across on-premise, cloud, and hybrid environments with unified visibility.",
+    },
+  ];
 
   return (
-    <div
+    <section
       id="products"
-      ref={productRef}
-      className="relative py-20 my-24 px-4 justify-center overflow-hidden dark:border-b-slate-700 min-h-screen"
+      className="relative py-20 min-h-screen flex items-center overflow-hidden transition-colors duration-900"
     >
-      {/* Animated background overlay */}
+      {/* Animated Background */}
+      <AnimatedBackground />
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <h4
-          ref={headingRef}
-          className="flex items-center text-3xl md:text-3xl font-bold mb-14 text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary)] via-[var(--secondary)] to-[var(--accent)] typing-animation"
-        >
-          <img src={Ai} alt="AI Icon" className="w-8 h-8 mr-2" />
-          Comprehensive monitoring solutions powered by advanced AI
-        </h4>
-        <style jsx>{`
-          .typing-animation {
-            overflow: hidden;
-            white-space: nowrap;
-            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-          }
+      {/* Gradient overlays for depth - consistent with Hero and Footer */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-background/80"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50"></div>
 
-          @keyframes typing {
-            from {
-              width: 0;
-            }
-            to {
-              width: 100%;
-            }
-          }
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center mb-16 space-y-6 animate-fade-in">
+          {/* Badge */}
+          <div className="inline-flex items-center space-x-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2">
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-primary">
+              What We Offer
+            </span>
+          </div>
 
-          @keyframes blink-caret {
-            from, to {
-              border-color: transparent;
-            }
-            50% {
-              border-color: orange;
-            }
-          }
-        `}</style>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {monitoringCards.map((card, index) => (
-            <motion.div
-              key={index}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm border border-purple-500/20 p-8 rounded-2xl hover:shadow-[0_0_30px_rgba(59,130,246,0.3)] transition-all duration-500 hover:transform hover:scale-105 group"
-              animate={{ x: [0, 20, 0] }} // Sliding effect
-              transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
-              whileHover={{ x: 0 }} // Stop sliding on hover
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
+            Our Powerful{" "}
+            <span className="block text-primary">Product Suite</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Explore the comprehensive features and solutions designed to bring
+            clarity, automation, and control to your complex IT environments.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products.map((product, index) => (
+            <Card
+              key={product.title}
+              className="p-6 bg-card/50 backdrop-blur-sm border-border/50 hover:bg-card/80 transition-all duration-300 transform hover:-translate-y-2 animate-scale-in"
+              style={{ animationDelay: `${0.2 * index}s` }}
             >
-              <motion.div 
-                className="h-48 overflow-hidden"
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <img
-                  src={card.image}
-                  alt={card.title}
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-              <div className="p-6">
-                <motion.div 
-                  className="flex items-center mb-4"
-                  whileHover={{ x: 5 }}
-                >
-                  <motion.div
-                    whileHover={{ rotate: 360 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    {card.icon}
-                  </motion.div>
-                  <h3 className="text-xl font-semibold ml-2 text-white group-hover:text-purple-300 transition-colors duration-300">
-                    {card.title}
-                  </h3>
-                </motion.div>
-                <p className="text-gray-300 group-hover:text-white transition-colors duration-300">
-                  {card.description}
+              <div className="space-y-4">
+                <div className="w-12 h-12 bg-primary/10 text-primary flex items-center justify-center rounded-lg shadow-sm">
+                  <product.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-xl font-semibold text-foreground">
+                  {product.title}
+                </h3>
+                <p className="text-base text-muted-foreground leading-relaxed">
+                  {product.description}
                 </p>
               </div>
-            </motion.div>
+            </Card>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
-}
+};

@@ -1,5 +1,5 @@
+import { useEffect } from "react"; // Added React import
 import { Shield, Zap, Database, Check, Crown } from "lucide-react";
-// import { Shield, Zap, Database, Check, Crown, Play } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedPlane } from "@/components/Landing/LandingSlice";
@@ -14,36 +14,25 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/app/store";
-import { useEffect, useState } from "react";
 
 import { setOrganization } from "../../Home/company/companySclice";
 import type { OrganizationDataInfrence } from "../../Home/company/companySclice";
 
-import { motion } from "framer-motion";
+import { AnimatedBackground } from "./AnimatedBackground"; // Import AnimatedBackground
 
-type Position = "center" | "left1" | "left" | "right" | "right1";
-
-// Define the type for the image variants
-type ImageVariants = {
-  [key in Position]: {
-    x: string;
-    scale: number;
-    zIndex: number;
-  };
-};
-
+// Updated icons to directly use Tailwind classes
 const icons = [
   {
-    icon: <Shield className="w-12 h-12 text-[var(--primary)]" />,
+    icon: <Shield className="w-12 h-12 text-primary" />,
   },
   {
-    icon: <Zap className="w-12 h-12 text-[var(--primary)]" />,
+    icon: <Zap className="w-12 h-12 text-primary" />,
   },
   {
-    icon: <Database className="w-12 h-12 text-[var(--primary)]" />,
+    icon: <Database className="w-12 h-12 text-primary" />,
   },
   {
-    icon: <Crown className="w-12 h-12 text-[var(--primary)]" />,
+    icon: <Crown className="w-12 h-12 text-primary" />,
   },
 ];
 
@@ -52,41 +41,6 @@ interface PricingProps {
 }
 
 export function Pricing({ showSelectedPlan = false }: PricingProps) {
-  // Type the state as an array of numbers
-  const [positionIndexes, setPositionIndexes] = useState<number[]>([
-    0, 1, 2, 3, 4,
-  ]);
-
-  const handleNext = (): void => {
-    setPositionIndexes((prevIndexes) => {
-      const updatedIndexes = prevIndexes.map(
-        (prevIndex) => (prevIndex + 1) % 5
-      );
-      return updatedIndexes;
-    });
-  };
-
-  const handleBack = (): void => {
-    setPositionIndexes((prevIndexes) => {
-      const updatedIndexes = prevIndexes.map(
-        (prevIndex) => (prevIndex + 4) % 5
-      );
-      return updatedIndexes;
-    });
-  };
-
-  // Type the positions array
-  const positions: Position[] = ["center", "left1", "left", "right", "right1"];
-
-  // Type the imageVariants object
-  const imageVariants: ImageVariants = {
-    center: { x: "0%", scale: 1, zIndex: 5 },
-    left1: { x: "-50%", scale: 0.7, zIndex: 3 },
-    left: { x: "-90%", scale: 0.5, zIndex: 2 },
-    right: { x: "90%", scale: 0.5, zIndex: 1 },
-    right1: { x: "50%", scale: 0.7, zIndex: 3 },
-  };
-
   const organizationData = useSelector(
     (state: RootState) => state.companyInfo.organizationData
   );
@@ -115,16 +69,12 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
     const type =
       selectedPlan?.name.toLowerCase() === "Individual plan".toLowerCase();
 
-    console.log("selected plan: ", selectedPlan);
-    console.log("type: ", type);
-
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
       is_private: type,
     };
 
     dispatch(setOrganization(updatedData));
-    console.log("updated data: ", updatedData);
   };
 
   useEffect(() => {
@@ -132,23 +82,52 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
   }, []);
 
   if (isLoading || !plansData) {
-    return <div className="text-center py-12 text-white">Loading plans...</div>;
+    return (
+      <div className="relative min-h-screen py-20 flex items-center justify-center overflow-hidden">
+        <AnimatedBackground />
+        <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-background/80"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50"></div>
+        <div className="relative z-10 text-center text-foreground">
+          Loading plans...
+        </div>
+      </div>
+    );
   }
 
   const sortedPlansData = plansData.slice().sort((a, b) => a.price - b.price);
 
   return (
-    <div
+    <section
       id="pricing"
-      className="py-20 border-b-[1px] justify-center overflow-hidden dark:border-b-slate-700"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden transition-colors duration-900 py-20 px-4 sm:px-6 lg:px-8"
     >
-      <div className="max-w-max mx-auto">
-        <h2 className="text-xl md:text-3xl font-bold mb-6 text-center text-white">
-          Flexible Plans <br />
-          for Every Need
-        </h2>
+      {/* Animated Background */}
+      <AnimatedBackground />
 
-        <div className="flex flex-row justify-center gap-8">
+      {/* Gradient overlays for depth - consistent with Hero and Footer */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-background/80"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50"></div>
+
+      <div className="relative z-10 max-w-7xl mx-auto">
+        {/* Section Heading */}
+        <div className="text-center mb-12 space-y-4">
+          <div className="inline-flex items-center space-x-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2">
+            <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+            <span className="text-sm font-medium text-primary">
+              Pricing & Plans
+            </span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
+            Flexible Plans for Every Need
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Choose the perfect plan that scales with your infrastructure and
+            monitoring requirements.
+          </p>
+        </div>
+
+        {/* Pricing Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sortedPlansData
             .filter(
               (plan) =>
@@ -158,127 +137,91 @@ export function Pricing({ showSelectedPlan = false }: PricingProps) {
                 )
             )
             .map((plan, index) => (
-              <motion.div
-                key={index}
-                className="rounded-[12px] shadow-lg"
-                initial="center"
-                animate={positions[positionIndexes[index]]}
-                variants={imageVariants}
-                transition={{ duration: 0.5 }}
-                style={{ width: "30%", position: "absolute" }}
-              >
-                <Card
-                  key={plan.id}
-                  className={`bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-2xl border border-purple-500/20 transition-all duration-300 hover:scale-105  
+              <Card
+                key={plan.id}
+                className={`p-6 bg-card/50 backdrop-blur-sm border-border/50 transition-all duration-300 hover:scale-[1.02] hover:bg-card/80 group flex flex-col justify-between 
                   ${
                     selectedPlan === plan.id && showSelectedPlan
-                      ? "ring-2 ring-[var(--primary)]"
+                      ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
                       : ""
-                  }
-                  ${
-                    !showSelectedPlan ? "hover:border-[var(--secondary)]" : ""
                   }`}
-                  style={{
-                    height: "80%",
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <div className="relative pt-4">
-                    <CardHeader>
-                      <div className="flex justify-center mb-4">
-                        {icons[index % icons.length].icon}
-                      </div>
-                      <CardTitle className="text-white group-hover:text-purple-300 transition-colors duration-300">
-                        {plan.name}
-                      </CardTitle>
-                      <CardDescription className="text-white group-hover:text-gray-300 transition-colors duration-300">
-                        {plan.description}
-                      </CardDescription>
-                    </CardHeader>
+              >
+                <CardHeader className="text-center pb-4">
+                  <div className="flex justify-center mb-4">
+                    {icons[index % icons.length].icon}
                   </div>
+                  <CardTitle className="text-foreground text-2xl group-hover:text-primary transition-colors duration-300">
+                    {plan.name}
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground text-sm">
+                    {plan.description}
+                  </CardDescription>
+                </CardHeader>
 
-                  <CardContent>
-                    <div className="text-center mb-6">
-                      <div className="flex items-baseline justify-center text-white">
-                        <span className="text-4xl font-bold">
-                          ${plan.price}
-                        </span>
-                        <span className="ml-2">/month</span>
-                      </div>
-                      <div className="space-y-2 mt-4">
-                        {plan.deduction.map((discount) => (
-                          <Badge
-                            key={discount.duration}
-                            variant="secondary"
-                            className="mr-2 bg-[var(--acent)] text-[var(--primary)] dark:bg-[var(--acent)]/30"
-                          >
-                            Save {discount.percentage}% on {discount.duration}{" "}
-                            plan
-                          </Badge>
-                        ))}
-                      </div>
+                <CardContent className="flex-grow flex flex-col justify-between pt-0">
+                  <div className="text-center mb-6">
+                    <div className="flex items-baseline justify-center text-foreground">
+                      <span className="text-5xl font-bold">${plan.price}</span>
+                      <span className="ml-2 text-muted-foreground">/month</span>
                     </div>
-
-                    <div className="space-y-3">
-                      {plan.features.map((feature, featureIndex) => (
-                        <div key={featureIndex} className="flex items-center">
-                          <Check className="w-5 h-5 text-[var(--primary)] mr-3" />
-                          <span className="text-sm text-white">{feature}</span>
-                        </div>
+                    <div className="space-y-2 mt-4">
+                      {plan.deduction.map((discount) => (
+                        <Badge
+                          key={discount.duration}
+                          variant="outline"
+                          className="mr-2 bg-primary/10 text-primary border-primary/20"
+                        >
+                          Save {discount.percentage}% on {discount.duration}{" "}
+                          plan
+                        </Badge>
                       ))}
                     </div>
+                  </div>
 
-                    {showSelectedPlan ? (
-                      <Button
-                        className={`w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105 ${
-                          selectedPlan === plan.id
-                            ? "bg-[var(--secondary)]"
-                            : ""
-                        }`}
-                        onClick={() => handlePlanSelect(plan.id)}
-                      >
-                        {selectedPlan === plan.id ? "Selected" : "Select Plan"}
-                      </Button>
-                    ) : isAuthenticated ? (
-                      <Button
-                        className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
-                        onClick={() => handlePlanSelect(plan.id)}
-                      >
-                        Select Plan
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => handlePlanSelect(plan.id)}
-                        className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
-                        asChild
-                      >
-                        <Link to="/auth">Get Started</Link>
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-              </motion.div>
+                  <div className="space-y-3 mb-6">
+                    {plan.features.map((feature, featureIndex) => (
+                      <div key={featureIndex} className="flex items-center">
+                        <Check className="w-5 h-5 text-primary mr-3" />
+                        <span className="text-sm text-muted-foreground">
+                          {feature}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {showSelectedPlan ? (
+                    <Button
+                      size="lg"
+                      className={`w-full mt-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all duration-300 ${
+                        selectedPlan === plan.id ? "bg-primary/80" : ""
+                      }`}
+                      onClick={() => handlePlanSelect(plan.id)}
+                    >
+                      {selectedPlan === plan.id ? "Selected" : "Select Plan"}
+                    </Button>
+                  ) : isAuthenticated ? (
+                    <Button
+                      size="lg"
+                      className="w-full mt-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all duration-300"
+                      onClick={() => handlePlanSelect(plan.id)}
+                    >
+                      Select Plan
+                    </Button>
+                  ) : (
+                    <Button
+                      size="lg"
+                      onClick={() => handlePlanSelect(plan.id)}
+                      className="w-full mt-auto bg-primary hover:bg-primary/90 text-primary-foreground shadow-md transition-all duration-300"
+                      asChild
+                    >
+                      <Link to="/auth">Get Started</Link>
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
             ))}
         </div>
-
-        <div className="flex flex-row justify-between mt-150">
-          <button
-            className="text-white bg-indigo-400 rounded-md py-2 px-4"
-            onClick={handleBack}
-          >
-            Back
-          </button>
-          <button
-            className="text-white bg-indigo-400 rounded-md py-2 px-4"
-            onClick={handleNext}
-          >
-            Next
-          </button>
-        </div>
       </div>
-    </div>
+    </section>
   );
 }

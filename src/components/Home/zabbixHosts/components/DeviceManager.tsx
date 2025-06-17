@@ -41,16 +41,13 @@ type Hosts = {
   network_device_type: string;
   host_group: number;
 };
-type availabilityResponse = {
-  status: string;
-  message: string;
-};
 
 export function DeviceManager() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deviceType, setDeviceType] = useState<"vm" | "network">("vm");
+  const [deviceSource, setDeviceSource] = useState<"local" | "hosted">("local");
   const [pendingData, setPendingData] = useState<any>(null);
   const [editingDevice, setEditingDevice] = useState<any>(null);
   const [deletingDeviceId, setDeletingDeviceId] = useState<string | null>(null);
@@ -62,11 +59,20 @@ export function DeviceManager() {
   const [updateHost] = useUpdateLocalHostMutation();
   const [deleteHost] = useDeleteLocalHostMutation();
 
-  const hosts = Array.isArray(data?.data) ? data.data : [];
+  const hosted_devices = data?.data?.hosted_hosts || [];
+  const local_hosts = data?.data?.local_hosts || [];
 
-  const vms = hosts.filter((host: Hosts) => host.device_type === "vm");
-  const networkDevices = hosts.filter(
-    (host: Hosts) => host.device_type === "network"
+  const local_hosts_vm = local_hosts.filter(
+    (device: Hosts) => device.device_type === "vm"
+  );
+  const local_hosts_network = local_hosts.filter(
+    (device: Hosts) => device.device_type === "network"
+  );
+  const hosted_devices_vm = hosted_devices.filter(
+    (device: Hosts) => device.device_type === "vm"
+  );
+  const hosted_devices_network = hosted_devices.filter(
+    (device: Hosts) => device.device_type === "network"
   );
 
   const handleSubmit = (data: any) => {
@@ -100,7 +106,6 @@ export function DeviceManager() {
       setPendingData(null);
       setIsConfirmDialogOpen(false);
     } catch (error: any) {
-      console.error(error);
       toast.error(
         error.data?.message || error.error || "Failed to create device"
       );
@@ -205,14 +210,14 @@ export function DeviceManager() {
   return (
     <div className="container mx-auto py-8">
       <Tabs
-        defaultValue="vm"
+        defaultValue="local"
         className="w-full"
-        onValueChange={(value) => setDeviceType(value as "vm" | "network")}
+        onValueChange={(value) => setDeviceSource(value as "local" | "hosted")}
       >
         <div className="flex justify-between items-center mb-6 dark:border-2 dark:bg-black dark:text-white">
-          <TabsList>
-            <TabsTrigger value="vm">Virtual Machines</TabsTrigger>
-            <TabsTrigger value="network">Network Devices</TabsTrigger>
+          <TabsList className="grid w-[400px] grid-cols-2">
+            <TabsTrigger value="local">Local Devices</TabsTrigger>
+            <TabsTrigger value="hosted">Hosted Devices</TabsTrigger>
           </TabsList>
           <Button
             onClick={() => {
@@ -226,23 +231,68 @@ export function DeviceManager() {
           </Button>
         </div>
 
-        <TabsContent value="vm">
-          <DeviceList
-            devices={vms}
-            type="vm"
-            isLoading={isLoading}
-            onEdit={openEditForm}
-            onDelete={openDeleteDialog}
-          />
+        <TabsContent value="local" className="mt-6">
+          <Tabs
+            defaultValue="vm"
+            className="w-full"
+            onValueChange={(value) => setDeviceType(value as "vm" | "network")}
+          >
+            <TabsList className="w-[400px] mb-6">
+              <TabsTrigger value="vm">VM Devices</TabsTrigger>
+              <TabsTrigger value="network">Network Devices</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="vm">
+              <DeviceList
+                devices={local_hosts_vm}
+                type="vm"
+                isLoading={isLoading}
+                onEdit={openEditForm}
+                onDelete={openDeleteDialog}
+              />
+            </TabsContent>
+            <TabsContent value="network">
+              <DeviceList
+                devices={local_hosts_network}
+                type="network"
+                isLoading={isLoading}
+                onEdit={openEditForm}
+                onDelete={openDeleteDialog}
+              />
+            </TabsContent>
+          </Tabs>
         </TabsContent>
-        <TabsContent value="network">
-          <DeviceList
-            devices={networkDevices}
-            type="network"
-            isLoading={isLoading}
-            onEdit={openEditForm}
-            onDelete={openDeleteDialog}
-          />
+
+        <TabsContent value="hosted" className="mt-6">
+          <Tabs
+            defaultValue="vm"
+            className="w-full"
+            onValueChange={(value) => setDeviceType(value as "vm" | "network")}
+          >
+            <TabsList className="w-[400px] mb-6">
+              <TabsTrigger value="vm">VM Devices</TabsTrigger>
+              <TabsTrigger value="network">Network Devices</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="vm">
+              <DeviceList
+                devices={hosted_devices_vm}
+                type="vm"
+                isLoading={isLoading}
+                onEdit={openEditForm}
+                onDelete={openDeleteDialog}
+              />
+            </TabsContent>
+            <TabsContent value="network">
+              <DeviceList
+                devices={hosted_devices_network}
+                type="network"
+                isLoading={isLoading}
+                onEdit={openEditForm}
+                onDelete={openDeleteDialog}
+              />
+            </TabsContent>
+          </Tabs>
         </TabsContent>
       </Tabs>
 

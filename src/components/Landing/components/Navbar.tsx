@@ -24,12 +24,12 @@ interface RouteProps {
 
 const routeList: RouteProps[] = [
   {
-    href: "#features",
-    label: "Features",
-  },
-  {
     href: "#products",
     label: "Products",
+  },
+  {
+    href: "#features",
+    label: "Features",
   },
   {
     href: "#pricing",
@@ -44,14 +44,14 @@ const routeList: RouteProps[] = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
-    <header className="sticky top-0 z-40 w-full bg-gradient-to-br from-slate-900 to-slate-800 py-2 text-white shadow-lg">
+    <header className="inverted-header-theme transition-colors duration-900 sticky top-0 z-40 w-full bg-background py-2 text-foreground shadow-lg">
       <NavigationMenu className="mx-auto">
         <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between">
           <NavigationMenuItem className="font-bold flex">
-            <Link to="/" className="flex items-center">
+            <a href="#" className="flex items-center">
               <Activity className="h-8 w-8 text-[var(--primary)]" />
               <span className="ml-2 text-xl font-bold">MoniPro</span>
-            </Link>
+            </a>
           </NavigationMenuItem>
 
           {/* mobile */}
@@ -119,7 +119,7 @@ export function Navbar() {
           <div className="hidden md:flex gap-2">
             <Link
               to="/auth"
-              className={`text-[var(--white)] text-white border ${buttonVariants({ variant: "secondary" })}`}
+              className=" bg-accent text-accent-foreground px-4 py-2 rounded-md"
             >
               Login{" "}
             </Link>
