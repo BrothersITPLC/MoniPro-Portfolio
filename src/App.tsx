@@ -12,7 +12,9 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
+
 import { CompanyInfo } from "@/components/Home/company/components/CompanyInfo";
+
 import { PaymentStep } from "@/components/Home/company/components/PaymentStep";
 import { PaymentVerification } from "@/components/Home/company/components/PaymentVerification";
 
@@ -32,6 +34,7 @@ import { GoogleCallback } from "./components/Auth/components/GoogleCallback";
 import { PersonalInfoUpdate } from "@/components/Auth/components/PersonalInfoUpdate/PersonalInfoUpdate";
 import { Updatebillingcycle } from "./components/Home/company/components/UpdateBillingcycle";
 import { UpdatePricing } from "./components/Home/company/components/UpdatePricingcycle";
+
 
 function App() {
   return (
@@ -97,3 +100,4 @@ function App() {
 }
 
 export default App;
+//hi
