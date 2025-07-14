@@ -1,5 +1,5 @@
 import {
-  Building2,
+  User,
   Globe,
   Phone,
   FileText,
@@ -23,14 +23,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/app/store";
-import { setOrganization } from "../companySclice";
-import type { OrganizationDataInfrence } from "../companySclice";
+import { setOrganization } from "../../companySclice";
+import type { OrganizationDataInfrence } from "../../companySclice";
+
 interface PlanSelectionProps {
   onNext: (step: number) => void;
 }
-
-const CompanyInfoSchema = z.object({
-  organization_name: z.string().min(1, "Company name is required"),
+const personalInfoSchema = z.object({
+  first_name: z.string().min(1, "first name name is required"),
+  last_name: z.string().min(1, "last name name name is required"),
   organization_phone: z
     .string()
     .regex(
@@ -40,20 +41,22 @@ const CompanyInfoSchema = z.object({
   organization_website: z.string().optional(),
   organization_description: z.string().optional(),
 });
-
-export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
-
-  const selectedPlan = useSelector((state: RootState) => state.landing.SelectedPlane);
-
+export function PersonalInfoStep({ onNext }: PlanSelectionProps) {
   const dispatch = useDispatch();
+
+  const selectedPlan = useSelector(
+    (state: RootState) => state.landing.SelectedPlane
+  );
+
   const organizationData = useSelector(
     (state: RootState) => state.companyInfo.organizationData
   );
 
-  const form = useForm<z.infer<typeof CompanyInfoSchema>>({
-    resolver: zodResolver(CompanyInfoSchema),
+  const form = useForm<z.infer<typeof personalInfoSchema>>({
+    resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      organization_name: organizationData?.organization_name || "",
+      first_name: organizationData?.first_name || "",
+      last_name: organizationData?.last_name || "",
       organization_phone: organizationData?.organization_phone || "",
       organization_website: organizationData?.organization_website || "",
       organization_description:
@@ -61,7 +64,7 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof CompanyInfoSchema>) => {
+  const onSubmit = (data: z.infer<typeof personalInfoSchema>) => {
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
       ...data,
@@ -77,8 +80,9 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
     <div className="max-w-3xl mx-auto py-10 mt-10">
       <Card className="border-none shadow-none">
         <CardHeader className="space-y-1">
-      
+          {/* <CardTitle className="text-2xl font-bold">Personal Information</CardTitle> */}
         </CardHeader>
+
         <CardContent>
           <Form {...form}>
             <form
@@ -88,16 +92,16 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
-                  name="organization_name"
+                  name="first_name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex items-center gap-2 text-base">
-                        <Building2 className="h-5 w-5 text-muted-foreground" />
-                        Company Name
+                        <User className="h-5 w-5 text-muted-foreground" />
+                        First Name
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Enter your organization name"
+                          placeholder="Enter your first name"
                           {...field}
                           className="border-border/60 focus-visible:ring-primary/20 h-11 text-base"
                         />
@@ -108,12 +112,35 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
                 />
                 <FormField
                   control={form.control}
+                  name="last_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2 text-base">
+                        <User className="h-5 w-5 text-muted-foreground" />
+                        Last Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your last name"
+                          {...field}
+                          className="border-border/60 focus-visible:ring-primary/20 h-11 text-base"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <FormField
+                  control={form.control}
                   name="organization_phone"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex items-center gap-2">
                         <Phone className="h-4 w-4 text-muted-foreground" />
-                        Company Phone
+                        Phone Number
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -126,28 +153,27 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="organization_website"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center gap-2">
+                        <Globe className="h-4 w-4 text-muted-foreground" />
+                        Personal Website
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="https://yourwebsite.com"
+                          {...field}
+                          className="border-border/60 focus-visible:ring-primary/20"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-
-              <FormField
-                control={form.control}
-                name="organization_website"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex items-center gap-2">
-                      <Globe className="h-4 w-4 text-muted-foreground" />
-                      Company Website
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="https://yourcompany.com"
-                        {...field}
-                        className="border-border/60 focus-visible:ring-primary/20"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <FormField
                 control={form.control}
@@ -156,13 +182,13 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
                   <FormItem>
                     <FormLabel className="flex items-center gap-2">
                       <FileText className="h-4 w-4 text-muted-foreground" />
-                      Company Description
+                      Description
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Tell us about your company, products, and services..."
-                        className="min-h-[120px] border-border/60 focus-visible:ring-primary/20"
+                        placeholder="Tell us about yourself..."
                         {...field}
+                        className="border-border/60 focus-visible:ring-primary/20 min-h-[120px]"
                       />
                     </FormControl>
                     <FormMessage />

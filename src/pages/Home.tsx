@@ -4,6 +4,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { useEffect } from "react";
 import { ModeToggle } from "@/components/Global/ModeToggle";
 import { Outlet } from "react-router-dom";
+import { NavUser } from "@/components/Home/nav-user";
 
 export function Home() {
   const { data: deviceList, refetch } = useGetInfrastructureListQuery(
@@ -16,7 +17,6 @@ export function Home() {
     refetch();
   }, [deviceList, refetch]);
 
-  // Get the first item if deviceList is an array, or use the deviceList directly if it's already the correct shape
   const sidebarDeviceList = Array.isArray(deviceList)
     ? deviceList[0]
     : deviceList;
@@ -24,14 +24,19 @@ export function Home() {
   return (
     <SidebarProvider>
       <AppSidebar deviceList={sidebarDeviceList} />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 w-full justify-between p-5">
+      <SidebarInset className="flex flex-col h-screen overflow-hidden">
+        <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-4 bg-background border-b border-border transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 w-full justify-between px-6">
           <div></div>
-          <ModeToggle />
+          <div className="flex items-center gap-4">
+            <NavUser />
+            <ModeToggle />
+          </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <Outlet />
-        </div>
+        <main className="flex-1 overflow-auto">
+          <div className="flex flex-1 flex-col gap-4 p-4">
+            <Outlet />
+          </div>
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

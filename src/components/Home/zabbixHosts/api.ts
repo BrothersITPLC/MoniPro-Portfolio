@@ -5,6 +5,7 @@ export const hostApi = createApi({
   reducerPath: "hostApi",
   baseQuery: baseQueryWithReauth,
   refetchOnMountOrArgChange: 3,
+  tagTypes: ["LocalHosts"],
   endpoints: (builder) => ({
     GetZabixHostes: builder.query({
       query: () => ({
@@ -21,11 +22,75 @@ export const hostApi = createApi({
       }),
     }),
 
+    getTemplateNames: builder.query({
+      query: (params) => ({
+        url: `/template-name/?hostids=${params.hostids}`,
+        method: "GET",
+      }),
+    }),
+
     createHost: builder.mutation({
       query: (HostData) => ({
         url: "/zabbix-hosts/",
         method: "POST",
         body: HostData,
+      }),
+    }),
+
+    getLocalHosts: builder.query({
+      query: () => ({
+        url: "/local-hosts/",
+        method: "GET",
+      }),
+      providesTags: ["LocalHosts"],
+    }),
+
+    createLocalHost: builder.mutation({
+      query: (hostData) => ({
+        url: "/local-hosts/",
+        method: "POST",
+        body: hostData,
+      }),
+      invalidatesTags: ["LocalHosts"],
+    }),
+
+    updateLocalHost: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/local-hosts/${id}/`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["LocalHosts"],
+    }),
+
+    deleteLocalHost: builder.mutation({
+      query: (id) => ({
+        url: `/local-hosts/${id}/`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["LocalHosts"],
+    }),
+    getMonitoringCategoryAndTemplates: builder.query({
+      query: () => ({
+        url: "/monitoring-category-templates/",
+        method: "GET",
+      }),
+    }),
+    checkHostAvailability: builder.query({
+      query: ({ host, isDomain }) => ({
+        url: "reachability/",
+        method: "GET",
+        params: {
+          host,
+          is_domain: isDomain.toString(),
+        },
+      }),
+    }),
+    PostHostCreation: builder.mutation({
+      query: (hostData) => ({
+        url: "/post-host-creation/",
+        method: "POST",
+        body: hostData,
       }),
     }),
   }),
@@ -34,4 +99,13 @@ export const {
   useGetZabixHostesQuery,
   useGetHostItemsQuery,
   useCreateHostMutation,
+  useGetLocalHostsQuery,
+  useCreateLocalHostMutation,
+  useUpdateLocalHostMutation,
+  useDeleteLocalHostMutation,
+  useCheckHostAvailabilityQuery,
+  useLazyCheckHostAvailabilityQuery,
+  useGetMonitoringCategoryAndTemplatesQuery,
+  usePostHostCreationMutation,
+  useGetTemplateNamesQuery,
 } = hostApi;

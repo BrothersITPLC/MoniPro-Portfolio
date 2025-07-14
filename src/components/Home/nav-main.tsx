@@ -76,7 +76,7 @@ export function NavMain({
 
   return (
     <SidebarGroup className="px-4">
-      <SidebarGroupLabel className="text-[var(--primary)] dark:text-[var(--primary-dark)] text-base font-semibold mb-6 uppercase tracking-wider">
+      <SidebarGroupLabel className="text-primary font-semibold mb-6 uppercase tracking-wider">
         Platform
       </SidebarGroupLabel>
       <SidebarMenu className="space-y-2">
@@ -91,21 +91,20 @@ export function NavMain({
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton
                   tooltip={item.title}
-                  className="hover:bg-[var(--light)] dark:hover:bg-[var(--dark-accent)] 
-                           text-[var(--text-heading)] dark:text-[var(--text-heading-dark)]
-                           hover:text-[var(--primary)] dark:hover:text-[var(--primary-dark)]
-                           data-[active=true]:bg-[var(--light)] dark:data-[active=true]:bg-[var(--neutral-bg)]
-                           data-[active=true]:text-[var(--primary)] dark:data-[active=true]:text-[var(--primary-dark)]
+                  className="hover:bg-accent/50 text-foreground
+                           hover:text-primary
+                           data-[active=true]:bg-accent/50
+                           data-[active=true]:text-primary
                            rounded-lg transition-all duration-200 py-3 px-4
-                           hover:shadow-sm dark:hover:shadow-none"
+                           hover:shadow-sm"
                   isActive={activeItems[item.title] || item.isActive}
                 >
                   {item.icon && (
                     <item.icon
                       className={`size-6 ${
                         activeItems[item.title] || item.isActive 
-                          ? "text-[var(--primary)] dark:text-[var(--primary-dark)]" 
-                          : "text-[var(--secondary)] dark:text-[var(--secondary-dark)]"
+                          ? "text-primary" 
+                          : "text-muted-foreground"
                       }`}
                     />
                   )}
@@ -122,8 +121,8 @@ export function NavMain({
                     className={`ml-auto size-5 transition-transform duration-300 
                               group-data-[state=open]/collapsible:rotate-90 ${
                                 activeItems[item.title] || item.isActive
-                                  ? "text-[var(--primary)] dark:text-[var(--primary-dark)]"
-                                  : "text-[var(--secondary)] dark:text-[var(--secondary-dark)]"
+                                  ? "text-primary"
+                                  : "text-muted-foreground"
                               }`}
                   />
                 </SidebarMenuButton>
@@ -144,15 +143,15 @@ export function NavMain({
                           <Link
                             to={subItem.url}
                             className="flex items-center py-2.5 px-3 text-[14px] font-medium
-                                   text-[var(--text-muted)] dark:text-[var(--text-muted-dark)]
-                                   hover:text-[var(--primary)] dark:hover:text-[var(--primary-dark)]
+                                   text-muted-foreground
+                                   hover:text-primary
                                    rounded-md
-                                   hover:bg-[var(--light)] dark:hover:bg-[var(--dark-accent)]
+                                   hover:bg-accent/50
                                    transition-all duration-200
-                                   data-[active=true]:text-[var(--primary)] dark:data-[active=true]:text-[var(--primary-dark)]
-                                   data-[active=true]:bg-[var(--light)] dark:data-[active=true]:bg-[var(--neutral-bg)]
+                                   data-[active=true]:text-primary
+                                   data-[active=true]:bg-accent/50
                                    data-[active=true]:font-semibold
-                                   hover:shadow-sm dark:hover:shadow-none"
+                                   hover:shadow-sm"
                           >
                             <span>{subItem.title}</span>
                           </Link>

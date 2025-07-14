@@ -4,8 +4,8 @@ import { CheckCircle2, Building2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "@/app/store";
-import { setOrganization } from "../companySclice";
-import type { OrganizationDataInfrence } from "../companySclice";
+import { setOrganization } from "../../companySclice";
+import type { OrganizationDataInfrence } from "../../companySclice";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -19,7 +19,6 @@ const subscriptionTypeSchema = z.object({
 
 interface PlanSelectionProps {
   onNext: (step: number) => void;
-  onPrevious: () => void;
 }
 
 export function PlanSelection({ onNext }: PlanSelectionProps) {
@@ -28,7 +27,9 @@ export function PlanSelection({ onNext }: PlanSelectionProps) {
     (state: RootState) => state.companyInfo.organizationData
   );
 
-  const [selected, setSelected] = useState<"company" | "individual" | null>(null);
+  const [selected, setSelected] = useState<"company" | "individual" | null>(
+    null
+  );
 
   const form = useForm<z.infer<typeof subscriptionTypeSchema>>({
     resolver: zodResolver(subscriptionTypeSchema),
@@ -42,8 +43,10 @@ export function PlanSelection({ onNext }: PlanSelectionProps) {
       ...organizationData,
       is_private: type,
       payment_provider: organizationData?.payment_provider ?? 0,
-      organization_payment_plan: organizationData?.organization_payment_plan ?? 0,
-      organization_payment_duration: organizationData?.organization_payment_duration ?? 0,
+      organization_payment_plan:
+        organizationData?.organization_payment_plan ?? 0,
+      organization_payment_duration:
+        organizationData?.organization_payment_duration ?? 0,
       user_id: organizationData?.user_id ?? 0,
       plan_type: organizationData?.plan_type ?? 0,
       organization_phone: organizationData?.organization_phone ?? "",
@@ -51,12 +54,13 @@ export function PlanSelection({ onNext }: PlanSelectionProps) {
       organization_name: organizationData?.organization_name ?? "",
       first_name: organizationData?.first_name ?? "",
       last_name: organizationData?.last_name ?? "",
-      organization_description: organizationData?.organization_description ?? "",
+      organization_description:
+        organizationData?.organization_description ?? "",
     };
 
     dispatch(setOrganization(updatedData));
 
-    console.log("this is the updated data:",  updatedData);
+    console.log("this is the updated data:", updatedData);
 
     form.setValue("is_private", type, { shouldValidate: true });
     setSelected(type ? "individual" : "company");
@@ -85,7 +89,9 @@ export function PlanSelection({ onNext }: PlanSelectionProps) {
         {/* Company Plan */}
         <Card
           className={`relative group cursor-pointer transition-all duration-300 hover:scale-105 ${
-            selected === "company" ? "bg-[url('/bg-company.png')] bg-cover ring-2 ring-[var(--secondary)]" : "hover:border-[var(--secondary)]"
+            selected === "company"
+              ? "bg-[url('/bg-company.png')] bg-cover ring-2 ring-[var(--secondary)]"
+              : "hover:border-[var(--secondary)]"
           }`}
           onClick={() => handleAccountTypeSelection(false)}
         >
@@ -109,7 +115,9 @@ export function PlanSelection({ onNext }: PlanSelectionProps) {
 
         <Card
           className={`relative group cursor-pointer transition-all duration-300 hover:scale-105 ${
-            selected === "individual" ? "bg-[url('/bg-individual.png')] bg-cover ring-2 ring-[var(--secondary)]" : "hover:border-[var(--secondary)]"
+            selected === "individual"
+              ? "bg-[url('/bg-individual.png')] bg-cover ring-2 ring-[var(--secondary)]"
+              : "hover:border-[var(--secondary)]"
           }`}
           onClick={() => handleAccountTypeSelection(true)}
         >
@@ -133,10 +141,7 @@ export function PlanSelection({ onNext }: PlanSelectionProps) {
       </div>
 
       <div className="mt-8 flex justify-center">
-        <Button
-          onClick={handleNext}
-          disabled={selected === null}
-        >
+        <Button onClick={handleNext} disabled={selected === null}>
           Next
         </Button>
       </div>

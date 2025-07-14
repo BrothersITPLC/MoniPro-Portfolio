@@ -17,7 +17,8 @@ export const ProtectedRoute = () => {
     location.pathname === "/logout" ||
     location.pathname === "/home/comp-info" ||
     location.pathname === "/home/private-info" ||
-    location.pathname === "/reset-password"
+    location.pathname === "/reset-password" ||
+    location.pathname.startsWith("/home/payment-verification/")
   ) {
     return <Outlet />;
   }
@@ -31,6 +32,15 @@ export const ProtectedRoute = () => {
   // Redirect to comp-info if organization info is not completed
   else if (!user?.organization_info_completed) {
     return <Navigate to="/home/comp-info" replace />;
+  } else if (
+    user.organization_info_completed &&
+    user.user_have_completed_payment !== "success"
+  ) {
+    // Only redirect if not already on payment page or payment verification page
+    if (!location.pathname.startsWith("/home/payment")) {
+      return <Navigate to="/home/payment" replace />;
+    }
+    return <Outlet />;
   }
 
   // Check permissions for specific routes
@@ -48,3 +58,7 @@ export const ProtectedRoute = () => {
 
   return <Outlet />;
 };
+
+
+
+

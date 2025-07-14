@@ -11,7 +11,7 @@ import globalReducer from "./global";
 import { authApi } from "@/components/Auth/api";
 import { hostApi } from "@/components/Home/zabbixHosts/api";
 import CompanyInfoSlice from "@/components/Home/company/companySclice";
-
+import { AlertApi } from "@/components/Home/notification/api";
 import { VerficationApi } from "@/components/Home/company/api";
 import teamSlice from "@/components/Home/team/teamSlice";
 
@@ -33,6 +33,7 @@ const rootReducer = combineReducers({
   [landingApi.reducerPath]: landingApi.reducer,
   [HomeApi.reducerPath]: HomeApi.reducer,
   [hostApi.reducerPath]: hostApi.reducer,
+  [AlertApi.reducerPath]: AlertApi.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -47,6 +48,7 @@ export const store = configureStore({
       landingApi.middleware,
       HomeApi.middleware,
       hostApi.middleware,
+      AlertApi.middleware,
     ]),
 });
 

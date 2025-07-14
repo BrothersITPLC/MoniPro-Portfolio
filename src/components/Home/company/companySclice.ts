@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface OrganizationDataInfrence {
   is_private: Boolean;
-  payment_provider: number;
   organization_payment_plan: number;
   organization_payment_duration: number;
   user_id: number;
@@ -23,7 +22,6 @@ interface LandingState {
 const initialState: LandingState = {
   organizationData: {
     is_private: false,
-    payment_provider: 0,
     organization_payment_plan: 0,
     organization_payment_duration: 0,
     user_id: 0,

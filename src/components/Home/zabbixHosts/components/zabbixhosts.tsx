@@ -42,16 +42,16 @@ const dockerContainers = [
 ];
 
 function MetricCard({ title, icon: Icon, value, subtitle }: { title: string; icon: any; value: string; subtitle?: string }) {
-
-    <div className="bg-[var(--card)] rounded-xl p-6 shadow-lg">
+  return (
+    <div className="bg-card rounded-xl p-6 shadow-lg">
       <div className="flex items-center gap-4 mb-2">
-        <Icon className="w-6 h-6 text-[var(--primary)]" />
-        <h3 className="text-lg font-semibold text-[var(--foreground)]">{title}</h3>
+        <Icon className="w-6 h-6 text-primary" />
+        <h3 className="text-lg font-semibold text-foreground">{title}</h3>
       </div>
-      <p className="text-3xl font-bold text-[var(--foreground)]">{value}</p>
-      {subtitle && <p className="text-sm text-[var(--muted-foreground)] mt-1">{subtitle}</p>}
+      <p className="text-3xl font-bold text-foreground">{value}</p>
+      {subtitle && <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>}
     </div>
-  
+  );
 }
 
 function TimeIntervalSelector({ value, onChange }: { value: string; onChange: (value: string) => void }) {
@@ -59,7 +59,7 @@ function TimeIntervalSelector({ value, onChange }: { value: string; onChange: (v
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="bg-[var(--card)] border border-input rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+      className="bg-card border border-input rounded-md px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
     >
       {timeIntervals.map((interval) => (
         <option key={interval.value} value={interval.value}>
@@ -72,34 +72,34 @@ function TimeIntervalSelector({ value, onChange }: { value: string; onChange: (v
 
 function DockerContainersTable() {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
-      <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
-        <Box className="w-5 h-5 text-[var(--primary)]" />
+    <div className="bg-card p-6 rounded-xl shadow-lg border">
+      <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+        <Box className="w-5 h-5 text-primary" />
         Docker Containers
       </h3>
       <div className="overflow-x-auto">
-        <table className="min-w-full dark:border-2 dark:bg-black dark:text-white">
+        <table className="min-w-full">
           <thead>
-            <tr className="bg-gray-50 dark:bg-[var(--neutral-text)] ">
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">Container</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">Ports</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">CPU</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider dark:text-[var(--white)]">Memory</th>
+            <tr className="bg-muted">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Container</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Ports</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">CPU</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Memory</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-card divide-y divide-border">
             {dockerContainers.map((container) => (
               <tr key={container.name}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[var(--bg-dark)] dark:border-2 dark:bg-black dark:text-white">{container.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-muted)] dark:border-2 dark:bg-black dark:text-white">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-[var(--success-text)]">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">{container.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-primary/10 text-primary">
                     {container.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-muted)] dark:border-2 dark:bg-black dark:text-white">{container.ports}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-muted)] dark:border-2 dark:bg-black dark:text-white">{container.cpu}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-muted)] dark:border-2 dark:bg-black dark:text-white">{container.memory}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{container.ports}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{container.cpu}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{container.memory}</td>
               </tr>
             ))}
           </tbody>
@@ -114,14 +114,14 @@ export function ZabbixHosts() {
   const data = generateTimeData(timeInterval);
 
   return (
-    <div className="min-h-screen  p-8">
+    <div className="min-h-screen p-8">
       <div className="">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-[var(--bg-dark)] dark:text-[var(--border-dark)]">System Performance Dashboard</h1>
+          <h1 className="text-3xl font-bold text-foreground">System Performance Dashboard</h1>
           <TimeIntervalSelector value={timeInterval} onChange={setTimeInterval} />
         </div>
         
-        <div className="grid grid-cols-1  md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <MetricCard
             icon={Server}
             title="CPU Cores"
@@ -150,28 +150,35 @@ export function ZabbixHosts() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* CPU Usage Chart */}
-          <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
-            <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
-              <Activity className="w-5 h-5 text-[var(--primary)]" />
+          <div className="bg-card p-6 rounded-xl shadow-lg border">
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-primary" />
               CPU Utilization
             </h3>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="time" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="usage" stroke="#4f46e5" strokeWidth={2} />
+                  <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                  <XAxis dataKey="time" className="text-muted-foreground" />
+                  <YAxis className="text-muted-foreground" />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: 'var(--card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: 'var(--radius)',
+                    }}
+                    labelStyle={{ color: 'var(--foreground)' }}
+                  />
+                  <Line type="monotone" dataKey="usage" stroke="var(--primary)" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
 
           {/* Memory Usage Chart */}
-          <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
-            <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
-              <Memory className="w-5 h-5 text-[var(--primary)]" />
+          <div className="bg-card p-6 rounded-xl shadow-lg border">
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Memory className="w-5 h-5 text-primary" />
               Memory Usage
             </h3>
             <div className="h-[300px]">
@@ -189,9 +196,9 @@ export function ZabbixHosts() {
           </div>
 
           {/* Network Traffic Chart */}
-          <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
-            <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
-              <Network className="w-5 h-5 text-[var(--primary)]" />
+          <div className="bg-card p-6 rounded-xl shadow-lg border">
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Network className="w-5 h-5 text-primary" />
               Network Traffic
             </h3>
             <div className="h-[300px]">
@@ -209,9 +216,9 @@ export function ZabbixHosts() {
           </div>
 
           {/* Security Overview */}
-          <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
-            <h3 className="text-lg font-semibold text-[var(--neutral-text)] mb-4 flex items-center gap-2">
-              <Shield className="w-5 h-5 text-[var(--primary)]" />
+          <div className="bg-card p-6 rounded-xl shadow-lg border">
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Shield className="w-5 h-5 text-primary" />
               Security Overview
             </h3>
             <div className="space-y-4">

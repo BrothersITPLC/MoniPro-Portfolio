@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { GraphFactory } from './GraphFactory';
-import { extractMetadata } from '../../utils/graphUtils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle, Palette } from 'lucide-react';
-import { colorPalettes } from '../../utils/colorPalettes';
+import { useState } from "react";
+import { GraphFactory } from "./GraphFactory";
+import { extractMetadata } from "../../utils/graphUtils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, Palette } from "lucide-react";
+import { colorPalettes } from "../../utils/colorPalettes";
 import {
   Select,
   SelectContent,
@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
@@ -37,8 +36,11 @@ interface DashboardProps {
   title?: string;
 }
 
-export function Dashboard({ items, title = 'Monitoring Dashboard' }: DashboardProps) {
-  const [selectedPalette, setSelectedPalette] = useState('default');
+export function Dashboard({
+  items,
+  title = "Monitoring Dashboard",
+}: DashboardProps) {
+  const [selectedPalette, setSelectedPalette] = useState("default");
 
   if (!items || items.length === 0) {
     return (
@@ -70,10 +72,7 @@ export function Dashboard({ items, title = 'Monitoring Dashboard' }: DashboardPr
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <Select
-            value={selectedPalette}
-            onValueChange={setSelectedPalette}
-          >
+          <Select value={selectedPalette} onValueChange={setSelectedPalette}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select palette" />
             </SelectTrigger>
@@ -86,7 +85,10 @@ export function Dashboard({ items, title = 'Monitoring Dashboard' }: DashboardPr
                         <div
                           key={i}
                           className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: color, marginLeft: i > 0 ? '-3px' : '0' }}
+                          style={{
+                            backgroundColor: color,
+                            marginLeft: i > 0 ? "-3px" : "0",
+                          }}
                         />
                       ))}
                     </div>
@@ -106,7 +108,7 @@ export function Dashboard({ items, title = 'Monitoring Dashboard' }: DashboardPr
           </div>
         ))}
       </div>
-      
+
       {/* Metadata summary card */}
       <Card>
         <CardHeader>
@@ -115,20 +117,32 @@ export function Dashboard({ items, title = 'Monitoring Dashboard' }: DashboardPr
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Total Metrics</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Total Metrics
+              </p>
               <p className="text-2xl font-bold">{metadata.totalItems}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Data Points</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Data Points
+              </p>
               <p className="text-2xl font-bold">{metadata.dataPoints}</p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Min Value</p>
-              <p className="text-2xl font-bold">{metadata.minValue.toFixed(2)}</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Min Value
+              </p>
+              <p className="text-2xl font-bold">
+                {metadata.minValue.toFixed(2)}
+              </p>
             </div>
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Max Value</p>
-              <p className="text-2xl font-bold">{metadata.maxValue.toFixed(2)}</p>
+              <p className="text-sm font-medium text-muted-foreground">
+                Max Value
+              </p>
+              <p className="text-2xl font-bold">
+                {metadata.maxValue.toFixed(2)}
+              </p>
             </div>
           </div>
         </CardContent>

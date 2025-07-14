@@ -1,30 +1,34 @@
 import { Separator } from "@/components/ui/separator";
 import { Github, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import { AnimatedBackground } from "./AnimatedBackground";
 
 export const Footer = () => {
   return (
-    <footer className="relative py-20 px-4 border-b-[1px] text-white ">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <footer className="relative py-20 px-4 border-t border-border overflow-hidden">
+      {/* Animated Background */}
+      <AnimatedBackground />
 
+      {/* Gradient overlays for depth - similar to hero */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-background/80"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50"></div>
+
+      <div className="relative z-10 max-w-7xl mx-auto space-y-8">
         <div className="flex justify-between w-full">
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-white">
-              Follow Us
-            </h3>
+            <h3 className="text-xl font-semibold text-foreground">Follow Us</h3>
             <div className="flex flex-col space-y-2">
               <a
                 target="_blank"
                 href="https://github.com/BrothersITPLC"
-                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <Github className="h-4 w-4 mr-2" /> Github
               </a>
               <a
                 target="_blank"
                 href="https://x.com/"
-                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
                   <svg
@@ -43,7 +47,7 @@ export const Footer = () => {
               <a
                 target="_blank"
                 href="https://discord.com/"
-                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
                   <svg
@@ -63,20 +67,18 @@ export const Footer = () => {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-white">
-              Platforms
-            </h3>
+            <h3 className="text-xl font-semibold text-foreground">Platforms</h3>
             <div className="flex flex-col space-y-2">
               <a
                 href="#"
-                className="text-sm text-white hover:text-[var(--secondary)] transition-colors"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 Web
               </a>
               <a
                 target="_blank"
                 href="https://play.google.com/store/games"
-                className="text-sm text-white hover:text-[var(--secondary)] transition-colors"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 Mobile
               </a>
@@ -84,21 +86,19 @@ export const Footer = () => {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-xl font-semibold text-white">
-              Community
-            </h3>
+            <h3 className="text-xl font-semibold text-foreground">Community</h3>
             <div className="flex flex-col space-y-2">
               <a
                 target="_blank"
                 href="https://www.youtube.com/"
-                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <Youtube className="h-4 w-4 mr-2" /> Youtube
               </a>
               <a
                 target="_blank"
                 href="https://telegram.org/"
-                className="flex items-center text-sm text-white hover:text-[var(--secondary)] transition-colors"
+                className="flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <svg
@@ -116,7 +116,7 @@ export const Footer = () => {
               </a>
               <Link
                 to="/faq"
-                className="text-sm text-white hover:text-[var(--secondary)] transition-colors"
+                className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <svg
@@ -138,16 +138,16 @@ export const Footer = () => {
           </div>
         </div>
 
-        <Separator className="my-8 bg-gray-200 " />
+        <Separator className="my-8" />
 
         <div className="text-center">
-          <p className="text-white">
+          <p className="text-muted-foreground">
             &copy; {new Date().getFullYear()} Powered By{" "}
             <a
               href="https://www.brothersitplc.com/"
               target="_blank"
               rel="noreferrer noopener"
-              className="font-medium text-[var(--secondary)] hover:text-[var(--primary)] hover:underline"
+              className="font-medium text-primary hover:text-primary/80 hover:underline transition-colors"
             >
               Brothers IT PLC
             </a>

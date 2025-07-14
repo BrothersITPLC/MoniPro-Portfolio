@@ -1,4 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect } from "react";
 import {
   Activity,
   HardDrive,
@@ -8,7 +9,10 @@ import {
   Link2,
   Signal,
 } from "lucide-react";
-import { useGetHostItemsQuery } from "@/components/Home/zabbixHosts/api";
+import {
+  useGetHostItemsQuery,
+  useGetTemplateNamesQuery,
+} from "@/components/Home/zabbixHosts/api";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { Dashboard } from "./graphs/Dashboard";
@@ -17,52 +21,47 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function ItemWrapper() {
   const { hostId } = useParams();
   const [selectedTab, setSelectedTab] = useState("cpu");
+  const [tNames, setTNames] = useState([]);
 
   const { data: hostItems, isLoading } = useGetHostItemsQuery({
     hostids: hostId,
     name: selectedTab.toUpperCase(),
   });
 
+  const { data: templateNames, isLoading: TemplateNamesIsLoading } =
+    useGetTemplateNamesQuery({
+      hostids: hostId,
+    });
+
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
   };
 
+  useEffect(() => {
+    if (templateNames) {
+      setTNames(templateNames.data);
+    } else {
+      setTNames([]);
+    }
+  }, [templateNames]);
   return (
-    <div className="bg-white p-6 rounded-xl shadow-lg dark:border-2 dark:bg-black dark:text-white">
+    <div className="bg-[var(--background)] p-6 rounded-xl shadow-lg border border-[var(--border)]">
       <Tabs
         defaultValue="cpu"
         className="w-full"
         onValueChange={handleTabChange}
       >
-        <TabsList className="w-full flex justify-between mb-6 bg-[var(--card)] border-b">
-          <TabsTrigger value="cpu" className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-[var(--primary)]" />
-            CPU
-          </TabsTrigger>
-          <TabsTrigger value="memory" className="flex items-center gap-2">
-            <HardDrive className="w-4 h-4 text-[var(--primary)]" />
-            Memory
-          </TabsTrigger>
-          <TabsTrigger value="disk" className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-[var(--primary)]" />
-            Disk
-          </TabsTrigger>
-          <TabsTrigger value="interface" className="flex items-center gap-2">
-            <Network className="w-4 h-4 text-[var(--primary)]" />
-            Network
-          </TabsTrigger>
-          <TabsTrigger value="uptime" className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[var(--primary)]" />
-            Uptime
-          </TabsTrigger>
-          <TabsTrigger value="connections" className="flex items-center gap-2">
-            <Link2 className="w-4 h-4 text-[var(--primary)]" />
-            Connections
-          </TabsTrigger>
-          <TabsTrigger value="ping" className="flex items-center gap-2">
-            <Signal className="w-4 h-4 text-[var(--primary)]" />
-            Ping
-          </TabsTrigger>
+        <TabsList className="w-full flex justify-between mb-6 bg-[var(--muted)] border-b border-[var(--border)]">
+          {tNames.map((name) => (
+            <TabsTrigger
+              value={name}
+              key={name}
+              className="text-[var(--foreground)]"
+            >
+              <Activity className="w-4 h-4 text-[var(--primary)]" />
+              {name}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         {isLoading ? (

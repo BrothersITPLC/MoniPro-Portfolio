@@ -155,28 +155,28 @@ export function LandingWrapper() {
         {/* Dashboard Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {/* Total Hosts Card */}
-          <div className="bg-[var(--light)] rounded-lg p-4 shadow-sm border border-[var(--accent)] dark:border-2 dark:bg-black dark:text-white dark:border-[]">
+          <div className="bg-background rounded-lg p-4 shadow-sm border border-border">
             <div className="flex items-start gap-3">
-              <div className="bg-[var(--secondary)] p-3 rounded-full">
-                <Database className="size-6 text-white" />
+              <div className="bg-primary p-3 rounded-full">
+                <Database className="size-6 text-primary-foreground" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-[var(--text-muted)] dark:text-gray-300">
+                <h3 className="text-sm font-medium text-muted-foreground">
                   Total Hosts
                 </h3>
-                <p className="text-2xl font-bold text-[var(--primary)] dark:text-[var(--neutral-bg)]">
+                <p className="text-2xl font-bold text-foreground">
                   {dashboardData.totalHosts}
                 </p>
                 <div className="mt-2 flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-sm">
-                    <Server className="size-4 text-[var(--secondary)]" />
-                    <span className="text-[var(--text-heading)] dark:text-gray-300">
+                    <Server className="size-4 text-primary" />
+                    <span className="text-foreground">
                       {dashboardData.vmCount} Virtual Machines
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
-                    <Network className="size-4 text-[var(--secondary)]" />
-                    <span className="text-[var(--text-heading)] dark:text-gray-300">
+                    <Network className="size-4 text-primary" />
+                    <span className="text-foreground">
                       {dashboardData.networkCount} Network Devices
                     </span>
                   </div>
@@ -186,16 +186,16 @@ export function LandingWrapper() {
           </div>
 
           {/* Total Users Card */}
-          <div className="bg-[var(--light)] rounded-lg p-4 shadow-sm border border-[var(--accent)] dark:border-2 dark:bg-black dark:text-white">
+          <div className="bg-background rounded-lg p-4 shadow-sm border border-border">
             <div className="flex items-center gap-3">
-              <div className="bg-[var(--secondary)] p-3 rounded-full">
-                <Users className="size-6 text-white" />
+              <div className="bg-primary p-3 rounded-full">
+                <Users className="size-6 text-primary-foreground" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-[var(--text-muted)] dark:text-gray-300">
+                <h3 className="text-sm font-medium text-muted-foreground">
                   Total Users
                 </h3>
-                <p className="text-2xl font-bold text-[var(--secondary)] dark:text-[var(--neutral-bg)]  ">
+                <p className="text-2xl font-bold text-foreground">
                   {dashboardData.totalUsers}
                 </p>
               </div>
@@ -203,22 +203,22 @@ export function LandingWrapper() {
           </div>
 
           {/* Recent Problems Card */}
-          <div className="bg-[var(--light)] rounded-lg p-4 shadow-sm border border-[var(--accent)] dark:border-2 dark:bg-black dark:text-white">
+          <div className="bg-background rounded-lg p-4 shadow-sm border border-border">
             <div className="flex items-start gap-3">
-              <div className="bg-[var(--secondary)] p-3 rounded-full">
-                <AlertTriangle className="size-6 text-white" />
+              <div className="bg-primary p-3 rounded-full">
+                <AlertTriangle className="size-6 text-primary-foreground" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-[var(--text-muted)] dark:text-gray-300">
+                <h3 className="text-sm font-medium text-muted-foreground">
                   Recent Problems
                 </h3>
                 <div className="mt-2 space-y-2">
                   {dashboardData.recentProblems.map((problem) => (
                     <div key={problem.id} className="text-sm">
-                      <p className="font-medium text-[var(--text-heading)] dark:text-white">
+                      <p className="font-medium text-foreground">
                         {problem.name}
                       </p>
-                      <p className="text-xs text-[var(--text-muted)] dark:text-gray-400">{problem.time}</p>
+                      <p className="text-xs text-muted-foreground">{problem.time}</p>
                     </div>
                   ))}
                 </div>
@@ -227,20 +227,20 @@ export function LandingWrapper() {
           </div>
 
           {/* Recent Tasks Card */}
-          <div className="bg-[var(--light)] rounded-lg p-4 shadow-sm border border-[var(--accent)] dark:text-white dark:border-2 dark:bg-black dark:text-white">
+          <div className="bg-background rounded-lg p-4 shadow-sm border border-border">
             <div className="flex items-start gap-3">
-              <div className="bg-[var(--secondary)] p-3 rounded-full">
-                <ClipboardList className="size-6 text-white" />
+              <div className="bg-primary p-3 rounded-full">
+                <ClipboardList className="size-6 text-primary-foreground" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-[var(--text-muted)] dark:text-gray-300">
+                <h3 className="text-sm font-medium text-muted-foreground">
                   Recent Tasks
                 </h3>
                 <div className="mt-2 space-y-2">
                   {dashboardData.recentTasks.map((task) => (
                     <div key={task.id} className="text-sm">
-                      <p className="font-medium text-[var(--text-heading)] dark:text-white">{task.action}</p>
-                      <p className="text-xs text-[var(--text-muted)] dark:text-gray-400">
+                      <p className="font-medium text-foreground">{task.action}</p>
+                      <p className="text-xs text-muted-foreground">
                         by {task.user} • {task.time}
                       </p>
                     </div>
@@ -253,8 +253,8 @@ export function LandingWrapper() {
 
         {/* Virtual Machines Section */}
         <section>
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 bg-[var(--light)] p-3 rounded-lg dark:text-white dark:border-2 dark:bg-black dark:text-white">
-            <Server className="size-6 text-[var(--primary)]" />
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 bg-background p-3 rounded-lg text-foreground">
+            <Server className="size-6 text-primary" />
             Virtual Machines
           </h2>
           <InfrastructureShowcase
@@ -266,8 +266,8 @@ export function LandingWrapper() {
 
         {/* Network Devices Section */}
         <section>
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 bg-[var(--light)] p-3 rounded-lg dark:border-2 dark:bg-black dark:text-white">
-            <Network className="size-6 text-[var(--primary)]" />
+          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2 bg-background p-3 rounded-lg text-foreground">
+            <Network className="size-6 text-primary" />
             Network Devices
           </h2>
           <InfrastructureShowcase

@@ -57,12 +57,6 @@ export function NavUser() {
     }
   };
 
-  const selectedPlan = useSelector(
-    (state: RootState) => state.landing.SelectedPlane
-  );
-
-  console.log("this is the selected plane", selectedPlan);
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -70,33 +64,33 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] transition-all duration-200 rounded-xl p-2
-                         data-[state=open]:bg-[var(--light)] dark:data-[state=open]:bg-[var(--neutral-bg)] data-[state=open]:shadow-md"
+              className="hover:bg-accent/50 transition-all duration-200 rounded-xl p-2
+                           data-[state=open]:bg-accent/50 data-[state=open]:shadow-md"
             >
-              <Avatar className="h-10 w-10 rounded-lg border-2 border-[var(--primary)]">
+              <Avatar className="h-10 w-10 rounded-lg border-2 border-primary">
                 <AvatarImage
                   src={user?.profile_picture}
                   alt={user?.user_name}
                   className="object-cover"
                 />
-                <AvatarFallback className="rounded-lg bg-[var(--secondary)] text-[var(--white)]">
+                <AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
                   <UserRoundCheck className="h-5 w-5" />
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight ml-3">
-                <span className="truncate font-semibold text-[15px] text-[var(--text-heading)]">
+                <span className="truncate font-semibold text-[15px] text-foreground">
                   {user?.user_name}
                 </span>
-                <span className="truncate text-[13px] text-[var(--text-muted)]">
+                <span className="truncate text-[13px] text-muted-foreground">
                   {user?.user_email}
                 </span>
               </div>
-              <ChevronsUpDown className="ml-auto size-5 text-[var(--secondary)]" />
+              <ChevronsUpDown className="ml-auto size-5 text-muted-foreground" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[280px] rounded-xl shadow-lg border border-[var(--accent)] dark:border-[var(--border-light)]
-                      dark:bg-[var(--bg-dark)]"
+            className="w-[280px] rounded-xl shadow-lg border border-border
+                      bg-background"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={8}
@@ -128,11 +122,10 @@ export function NavUser() {
               <Link to="/home/subscription">
                 <DropdownMenuItem
                   className="py-2.5 px-3 text-[14px] cursor-pointer
-                            hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] 
-                            focus:bg-[var(--light)] dark:focus:bg-[var(--neutral-bg)]
+                            hover:bg-accent/50 focus:bg-accent/50
                             rounded-lg mx-1 my-0.5"
                 >
-                  <Sparkles className="mr-2 h-5 w-5 text-[var(--primary)]" />
+                  <Sparkles className="mr-2 h-5 w-5 text-primary" />
                   <span className="font-medium">Update Subscription Plan</span>
                 </DropdownMenuItem>
               </Link>
@@ -171,7 +164,7 @@ export function NavUser() {
             <DropdownMenuItem
               onClick={handleSubmit}
               className="py-2.5 px-3 text-[14px] cursor-pointer
-                       hover:bg-[var(--error-bg)] focus:bg-[var(--error-bg)] text-[var(--error-text)]
+                       hover:bg-destructive/10 focus:bg-destructive/10 text-destructive
                        rounded-lg mx-1 my-0.5"
             >
               <LogOut className="mr-2 h-5 w-5" />

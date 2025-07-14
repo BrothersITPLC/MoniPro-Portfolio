@@ -20,6 +20,7 @@ export interface User {
   user_id: number;
   user_have_zabbix_credentials: boolean;
   user_have_zabbix_user: boolean;
+  user_have_completed_payment: string;
 }
 
 interface AuthState {

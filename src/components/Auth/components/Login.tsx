@@ -42,6 +42,11 @@ export function Login({ onToggle, onReset }: LoginProps) {
         // Check if organization info is completed
         if (event.data.user && !event.data.user.organization_info_completed) {
           navigate("/home/comp-info");
+        } else if (
+          user.organization_info_completed &&
+          user.user_have_completed_payment != "success"
+        ) {
+          navigate("/home/payment");
         } else {
           navigate("/home/dashboard");
         }
@@ -56,6 +61,11 @@ export function Login({ onToggle, onReset }: LoginProps) {
     if (user) {
       if (!user.organization_info_completed) {
         navigate("/home/comp-info");
+      } else if (
+        user.organization_info_completed &&
+        user.user_have_completed_payment != "success"
+      ) {
+        navigate("/home/payment");
       } else {
         navigate("/home/dashboard");
       }
