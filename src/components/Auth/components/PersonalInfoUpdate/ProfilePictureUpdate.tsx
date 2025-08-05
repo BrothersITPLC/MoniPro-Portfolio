@@ -18,7 +18,6 @@ export function ProfilePictureUpdate({
   lastName,
 }: ProfilePictureUpdateProps) {
   const organizationData = useSelector((state: RootState) => state.auth.user);
-  console.log(organizationData);
   const [updateProfilePicture, { isLoading: isUploading }] =
     useUpdateProfilePicterMutation();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

@@ -1,4 +1,4 @@
-import { BaseUrl } from '../BaseUrl';
+import { BaseUrl } from "../BaseUrl";
 
 interface ZabbixInterface {
   ip: string;
@@ -32,26 +32,28 @@ interface ZabbixData {
 export const fetchZabbixData = async (): Promise<ZabbixData> => {
   try {
     const response = await fetch(`${BaseUrl}/zabbix-data/`, {
-      method: 'GET',
-      credentials: 'include',
+      method: "GET",
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json',
-        'X-CSRFToken': document.cookie.split('csrftoken=')[1]?.split(';')[0] || ''
-      }
+        "Content-Type": "application/json",
+        "X-CSRFToken":
+          document.cookie.split("csrftoken=")[1]?.split(";")[0] || "",
+      },
     });
 
     const data = await response.json();
-    console.log(data);
     if (!response.ok) {
-      throw new Error(data.message || 'Failed to fetch Zabbix data');
+      throw new Error(data.message || "Failed to fetch Zabbix data");
     }
 
     return {
-      status: 'success',
-      data: data.data || []
+      status: "success",
+      data: data.data || [],
     };
   } catch (error) {
-    console.error('Zabbix data fetch error:', error);
-    throw new Error(error instanceof Error ? error.message : 'Failed to fetch monitoring data');
+    console.error("Zabbix data fetch error:", error);
+    throw new Error(
+      error instanceof Error ? error.message : "Failed to fetch monitoring data"
+    );
   }
 };

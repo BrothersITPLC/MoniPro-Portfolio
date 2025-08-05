@@ -3,32 +3,6 @@ import { baseQueryWithReauth } from "@/lib/baseQuery";
 import { loginState } from "./AutSlice";
 import { toast } from "sonner";
 
-// Reusable function for handling profile updates after successful mutations
-const handleProfileUpdate = async (dispatch: any) => {
-  const profileResponse = await dispatch(
-    authApi.endpoints.getProfile.initiate(undefined, {
-      forceRefetch: true,
-    })
-  ).unwrap();
-
-  dispatch(loginState({ user: profileResponse.user_data }));
-};
-
-// Reusable onQueryStarted handler
-const createProfileUpdateHandler = () => {
-  return async (_: any, { dispatch, queryFulfilled }: any) => {
-    try {
-      await queryFulfilled;
-      await handleProfileUpdate(dispatch);
-    } catch (error) {
-      const errorMessage =
-        (error as any)?.data?.message || "Operation failed. Please try again.";
-      toast.error(errorMessage);
-      console.error("Operation failed:", error);
-    }
-  };
-};
-
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: baseQueryWithReauth,
@@ -47,6 +21,7 @@ export const authApi = createApi({
         url: "/profile/",
         method: "GET",
       }),
+      keepUnusedDataFor: 0,
     }),
     login: builder.mutation({
       query: (user) => ({
@@ -54,7 +29,24 @@ export const authApi = createApi({
         method: "POST",
         body: user,
       }),
-      onQueryStarted: createProfileUpdateHandler(),
+      invalidatesTags: ["Profile"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
     }),
     SetZabbixCredentialsFirst: builder.mutation({
       query: () => ({
@@ -62,7 +54,24 @@ export const authApi = createApi({
         method: "POST",
         body: {},
       }),
-      onQueryStarted: createProfileUpdateHandler(),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
     }),
     SetZabbixUser: builder.mutation({
       query: () => ({
@@ -70,7 +79,24 @@ export const authApi = createApi({
         method: "POST",
         body: {},
       }),
-      onQueryStarted: createProfileUpdateHandler(),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
     }),
     logout: builder.mutation({
       query: (_: void) => ({
@@ -107,7 +133,24 @@ export const authApi = createApi({
         method: "POST",
         body: code,
       }),
-      onQueryStarted: createProfileUpdateHandler(),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
     }),
     updateProfilePicter: builder.mutation({
       query: (formData) => ({
@@ -115,7 +158,24 @@ export const authApi = createApi({
         method: "POST",
         body: formData,
       }),
-      onQueryStarted: createProfileUpdateHandler(),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
     }),
     changePassword: builder.mutation({
       query: (passwords) => ({
@@ -123,7 +183,24 @@ export const authApi = createApi({
         method: "POST",
         body: passwords,
       }),
-      onQueryStarted: createProfileUpdateHandler(),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
     }),
     updateProfile: builder.mutation({
       query: (user_data) => ({
@@ -131,7 +208,24 @@ export const authApi = createApi({
         method: "PATCH",
         body: user_data,
       }),
-      onQueryStarted: createProfileUpdateHandler(),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
     }),
   }),
 });

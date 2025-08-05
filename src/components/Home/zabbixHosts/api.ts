@@ -70,9 +70,10 @@ export const hostApi = createApi({
       }),
       invalidatesTags: ["LocalHosts"],
     }),
-    getMonitoringCategoryAndTemplates: builder.query({
+
+    getTemplates: builder.query({
       query: () => ({
-        url: "/monitoring-category-templates/",
+        url: "/templates/",
         method: "GET",
       }),
     }),
@@ -105,7 +106,7 @@ export const {
   useDeleteLocalHostMutation,
   useCheckHostAvailabilityQuery,
   useLazyCheckHostAvailabilityQuery,
-  useGetMonitoringCategoryAndTemplatesQuery,
   usePostHostCreationMutation,
   useGetTemplateNamesQuery,
+  useGetTemplatesQuery,
 } = hostApi;
