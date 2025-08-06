@@ -17,10 +17,8 @@ import {
 
 import type { User } from "@/components/Auth/AutSlice";
 
-
 export function LandingWrapper() {
   const user = useSelector((state: any) => state.auth.user);
-  console.log(user);
   const [setZabbixCredentialsFirst] = useSetZabbixCredentialsFirstMutation();
   const [setZabbixUser] = useSetZabbixUserMutation();
 
@@ -218,7 +216,9 @@ export function LandingWrapper() {
                       <p className="font-medium text-foreground">
                         {problem.name}
                       </p>
-                      <p className="text-xs text-muted-foreground">{problem.time}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {problem.time}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -239,7 +239,9 @@ export function LandingWrapper() {
                 <div className="mt-2 space-y-2">
                   {dashboardData.recentTasks.map((task) => (
                     <div key={task.id} className="text-sm">
-                      <p className="font-medium text-foreground">{task.action}</p>
+                      <p className="font-medium text-foreground">
+                        {task.action}
+                      </p>
                       <p className="text-xs text-muted-foreground">
                         by {task.user} • {task.time}
                       </p>

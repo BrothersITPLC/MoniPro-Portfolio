@@ -37,8 +37,6 @@ export function CompanyInfo() {
   );
   const userData = useSelector((state: RootState) => state.auth);
 
-  console.log("This is selectedPlan", selectedPlanId);
-
   const user_id = userData?.user?.user_id;
 
   const [currentStep, setCurrentStep] = useState(selectedPlan === 0 ? 1 : 1);

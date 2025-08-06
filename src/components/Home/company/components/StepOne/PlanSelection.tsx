@@ -60,8 +60,6 @@ export function PlanSelection({ onNext }: PlanSelectionProps) {
 
     dispatch(setOrganization(updatedData));
 
-    console.log("this is the updated data:", updatedData);
-
     form.setValue("is_private", type, { shouldValidate: true });
     setSelected(type ? "individual" : "company");
   };

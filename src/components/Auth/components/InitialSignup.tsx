@@ -104,7 +104,7 @@ export function CompanySignup() {
          </div>
         <Button
           type="submit"
-          className="w-full cursor-pointer bg-[var(--secondary)] hover:bg-[var(--primary)] transition-all duration-300 transform hover:scale-105"
+          className="w-full cursor-pointer bg-[var(--primary)] transition-all duration-300 transform hover:scale-105"
           disabled={isLoading}
         >
           {isLoading ? "Signing up..." : "Signup"}

@@ -1,8 +1,4 @@
-import {
-  GOOGLE_CLIENT_ID,
-  REDIRECT_URL,
-  SCOPE,
-} from "@/app/constant";
+import { GOOGLE_CLIENT_ID, REDIRECT_URL, SCOPE } from "@/app/constant";
 import { toast } from "sonner";
 
 export const handleGoogleAuth = async () => {
