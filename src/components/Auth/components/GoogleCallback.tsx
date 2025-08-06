@@ -51,7 +51,7 @@ export function GoogleCallback() {
           // Close this window after a short delay
           setTimeout(() => {
             window.close();
-          }, 1500);
+          }, 3000);
         } else {
           throw new Error(response.message || "Authentication failed");
         }

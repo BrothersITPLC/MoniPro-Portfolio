@@ -22,6 +22,7 @@ export const authApi = createApi({
         method: "GET",
       }),
       keepUnusedDataFor: 0,
+      providesTags: ["Profile"],
     }),
     login: builder.mutation({
       query: (user) => ({
@@ -133,6 +134,7 @@ export const authApi = createApi({
         method: "POST",
         body: code,
       }),
+      invalidatesTags: ["Profile"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -141,7 +143,6 @@ export const authApi = createApi({
               forceRefetch: true,
             })
           ).unwrap();
-
           dispatch(loginState({ user: profileResponse.user_data }));
         } catch (error) {
           const errorMessage =
