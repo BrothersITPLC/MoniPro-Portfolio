@@ -1,16 +1,16 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ArrowDown, Monitor, Zap, Eye } from "lucide-react";
-import { AnimatedBackground } from "./AnimatedBackground";
-import { MonitoringVisual } from "./MonitoringVisual";
+import type React from "react"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { ArrowDown, Monitor, Zap, Eye } from "lucide-react"
+import { AnimatedBackground } from "./AnimatedBackground"
+import { MonitoringVisual } from "./MonitoringVisual"
 
 export const HeroSection: React.FC = () => {
   const features = [
     {
       icon: Monitor,
       title: "Infrastructure Monitoring",
-      description: "Complete visibility across your entire technology stack",
+      description: "Real-time monitoring of networks, applications, and systems.",
     },
     {
       icon: Zap,
@@ -22,12 +22,12 @@ export const HeroSection: React.FC = () => {
       title: "24/7 Observability",
       description: "Continuous monitoring with instant alerting",
     },
-  ];
+  ]
 
   return (
     <section
       id="#"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden transition-colors duration-900"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden transition-colors duration-900 pb-16"
     >
       {/* Animated Background */}
       <AnimatedBackground />
@@ -36,30 +36,27 @@ export const HeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-background/80"></div>
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      {/* Main content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
           {/* Left column - Content */}
           <div className="space-y-8 animate-fade-in">
             {/* Badge */}
-            <div className="inline-flex items-center space-x-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2">
+            <div className="inline-flex items-center space-x-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2 mt-4">
               <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium text-primary">
-                Next-Generation Monitoring
-              </span>
+              <span className="text-sm font-medium text-primary">Next-Generation Monitoring</span>
             </div>
 
             {/* Main headline */}
-            <div className="space-y-4">
+            <div className="space-y-2">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
                 Intelligent
                 <span className="block text-primary">Monitoring</span>
                 <span className="block">Platform</span>
               </h1>
-
               <p className="text-xl text-muted-foreground max-w-2xl leading-relaxed">
-                Harness the power of AI-driven monitoring to gain unprecedented
-                visibility, automate responses, and prevent issues before they
-                impact your business.
+                Harness the power of AI-driven monitoring to gain unprecedented visibility, automate responses, and
+                prevent issues before they impact your business.
               </p>
             </div>
 
@@ -73,12 +70,8 @@ export const HeroSection: React.FC = () => {
                 >
                   <div className="space-y-2">
                     <feature.icon className="w-6 h-6 text-primary" />
-                    <h3 className="font-semibold text-sm text-foreground">
-                      {feature.title}
-                    </h3>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
-                      {feature.description}
-                    </p>
+                    <h3 className="font-semibold text-sm text-foreground">{feature.title}</h3>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{feature.description}</p>
                   </div>
                 </Card>
               ))}
@@ -107,34 +100,27 @@ export const HeroSection: React.FC = () => {
                   className="text-center animate-fade-in"
                   style={{ animationDelay: `${1 + index * 0.1}s` }}
                 >
-                  <div className="text-2xl font-bold text-primary">
-                    {stat.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {stat.label}
-                  </div>
+                  <div className="text-2xl font-bold text-primary">{stat.value}</div>
+                  <div className="text-sm text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Right column - Visual */}
-          <div
-            className="relative animate-scale-in"
-            style={{ animationDelay: "0.5s" }}
-          >
+          <div className="relative animate-scale-in" style={{ animationDelay: "0.5s" }}>
             <MonitoringVisual />
           </div>
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="flex flex-col items-center space-y-2 text-muted-foreground">
+      {/* Scroll indicator - Now properly spaced */}
+      <div className="relative z-10 mt-8 mb-4">
+        <div className="flex flex-col items-center space-y-2 text-muted-foreground animate-bounce">
           <span className="text-sm">Discover More</span>
-          <ArrowDown className="w-4 h-4" />
+          <ArrowDown className="w-4 h-4 " />
         </div>
       </div>
     </section>
-  );
-};
+  )
+}

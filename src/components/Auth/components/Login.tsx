@@ -38,7 +38,6 @@ export function Login({ onToggle, onReset }: LoginProps) {
       if (event.data && event.data.action === "google-authentication-success") {
         toast.success("Google login successful!");
         setIsGoogleLoading(false);
-
         // Check if organization info is completed
         if (event.data.user && !event.data.user.organization_info_completed) {
           navigate("/home/comp-info");
@@ -111,7 +110,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
             to="/"
             className="flex items-center justify-center hover:scale-105 transition-all duration-300"
           >
-            <House className="h-8 w-8 text-[var(--secondary)]" />
+            <House className="h-8 w-8 text-[var(--primary)]" />
           </Link>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-300">
             Welcome back
@@ -208,7 +207,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
                     </Label>
                     <button
                       type="button"
-                      className="ml-auto text-sm text-[var(--secondary)] hover:text-[var(--primary)] hover:underline transition-colors"
+                      className="ml-auto text-sm text-[var(--primary)] hover:underline transition-colors"
                       onClick={onReset}
                     >
                       Forgot your password?
@@ -225,7 +224,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full bg-[var(--secondary)] hover:bg-[var(--primary)] text-white transition-all duration-300 hover:scale-105"
+                  className="w-full bg-[var(--primary)] text-white transition-all duration-300 hover:scale-105"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -242,7 +241,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
                 Don&apos;t have an account?{" "}
                 <button
                   type="button"
-                  className="text-[var(--secondary)] hover:text-[var(--primary)] underline underline-offset-4 cursor-pointer transition-colors"
+                  className="text-[var(--primary)] underline underline-offset-4 cursor-pointer transition-colors"
                   onClick={onToggle}
                 >
                   Sign up
@@ -256,14 +255,14 @@ export function Login({ onToggle, onReset }: LoginProps) {
         By signing in, you agree to our{" "}
         <a
           href="#"
-          className="text-[var(--secondary)] hover:text-[var(--primary)] underline underline-offset-4 transition-colors"
+          className="text-[var(--primary)] underline underline-offset-4 transition-colors"
         >
           Terms of Service
         </a>{" "}
         and{" "}
         <a
           href="#"
-          className="text-[var(--secondary)] hover:text-[var(--primary)] underline underline-offset-4 transition-colors"
+          className="text-[var(--primary)] underline underline-offset-4 transition-colors"
         >
           Privacy Policy
         </a>

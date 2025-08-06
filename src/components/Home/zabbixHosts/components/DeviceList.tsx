@@ -24,10 +24,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 
 import {
-  useGetMonitoringCategoryAndTemplatesQuery,
   usePostHostCreationMutation,
+  useGetTemplatesQuery,
 } from "@/components/Home/zabbixHosts/api";
 import { ItemSelection } from "@/components/Home/zabbixHosts/components/ItemSelection";
 import { Spinner } from "@/components/ui/spinner";
@@ -39,17 +40,20 @@ interface DeviceListProps {
   isLoading: boolean;
   onEdit: (device: any) => void;
   onDelete: (deviceId: string) => void;
+  isHosted: boolean;
 }
 
-type SingleMoniteringType = {
+type SingleTemplateGroup = {
   id: number;
-  name: string;
-  category_description: string;
-  category_long_description: string;
-  template: Array<{
-    name: string;
+  template_group_name: string;
+  template_group_discription: string;
+  template_group_id: string;
+  templates: Array<{
+    id: number;
+    template_name: string;
     template_description: string;
-    template_id: number;
+    template_id: string;
+    template_group: number;
   }>;
 };
 
@@ -59,22 +63,16 @@ export function DeviceList({
   isLoading,
   onEdit,
   onDelete,
+  isHosted,
 }: DeviceListProps) {
   const [isSecondDialogOpen, setIsSecondDialogOpen] = useState(false);
   const [ispostHostCreationSuccess, setIsPostHostCreationSuccess] =
     useState(false);
   const [postHostCreationMessage, setPostHostCreationMessage] = useState("");
-  const [SelectedMonitoringType, setSelectedMonitoringTypeState] = useState<
-    SingleMoniteringType[]
-  >([]);
+  const [selectedTemplateGroup, setSelectedTemplateGroup] =
+    useState<SingleTemplateGroup | null>(null);
   const [localHostId, setLocalHostId] = useState(0);
-  const {
-    data: monitoringCategoryResponse,
-    isLoading: monitoringCategoryIsLoading,
-    isError: monitoringCategoryIsError,
-  } = useGetMonitoringCategoryAndTemplatesQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
+
   const [postHostCreation, { isLoading: isPostHostCreationLoading }] =
     usePostHostCreationMutation();
   const getIcon = (deviceType: string) => {
@@ -97,48 +95,52 @@ export function DeviceList({
 
   if (isLoading) {
     return (
-      <div className="text-center py-8 text-foreground">Loading devices...</div>
+      <div className="flex items-center justify-center py-12">
+        <Spinner className="h-8 w-8 text-primary" />
+        <span className="ml-3 text-foreground">Loading devices...</span>
+      </div>
     );
   }
 
   if (devices.length === 0) {
     return (
-      <div className="text-center p-8 border border-border rounded-lg bg-background">
+      <div className="text-center p-8 border border-border rounded-lg bg-background/50 backdrop-blur-sm shadow-sm">
         {type === "vm" ? (
-          <Server className="mx-auto h-12 w-12 text-muted-foreground" />
+          <Server className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
         ) : (
-          <Network className="mx-auto h-12 w-12 text-muted-foreground" />
+          <Network className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
         )}
-        <h3 className="mt-2 text-lg font-medium text-foreground">
+        <h3 className="mt-4 text-lg font-medium text-foreground">
           No {type === "vm" ? "Virtual Machines" : "Network Devices"}
         </h3>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Add a device to start monitoring
+        <p className="mt-2 text-sm text-muted-foreground">
+          {isHosted
+            ? "No hosted devices found."
+            : "Add a device to start monitoring"}
         </p>
+        {!isHosted && (
+          <Button
+            className="mt-4 bg-primary/90 hover:bg-primary text-primary-foreground"
+            size="sm"
+            onClick={() => {
+              // Add device logic
+            }}
+          >
+            Add Device
+          </Button>
+        )}
       </div>
     );
   }
 
-  const monitoringCategory =
-    monitoringCategoryResponse?.status === "success"
-      ? monitoringCategoryResponse.data
-      : [];
-
-  const handleMonitoringType = (id: number, local_host_id: number) => {
+  const handleMonitoringType = (
+    templateGroup: SingleTemplateGroup,
+    local_host_id: number
+  ) => {
     setIsPostHostCreationSuccess(false);
-
+    setSelectedTemplateGroup(templateGroup);
     setIsSecondDialogOpen(true);
     setLocalHostId(local_host_id);
-    const selectedCategory =
-      monitoringCategoryResponse?.status === "success"
-        ? monitoringCategoryResponse.data.filter(
-            (category: SingleMoniteringType) => category.id === id
-          )
-        : monitoringCategory.filter(
-            (category: SingleMoniteringType) => category.id === id
-          );
-
-    setSelectedMonitoringTypeState(selectedCategory);
   };
 
   const handlePostHostCreation = async (data: any) => {
@@ -164,32 +166,53 @@ export function DeviceList({
     }
   };
 
+  const {
+    data: tempGroupData,
+    isLoading: tempGroupDataIsLoading,
+    isError: tempGroupDataIsError,
+  } = useGetTemplatesQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const templateGroupData =
+    tempGroupData?.status === "success" ? tempGroupData.data : [];
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {devices.map((device) => (
         <Card
           key={device.id}
-          className="bg-card text-card-foreground border-border"
+          className="bg-card text-card-foreground border-border overflow-hidden transition-all duration-200 hover:shadow-md group"
         >
           <Dialog>
             <DialogTrigger>
-              <CardHeader className="cursor-pointer">
-                <CardTitle className="text-foreground">
-                  {type === "network" && getIcon(device.network_device_type)}
-                  {device.host}
-                </CardTitle>
-                <CardDescription className="text-muted-foreground">
+              <CardHeader className="cursor-pointer pb-2 group-hover:bg-muted/30 transition-colors duration-200">
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-foreground text-lg font-medium">
+                    {type === "network" && getIcon(device.network_device_type)}
+                    {device.host}
+                  </CardTitle>
+                  {isHosted && (
+                    <Badge
+                      variant="outline"
+                      className="bg-primary/10 text-primary text-xs"
+                    >
+                      Hosted
+                    </Badge>
+                  )}
+                </div>
+                <CardDescription className="text-muted-foreground mt-1">
                   {device.ip || device.dns}
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-2">
                 <div className="space-y-2">
                   {type === "network" && device.network_device_type && (
                     <div className="text-sm">
                       <span className="text-muted-foreground">
                         Device Type:
                       </span>{" "}
-                      <span className="text-foreground">
+                      <span className="text-foreground font-medium">
                         {device.network_device_type}
                       </span>
                     </div>
@@ -199,21 +222,26 @@ export function DeviceList({
             </DialogTrigger>
             <DialogContent className="min-w-1/2 max-w-3/4 bg-background border-border">
               <DialogHeader>
-                <DialogTitle className="text-foreground">
-                  Please choose the type of monitoring you want for your device
+                <DialogTitle className="text-foreground flex items-center gap-2">
+                  {type === "vm" ? (
+                    <Server className="h-5 w-5 text-primary" />
+                  ) : (
+                    <Network className="h-5 w-5 text-primary" />
+                  )}
+                  <span>Choose monitoring type for {device.host}</span>
                 </DialogTitle>
                 <DialogDescription className="text-muted-foreground">
-                  You can choose between CPU, Memory, Disk, Network and Load
-                  Average
+                  Select the monitoring categories you want to apply to this
+                  device
                 </DialogDescription>
               </DialogHeader>
-              <div className="my-4 p-4 flex flex-row gap-4">
+              <div className="my-4 p-4 flex flex-row gap-4 bg-muted/30 rounded-lg">
                 <div className="">
-                  {monitoringCategoryIsLoading ? (
+                  {tempGroupDataIsLoading ? (
                     <p className="text-muted-foreground">
                       Loading monitoring categories...
                     </p>
-                  ) : monitoringCategoryIsError ? (
+                  ) : tempGroupDataIsError ? (
                     <Alert variant="destructive">
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription className="text-destructive-foreground">
@@ -221,7 +249,7 @@ export function DeviceList({
                         later.
                       </AlertDescription>
                     </Alert>
-                  ) : monitoringCategory.length === 0 ? (
+                  ) : templateGroupData.length === 0 ? (
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription className="text-foreground">
@@ -229,30 +257,37 @@ export function DeviceList({
                       </AlertDescription>
                     </Alert>
                   ) : (
-                    monitoringCategory.map((category: SingleMoniteringType) => (
-                      <div
-                        key={category.id}
-                        className="mb-4 flex flex-col gap-2"
-                      >
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90"
-                                onClick={() =>
-                                  handleMonitoringType(category.id, device.id)
-                                }
-                              >
-                                {category.name}
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent className="bg-popover text-popover-foreground border-border">
-                              <p>{category.category_description}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                    ))
+                    templateGroupData.map(
+                      (template_group: SingleTemplateGroup) => (
+                        <div
+                          key={template_group.id}
+                          className="mb-4 flex flex-col gap-2"
+                        >
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90"
+                                  onClick={() =>
+                                    handleMonitoringType(
+                                      template_group,
+                                      device.id
+                                    )
+                                  }
+                                >
+                                  {template_group.template_group_name}
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="bg-popover text-popover-foreground border-border">
+                                <p>
+                                  {template_group.template_group_discription}
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      )
+                    )
                   )}
                 </div>
                 <div className="w-2 h-[100%] bg-border rounded-lg"></div>
@@ -262,11 +297,11 @@ export function DeviceList({
                   <p className="text-foreground">{postHostCreationMessage}</p>
                 ) : (
                   isSecondDialogOpen &&
-                  SelectedMonitoringType.length > 0 && (
+                  selectedTemplateGroup && (
                     <div className="">
                       <ItemSelection
                         handlePostHostCreation={handlePostHostCreation}
-                        moniteringTypes={SelectedMonitoringType}
+                        selectedTemplateGroup={selectedTemplateGroup}
                         local_host_id={localHostId}
                       />
                     </div>
@@ -276,21 +311,23 @@ export function DeviceList({
             </DialogContent>
           </Dialog>
 
-          <CardFooter className="flex justify-end gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onEdit(device)}
-              className="bg-secondary text-secondary-foreground hover:bg-secondary/80"
-            >
-              <Edit className="h-4 w-4 mr-2" />
-              Edit
-            </Button>
+          <CardFooter className="flex justify-end gap-2 pt-2 pb-3 bg-muted/10">
+            {!isHosted && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onEdit(device)}
+                className="bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors duration-200"
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+            )}
             <Button
               variant="destructive"
               size="sm"
               onClick={() => onDelete(device.id)}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors duration-200"
             >
               <Trash2 className="h-4 w-4 mr-2" />
               Delete
