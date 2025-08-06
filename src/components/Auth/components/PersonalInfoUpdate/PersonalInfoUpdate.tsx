@@ -8,7 +8,6 @@ import { GeneralInfoUpdate } from "@/components/Auth/components/PersonalInfoUpda
 
 export function PersonalInfoUpdate() {
   const organizationData = useSelector((state: RootState) => state.auth.user);
-  console.log(organizationData);
   const [activeTab, setActiveTab] = useState<"general" | "password">("general");
 
   return (

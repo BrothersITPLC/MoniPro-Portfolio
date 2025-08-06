@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/app/store";
 import { useEffect, useState } from "react";
-import { toast } from "sonner"; 
+import { toast } from "sonner";
 import { setSelectedPlane } from "@/components/Landing/LandingSlice";
 
 const icons = [
@@ -32,16 +32,13 @@ const icons = [
   },
 ];
 
-
-
 interface ChangePaymentProps {
   setShowPricing: (value: boolean) => void;
 }
 
 export function ChangePayment({ setShowPricing }: ChangePaymentProps) {
-
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
-  
+
   const dispatch = useDispatch();
 
   const {
@@ -56,29 +53,25 @@ export function ChangePayment({ setShowPricing }: ChangePaymentProps) {
     (state: RootState) => state.companyInfo.organizationData
   );
 
-  const { user } = useSelector(
-    (state: RootState) => state.auth
-  );
+  const { user } = useSelector((state: RootState) => state.auth);
 
- const handlePlanUpdate = (planId: number) => {
+  const handlePlanUpdate = (planId: number) => {
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
       organization_payment_plan: planId,
     };
     setSelectedPlanId(planId);
     dispatch(setOrganization(updatedData));
-    dispatch(setSelectedPlane(planId)); 
- 
+    dispatch(setSelectedPlane(planId));
   };
 
   const handleupdate = () => {
-    if(selectedPlanId === null) {
+    if (selectedPlanId === null) {
       toast.error("Please select a plan");
-      return; 
+      return;
     }
-    setShowPricing(false); 
-    console.log("this is the updated one: ", organizationData);
-  }
+    setShowPricing(false);
+  };
 
   useEffect(() => {
     refetch();
@@ -96,9 +89,13 @@ export function ChangePayment({ setShowPricing }: ChangePaymentProps) {
 
   // Filter plans based on organization's privacy status
   const filteredPlans = organizationData?.is_private
-    ? sortedPlansData.filter(plan => plan.name.toLowerCase() === 'individual plan')
-    : sortedPlansData.filter(plan => plan.name.toLowerCase() !== 'individual plan');
-    
+    ? sortedPlansData.filter(
+        (plan) => plan.name.toLowerCase() === "individual plan"
+      )
+    : sortedPlansData.filter(
+        (plan) => plan.name.toLowerCase() !== "individual plan"
+      );
+
   return (
     <div
       id="pricing"
@@ -178,26 +175,22 @@ export function ChangePayment({ setShowPricing }: ChangePaymentProps) {
                   </div>
 
                   <Button
-                      className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
-                      onClick={() => handlePlanUpdate(plan.id)}
-                    >
-                      Select Plan
-                 </Button>
-
+                    className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
+                    onClick={() => handlePlanUpdate(plan.id)}
+                  >
+                    Select Plan
+                  </Button>
                 </CardContent>
               </Card>
             ))}
-
         </div>
-            <Button
-                className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
-                onClick={handleupdate}
-            >
-                Update Plan
-            </Button>
-        <div>
-
-        </div>
+        <Button
+          className="w-full mt-6 bg-[var(--primary)] hover:bg-[var(--secondary)] transition-all transform hover:scale-105"
+          onClick={handleupdate}
+        >
+          Update Plan
+        </Button>
+        <div></div>
       </div>
     </div>
   );

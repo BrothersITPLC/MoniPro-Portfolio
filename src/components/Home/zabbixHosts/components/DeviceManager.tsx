@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Server, Network, CloudCog, Database } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import {
   Dialog,
@@ -214,10 +214,22 @@ export function DeviceManager() {
         className="w-full"
         onValueChange={(value) => setDeviceSource(value as "local" | "hosted")}
       >
-        <div className="flex justify-between items-center mb-6 dark:border-2 dark:bg-black dark:text-white">
-          <TabsList className="grid w-[400px] grid-cols-2">
-            <TabsTrigger value="local">Local Devices</TabsTrigger>
-            <TabsTrigger value="hosted">Hosted Devices</TabsTrigger>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+          <TabsList className="w-full md:w-[400px] p-1 bg-muted/80 backdrop-blur-sm rounded-xl shadow-md">
+            <TabsTrigger 
+              value="local" 
+              className="flex-1 py-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <Database className="h-4 w-4" />
+              <span>Local Devices</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="hosted" 
+              className="flex-1 py-3 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              <CloudCog className="h-4 w-4" />
+              <span>Hosted Devices</span>
+            </TabsTrigger>
           </TabsList>
           <Button
             onClick={() => {
@@ -225,71 +237,100 @@ export function DeviceManager() {
               setPendingData(null);
               setIsFormOpen(true);
             }}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 rounded-lg"
           >
             <PlusCircle className="h-4 w-4 mr-2" />
             Add Device
           </Button>
         </div>
 
-        <TabsContent value="local" className="mt-6">
+        <TabsContent value="local" className="mt-6 animate-in fade-in-50 slide-in-from-left-5 duration-300">
           <Tabs
             defaultValue="vm"
             className="w-full"
             onValueChange={(value) => setDeviceType(value as "vm" | "network")}
           >
-            <TabsList className="w-[400px] mb-6">
-              <TabsTrigger value="vm">VM Devices</TabsTrigger>
-              <TabsTrigger value="network">Network Devices</TabsTrigger>
+            <TabsList className="w-full md:w-[400px] mb-6 p-1 bg-muted/80 backdrop-blur-sm rounded-xl shadow-sm">
+              <TabsTrigger 
+                value="vm" 
+                className="flex-1 py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <Server className="h-4 w-4" />
+                <span>VM Devices</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="network" 
+                className="flex-1 py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <Network className="h-4 w-4" />
+                <span>Network Devices</span>
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="vm">
+            <TabsContent value="vm" className="animate-in fade-in-50 slide-in-from-bottom-5 duration-300">
               <DeviceList
                 devices={local_hosts_vm}
                 type="vm"
                 isLoading={isLoading}
                 onEdit={openEditForm}
                 onDelete={openDeleteDialog}
+                isHosted={false}
               />
             </TabsContent>
-            <TabsContent value="network">
+            <TabsContent value="network" className="animate-in fade-in-50 slide-in-from-bottom-5 duration-300">
               <DeviceList
                 devices={local_hosts_network}
                 type="network"
                 isLoading={isLoading}
                 onEdit={openEditForm}
                 onDelete={openDeleteDialog}
+                isHosted={false}
               />
             </TabsContent>
           </Tabs>
         </TabsContent>
 
-        <TabsContent value="hosted" className="mt-6">
+        <TabsContent value="hosted" className="mt-6 animate-in fade-in-50 slide-in-from-right-5 duration-300">
           <Tabs
             defaultValue="vm"
             className="w-full"
             onValueChange={(value) => setDeviceType(value as "vm" | "network")}
           >
-            <TabsList className="w-[400px] mb-6">
-              <TabsTrigger value="vm">VM Devices</TabsTrigger>
-              <TabsTrigger value="network">Network Devices</TabsTrigger>
+            <TabsList className="w-full md:w-[400px] mb-6 p-1 bg-muted/80 backdrop-blur-sm rounded-xl shadow-sm">
+              <TabsTrigger 
+                value="vm" 
+                className="flex-1 py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <Server className="h-4 w-4" />
+                <span>VM Devices</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="network" 
+                className="flex-1 py-2 data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <Network className="h-4 w-4" />
+                <span>Network Devices</span>
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="vm">
+            <TabsContent value="vm" className="animate-in fade-in-50 slide-in-from-bottom-5 duration-300">
               <DeviceList
                 devices={hosted_devices_vm}
                 type="vm"
                 isLoading={isLoading}
                 onEdit={openEditForm}
                 onDelete={openDeleteDialog}
+                isHosted={true}
               />
             </TabsContent>
-            <TabsContent value="network">
+            <TabsContent value="network" className="animate-in fade-in-50 slide-in-from-bottom-5 duration-300">
               <DeviceList
                 devices={hosted_devices_network}
                 type="network"
                 isLoading={isLoading}
                 onEdit={openEditForm}
                 onDelete={openDeleteDialog}
+                isHosted={true}
               />
             </TabsContent>
           </Tabs>
@@ -298,12 +339,12 @@ export function DeviceManager() {
 
       {/* Create/Edit Device Form Dialog */}
       <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-        <DialogContent>
+        <DialogContent className="bg-background border-border">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-foreground">
               {editingDevice ? "Edit Device" : "Add New Device"}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-muted-foreground">
               {editingDevice
                 ? "Update the details of your device below."
                 : "Fill in the details to add a new device to your inventory."}

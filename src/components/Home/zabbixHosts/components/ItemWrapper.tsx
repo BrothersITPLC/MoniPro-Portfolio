@@ -1,14 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect } from "react";
-import {
-  Activity,
-  HardDrive,
-  Database,
-  Network,
-  Clock,
-  Link2,
-  Signal,
-} from "lucide-react";
+import { Activity } from "lucide-react";
 import {
   useGetHostItemsQuery,
   useGetTemplateNamesQuery,

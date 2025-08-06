@@ -14,66 +14,65 @@ import {
 
 interface SelectedItemsType {
   local_host_id: number;
-  category_id: number;
-  template: number[];
+  template_list: string[];
   password: string;
   username: string;
 }
 
-type SingleMoniteringType = {
+type SingleTemplateGroup = {
   id: number;
-  name: string;
-  category_description: string;
-  category_long_description: string;
-  template: Array<{
-    name: string;
+  template_group_name: string;
+  template_group_discription: string;
+  template_group_id: string;
+  templates: Array<{
+    id: number;
+    template_name: string;
     template_description: string;
-    template_id: number;
+    template_id: string;
+    template_group: number;
   }>;
 };
 
 interface ItemSelectionProps {
-  moniteringTypes: SingleMoniteringType[];
+  selectedTemplateGroup: SingleTemplateGroup;
   local_host_id: number;
   handlePostHostCreation: any;
 }
 
 export function ItemSelection({
-  moniteringTypes,
+  selectedTemplateGroup,
   local_host_id,
   handlePostHostCreation,
 }: ItemSelectionProps) {
   const [selectedItems, setSelectedItems] = useState<SelectedItemsType>({
     local_host_id: local_host_id,
-    category_id: 0,
-    template: [],
+    template_list: [],
     password: "",
     username: "",
   });
 
   useEffect(() => {
-    // Reset selected items when monitoring type changes
-    if (moniteringTypes && moniteringTypes.length > 0) {
+    // Reset selected items when template group changes
+    if (selectedTemplateGroup) {
       setSelectedItems({
         local_host_id: local_host_id,
-        category_id: moniteringTypes[0].id,
-        template: [],
+        template_list: [],
         password: "",
         username: "",
       });
     }
-  }, [moniteringTypes]);
+  }, [selectedTemplateGroup, local_host_id]);
 
-  if (!moniteringTypes || moniteringTypes.length === 0) {
-    return <div>No monitoring type selected</div>;
+  if (!selectedTemplateGroup) {
+    return <div>No template group selected</div>;
   }
 
-  const toggleItemSelection = (templateId: number) => {
+  const toggleItemSelection = (templateId: string) => {
     setSelectedItems((prev) => ({
       ...prev,
-      template: prev.template.includes(templateId)
-        ? prev.template.filter((id) => id !== templateId)
-        : [...prev.template, templateId],
+      template_list: prev.template_list.includes(templateId)
+        ? prev.template_list.filter((id) => id !== templateId)
+        : [...prev.template_list, templateId],
     }));
   };
 
@@ -81,8 +80,9 @@ export function ItemSelection({
     handlePostHostCreation(data);
   };
 
-  const isSimpleChecks =
-    moniteringTypes[0].name.toLowerCase() === "simple checks";
+  const isSimpleChecks = selectedTemplateGroup.template_group_name
+    .toLowerCase()
+    .includes("simple");
 
   const handleInputChange = (field: "username" | "password", value: string) => {
     setSelectedItems((prev) => ({
@@ -93,8 +93,10 @@ export function ItemSelection({
 
   return (
     <div className="p-4 w-full">
-      <h2 className="text-lg font-medium mb-2">{moniteringTypes[0].name}</h2>
-      <p className="mb-4">{moniteringTypes[0].category_long_description}</p>
+      <h2 className="text-lg font-medium mb-2">
+        {selectedTemplateGroup.template_group_name}
+      </h2>
+      <p className="mb-4">{selectedTemplateGroup.template_group_discription}</p>
 
       {!isSimpleChecks && (
         <div className="mt-4 space-y-4 flex  gap-4 border m-2 p-2 rounded-2xl">
@@ -121,27 +123,27 @@ export function ItemSelection({
         </div>
       )}
 
-      {moniteringTypes[0].template.length === 0 ? (
+      {selectedTemplateGroup.templates.length === 0 ? (
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>No items available.</AlertDescription>
         </Alert>
       ) : (
         <ScrollArea className="h-[300px] pr-4 rounded-md border grid grid-cols-4 gap-4">
-          {moniteringTypes[0].template.map((item) => (
+          {selectedTemplateGroup.templates.map((item) => (
             <TooltipProvider key={item.template_id}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     variant={
-                      selectedItems.template.includes(item.template_id)
+                      selectedItems.template_list.includes(item.template_id)
                         ? "default"
                         : "outline"
                     }
                     className="m-2 p-4 text-sm whitespace-normal break-words w-full cursor-pointer"
                     onClick={() => toggleItemSelection(item.template_id)}
                   >
-                    {item.name}
+                    {item.template_name}
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -153,10 +155,10 @@ export function ItemSelection({
         </ScrollArea>
       )}
 
-      {selectedItems.template.length > 0 && (
+      {selectedItems.template_list.length > 0 && (
         <div className="mt-4">
           <p className="text-sm text-muted-foreground mb-2">
-            {selectedItems.template.length} item(s) selected
+            {selectedItems.template_list.length} item(s) selected
           </p>
         </div>
       )}
