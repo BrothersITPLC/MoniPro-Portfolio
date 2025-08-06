@@ -49,32 +49,31 @@ Provides rich context to speed up troubleshooting and resolution.
 Increases focus and efficiency by reducing unnecessary interruptions.`,
     image: server3,
   },
-];
+]
 
 export function Features() {
-  const featuresRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const featuresRef = useRef<HTMLDivElement>(null)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [scrollProgress, setScrollProgress] = useState(0)
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const scrollTop = e.currentTarget.scrollTop;
-    const scrollHeight = e.currentTarget.scrollHeight;
-    const clientHeight = e.currentTarget.clientHeight;
-    const totalScrollableHeight = scrollHeight - clientHeight;
+    const scrollTop = e.currentTarget.scrollTop
+    const scrollHeight = e.currentTarget.scrollHeight
+    const clientHeight = e.currentTarget.clientHeight
+    const totalScrollableHeight = scrollHeight - clientHeight
 
     if (totalScrollableHeight <= 0) {
       // Avoid division by zero if content is smaller than container
-      setScrollProgress(0);
-      setActiveIndex(0);
-      return;
+      setScrollProgress(0)
+      setActiveIndex(0)
+      return
     }
 
-    const itemHeight = totalScrollableHeight / features.length;
-    const newIndex = Math.floor(scrollTop / itemHeight);
-
-    setActiveIndex(Math.min(newIndex, features.length - 1));
-    setScrollProgress((scrollTop / totalScrollableHeight) * 100);
-  };
+    const itemHeight = totalScrollableHeight / features.length
+    const newIndex = Math.floor(scrollTop / itemHeight)
+    setActiveIndex(Math.min(newIndex, features.length - 1))
+    setScrollProgress((scrollTop / totalScrollableHeight) * 100)
+  }
 
   return (
     <section
@@ -89,78 +88,70 @@ export function Features() {
       <div className="absolute inset-0 bg-gradient-to-br from-background/80 via-background/60 to-background/80"></div>
       <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50"></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full grid md:grid-cols-2 gap-12 items-center">
-        {/* Section Heading (Moved for better semantic flow, but can be placed above grid if preferred) */}
-        <div className="md:col-span-2 text-center mb-12 space-y-4">
+      <div className="relative z-10 max-w-7xl mx-auto w-full">
+        {/* Section Heading */}
+        <div className="text-center mb-12 space-y-4">
           <div className="inline-flex items-center space-x-2 bg-primary/10 border border-primary/20 rounded-full px-4 py-2">
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-            <span className="text-sm font-medium text-primary">
-              Core Capabilities
-            </span>
+            <span className="text-sm font-medium text-primary">Core Capabilities</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
-            Unlock Advanced Monitoring
-          </h2>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">Unlock Advanced Monitoring</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Our platform goes beyond basic monitoring, providing intelligent
-            insights and automated responses to keep your systems optimal.
+            Our platform goes beyond basic monitoring, providing intelligent insights and automated responses to keep
+            your systems optimal.
           </p>
         </div>
 
-        {/* Scrollable Text Section */}
-        <div className="relative flex-1 md:pr-12 lg:pr-20">
-          {/* Scroll Indicator */}
-          <div className="absolute left-0 top-0 h-full w-1 bg-border/50 rounded-full">
-            <div
-              className="bg-primary rounded-full w-full transition-all duration-300 ease-in-out"
-              style={{ height: `${scrollProgress}%` }}
-            ></div>
+        {/* Main Content Grid - Modified for wider scroll area */}
+        <div className="grid md:grid-cols-5 gap-8 lg:gap-12 items-center">
+          {/* Scrollable Text Section - Now spans 3 columns */}
+          <div className="md:col-span-3 relative">
+            {/* Scroll Indicator */}
+            <div className="absolute left-0 top-0 h-full w-1 bg-border/50 rounded-full">
+              <div
+                className="bg-primary rounded-full w-full transition-all duration-300 ease-in-out"
+                style={{ height: `${scrollProgress}%` }}
+              ></div>
+            </div>
+
+            <ScrollArea className="h-[60vh] md:h-[70vh] lg:h-[80vh] overflow-y-auto pl-8 pr-4" onScroll={handleScroll}>
+              <div className="space-y-24 py-4">
+                {features.map((feature, index) => (
+                  <Card
+                    key={index}
+                    className={`p-6 bg-card/50 backdrop-blur-sm border-border/50 transition-all duration-300 ${
+                      activeIndex === index ? "border-primary/50 scale-[1.02] shadow-lg" : "opacity-60 grayscale-[50%]"
+                    }`}
+                  >
+                    <h3 className="text-2xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {feature.description.split("\n").map((line, i) => (
+                        <React.Fragment key={i}>
+                          {line}
+                          <br />
+                        </React.Fragment>
+                      ))}
+                    </p>
+                  </Card>
+                ))}
+                {/* Add some extra space at the bottom for smoother scrolling to last item */}
+                <div className="h-[calc(60vh - 150px)] md:h-[calc(70vh - 150px)] lg:h-[calc(80vh - 150px)]"></div>
+              </div>
+            </ScrollArea>
           </div>
 
-          <ScrollArea
-            className="h-[60vh] md:h-[70vh] lg:h-[80vh] overflow-y-auto pl-8 pr-4" // Adjusted padding for indicator
-            onScroll={handleScroll}
-          >
-            <div className="space-y-24 py-4">
-              {" "}
-              {/* Increased spacing between cards */}
-              {features.map((feature, index) => (
-                <Card
-                  key={index}
-                  className={`p-6 bg-card/50 backdrop-blur-sm border-border/50 transition-all duration-300 ${
-                    activeIndex === index
-                      ? "border-primary/50 scale-[1.02] shadow-lg"
-                      : "opacity-60 grayscale-[50%]"
-                  }`}
-                >
-                  <h3 className="text-2xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
-                    {feature.title}
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {feature.description.split("\n").map((line, i) => (
-                      <React.Fragment key={i}>
-                        {line}
-                        <br />
-                      </React.Fragment>
-                    ))}
-                  </p>
-                </Card>
-              ))}
-              {/* Add some extra space at the bottom for smoother scrolling to last item */}
-              <div className="h-[calc(60vh - 150px)] md:h-[calc(70vh - 150px)] lg:h-[calc(80vh - 150px)]"></div>
-            </div>
-          </ScrollArea>
-        </div>
-
-        {/* Dynamic SVG Display */}
-        <div className="relative flex-1 hidden md:flex items-center justify-center">
-          <img
-            src={features[activeIndex].image}
-            alt={features[activeIndex].title}
-            className="w-80 h-80 lg:w-96 lg:h-96 object-contain rounded-full shadow-2xl transition-all duration-500 ease-in-out transform scale-100"
-          />
+          {/* Dynamic SVG Display - Now spans 2 columns */}
+          <div className="md:col-span-2 relative flex items-center justify-center">
+            <img
+              src={features[activeIndex].image || "/placeholder.svg"}
+              alt={features[activeIndex].title}
+              className="w-72 h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96 object-contain rounded-full shadow-2xl transition-all duration-500 ease-in-out transform scale-100"
+            />
+          </div>
         </div>
       </div>
     </section>
-  );
+  )
 }

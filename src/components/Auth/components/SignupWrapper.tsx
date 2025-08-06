@@ -54,7 +54,7 @@ export function SignupWrapper(onToggle: SignupProps) {
       <Card className="border border-[var(--primary)] dark:border-gray-700 bg-white dark:bg-background hover:shadow-2xl transition-all duration-300">
         <CardHeader className="text-center space-y-3">
           <Link to="/" className="flex justify-center items-center">
-            <House className="h-8 w-8 text-[var(--secondary)]" />
+            <House className="h-8 w-8 text-[var(--primary)]" />
           </Link>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-300">
             Welcome
@@ -126,7 +126,7 @@ export function SignupWrapper(onToggle: SignupProps) {
           Already have an account?
           <button
             type="button"
-            className="text-[var(--secondary)] hover:text-[var(--primary)] underline underline-offset-4 cursor-pointer transition-colors"
+            className="text-[var(--primary)] underline underline-offset-4 cursor-pointer transition-colors"
             onClick={onToggle.onToggle}
           >
             Login
@@ -137,14 +137,14 @@ export function SignupWrapper(onToggle: SignupProps) {
         By clicking continue, you agree to our
         <a
           href="#"
-          className="text-[var(--secondary)] hover:text-[var(--primary)] underline underline-offset-4 transition-colors"
+          className="text-[var(--primary)] underline underline-offset-4 transition-colors"
         >
           Terms of Service
         </a>{" "}
         and{" "}
         <a
           href="#"
-          className="text-[var(--secondary)] hover:text-[var(--primary)] underline underline-offset-4 transition-colors"
+          className="text-[var(--primary)] underline underline-offset-4 transition-colors"
         >
           Privacy Policy
         </a>

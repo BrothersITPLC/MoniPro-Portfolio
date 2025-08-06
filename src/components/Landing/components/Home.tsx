@@ -1,5 +1,5 @@
 import { Testimonials } from "./Testimonials";
-import { Pricing } from "./Pricing";
+import  {Pricing}  from "./Pricing";
 import { Features } from "./AiFeatures";
 import { ProductSection } from "./Product";
 import { HeroSection } from "./Hero";

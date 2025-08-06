@@ -230,7 +230,6 @@ export const authApi = createApi({
     }),
   }),
 });
-
 export const {
   useInitialRegisterMutation,
   useLoginMutation,

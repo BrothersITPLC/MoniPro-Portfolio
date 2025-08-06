@@ -43,7 +43,7 @@ export function GoogleCallback() {
             // Then force a reload of the opener window after a short delay to ensure message is processed
             setTimeout(() => {
               window.opener.location.reload();
-            }, 500);
+            }, 5000);
           }
 
           toast.success("Google Authentication successful!");
@@ -51,7 +51,7 @@ export function GoogleCallback() {
           // Close this window after a short delay
           setTimeout(() => {
             window.close();
-          }, 3000);
+          }, 5000);
         } else {
           throw new Error(response.message || "Authentication failed");
         }
