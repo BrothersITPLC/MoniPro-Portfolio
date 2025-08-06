@@ -25,4 +25,4 @@ dist-ssr
 .qodo
 
 temp.tsx
-conf
+pnpm-lock.yaml
