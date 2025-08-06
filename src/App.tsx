@@ -19,7 +19,6 @@ import { PaymentStep } from "@/components/Home/company/components/PaymentStep";
 import { PaymentVerification } from "@/components/Home/company/components/PaymentVerification";
 
 import { ProtectedRoute } from "./components/Auth/components/ProtectedRoute";
-import { ZabbixHosts } from "./components/Home/zabbixHosts/components/zabbixhosts";
 import { ItemWrapper } from "./components/Home/zabbixHosts/components/ItemWrapper";
 import { PublicRoute } from "./components/Auth/components/PublicRoute";
 

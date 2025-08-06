@@ -1,14 +1,12 @@
-"use client"
-
-import React, { useRef, useState } from "react" // Added React import
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Card } from "@/components/ui/card"
-import { AnimatedBackground } from "./AnimatedBackground" // Import AnimatedBackground
+import React, { useRef, useState } from "react"; // Added React import
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card } from "@/components/ui/card";
+import { AnimatedBackground } from "./AnimatedBackground"; // Import AnimatedBackground
 
 // SVG Imports (Ensure these paths are correct in your project structure)
-import server1 from "@/components/asset/predictive.svg"
-import server2 from "@/components/asset/automated.svg"
-import server3 from "@/components/asset/alert.svg"
+import server1 from "/predictive.svg";
+import server2 from "/automated.svg";
+import server3 from "/alert.svg";
 
 // Feature Data Array
 const features = [
