@@ -128,6 +128,7 @@ export const authApi = createApi({
         body: user_data,
       }),
     }),
+
     googleExchange: builder.mutation({
       query: (code) => ({
         url: "/google-exchange/",
@@ -153,31 +154,42 @@ export const authApi = createApi({
         }
       },
     }),
-    githubExchange: builder.mutation({
-      query: (code) => ({
-        url: "/github-exchange/",
+
+    telegram: builder.mutation({
+      query: (telegramData) => ({
+        url: "/telegram/",
         method: "POST",
-        body: code,
+        body: telegramData, // send the full Telegram login data object, including hash
       }),
       invalidatesTags: ["Profile"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
-          await queryFulfilled;
+          const { data } = await queryFulfilled;
+
+          if (data.status !== "success") {
+            throw new Error(data.message || "Telegram login failed");
+          }
+
+          // Telegram login was successful, now refetch user profile
           const profileResponse = await dispatch(
             authApi.endpoints.getProfile.initiate(undefined, {
               forceRefetch: true,
             })
           ).unwrap();
+
+          // Update login state with fresh user data
           dispatch(loginState({ user: profileResponse.user_data }));
         } catch (error) {
           const errorMessage =
             (error as any)?.data?.message ||
+            error.message ||
             "Login or profile fetch failed. Please try again.";
           toast.error(errorMessage);
           console.error("Login or profile fetch failed:", error);
         }
       },
     }),
+
     updateProfilePicter: builder.mutation({
       query: (formData) => ({
         url: "/update-profile-picture/",
@@ -270,4 +282,5 @@ export const {
   useUpdateProfilePicterMutation,
   useChangePasswordMutation,
   useUpdateProfileMutation,
+  useTelegramMutation,
 } = authApi;
