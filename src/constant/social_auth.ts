@@ -9,6 +9,8 @@ export const GITHUB_REDIRECT_URL =
   "http://localhost:5173/social/auth/github/callback";
 export const GITHUB_CLIENT_ID = "Ov23li0GRm9jaGvDWYQ0";
 export const GITHUB_SCOPE = "read:user user:email";
+export const TGREDIRECT_URL =
+  "https://monipro.brothersit.dev/social/auth/telegram/callback";
 
 /* STG */
 
@@ -23,3 +25,4 @@ export const GITHUB_SCOPE = "read:user user:email";
 
 // const GITHUB_CLIENT_SECRET = "62002f528a39bae115b30314ecca280299495af9";
 // const GITHUB_CLIENT_ID = "Ov23liLO8fupMX4DYz2L";
+// export const TGREDIRECT_URL ="https://monipro.brothersit.dev/social/auth/telegram/callback";
