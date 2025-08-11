@@ -1,6 +1,6 @@
 import { AppSidebar } from "@/components/Home/app-sidebar";
 import { useGetInfrastructureListQuery } from "@/components/Home/api";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { useEffect } from "react";
 import { ModeToggle } from "@/components/Global/ModeToggle";
 import { Outlet } from "react-router-dom";
@@ -26,7 +26,9 @@ export function Home() {
       <AppSidebar deviceList={sidebarDeviceList} />
       <SidebarInset className="flex flex-col h-screen overflow-hidden">
         <header className="sticky top-0 z-50 flex h-16 shrink-0 items-center gap-4 bg-background border-b border-border transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 w-full justify-between px-6">
-          <div></div>
+          <div className="flex items-center gap-2">
+            <SidebarTrigger className="md:hidden" />
+          </div>
           <div className="flex items-center gap-4">
             <NavUser />
             <ModeToggle />

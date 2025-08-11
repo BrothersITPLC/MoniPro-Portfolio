@@ -29,11 +29,11 @@ import { PerformanceAlerts } from "./components/Home/notification/components/Per
 import { UpdateSubscription } from "./components/Home/company/components/Update";
 import { ResetPassword } from "./pages/ResetPassword";
 import { GoogleCallback } from "./components/Auth/components/GoogleCallback";
+import { GithubCallback } from "./components/Auth/components/GithubCallback";
 // import  {PersonalInfoUpdate}  from "./components/Home/company/components/Infoupdate";
 import { PersonalInfoUpdate } from "@/components/Auth/components/PersonalInfoUpdate/PersonalInfoUpdate";
 import { Updatebillingcycle } from "./components/Home/company/components/UpdateBillingcycle";
 import { UpdatePricing } from "./components/Home/company/components/UpdatePricingcycle";
-
 
 function App() {
   return (
@@ -50,6 +50,10 @@ function App() {
             <Route
               path="/social/auth/google/callback"
               element={<GoogleCallback />}
+            />
+            <Route
+              path="/social/auth/github/callback"
+              element={<GithubCallback />}
             />
             {/* Add the new payment verification route */}
           </Route>
