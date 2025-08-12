@@ -18,7 +18,10 @@ import { Link } from "react-router-dom";
 import { useLoginMutation } from "../api";
 import { handleGoogleAuth } from "./GoogleAuth";
 import { handleGithubAuth } from "./GitHubAuth";
-import { handleTelegramAuth } from "./TelegramAuth";
+
+import TelegramLoginButton from "./TelegramLoginButton";
+
+// import { handleTelegramAuth } from "./TelegramAuth";
 interface LoginProps extends React.ComponentProps<"div"> {
   onToggle: () => void;
   onReset: () => void;
@@ -33,7 +36,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
   });
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isGithubLoading, setIsGithubLoading] = useState(false);
-  const [isTelegramLoading, setIsTelegramLoading] = useState(false);
+  // const [isTelegramLoading, setIsTelegramLoading] = useState(false);
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
@@ -58,31 +61,34 @@ export function Login({ onToggle, onReset }: LoginProps) {
     return () => window.removeEventListener("message", messageHandler);
   }, [navigate]);
 
-  useEffect(() => {
-    const messageHandler = (event: MessageEvent) => {
-      if (
-        event.data &&
-        event.data.action === "telegram-authentication-success"
-      ) {
-        toast.success("Telegram login successful!");
-        setIsTelegramLoading(false);
-        // Check if organization info is completed
-        if (event.data.user && !event.data.user.organization_info_completed) {
-          navigate("/home/comp-info");
-        } else if (
-          user.organization_info_completed &&
-          user.user_have_completed_payment != "success"
-        ) {
-          navigate("/home/payment");
-        } else {
-          navigate("/home/dashboard");
-        }
-      }
-    };
 
-    window.addEventListener("message", messageHandler);
-    return () => window.removeEventListener("message", messageHandler);
-  }, [navigate]);
+  
+
+  // useEffect(() => {
+  //   const messageHandler = (event: MessageEvent) => {
+  //     if (
+  //       event.data &&
+  //       event.data.action === "telegram-authentication-success"
+  //     ) {
+  //       toast.success("Telegram login successful!");
+  //       setIsTelegramLoading(false);
+  //       // Check if organization info is completed
+  //       if (event.data.user && !event.data.user.organization_info_completed) {
+  //         navigate("/home/comp-info");
+  //       } else if (
+  //         user.organization_info_completed &&
+  //         user.user_have_completed_payment != "success"
+  //       ) {
+  //         navigate("/home/payment");
+  //       } else {
+  //         navigate("/home/dashboard");
+  //       }
+  //     }
+  //   };
+
+  //   window.addEventListener("message", messageHandler);
+  //   return () => window.removeEventListener("message", messageHandler);
+  // }, [navigate]);
 
   useEffect(() => {
     if (user) {
@@ -125,15 +131,15 @@ export function Login({ onToggle, onReset }: LoginProps) {
     }
   };
 
-  const handleTelegramLogin = async () => {
-    try {
-      setIsTelegramLoading(true);
-      await handleTelegramAuth();
-    } catch (error: any) {
-      setIsTelegramLoading(false);
-      toast.error(error.message || "Telegram authentication failed");
-    }
-  };
+  // const handleTelegramLogin = async () => {
+  //   try {
+  //     setIsTelegramLoading(true);
+  //     await handleTelegramAuth();
+  //   } catch (error: any) {
+  //     setIsTelegramLoading(false);
+  //     toast.error(error.message || "Telegram authentication failed");
+  //   }
+  // };
 
   const handleGithubLogin = async () => {
     try {
@@ -215,7 +221,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
                   {isGithubLoading ? "Connecting..." : "Login with Github"}
                 </Button>
 
-                <Button
+                {/* <Button
                   variant="outline"
                   className="w-full border-[var(--primary)] dark:border-gray-700 hover:bg-[var(--light)] dark:hover:bg-violet-900/30 transition-all duration-300 hover:scale-105"
                   type="button"
@@ -237,7 +243,11 @@ export function Login({ onToggle, onReset }: LoginProps) {
                     </svg>
                   )}
                   {isTelegramLoading ? "Connecting..." : "Login with Telegram"}
-                </Button>
+                </Button> */}
+                <button>
+                    <TelegramLoginButton />
+                </button>
+
               </div>
               <div className="relative text-center">
                 <div className="absolute inset-0 flex items-center">
