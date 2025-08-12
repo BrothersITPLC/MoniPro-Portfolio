@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 import { useLoginMutation } from "../api";
 import { handleGoogleAuth } from "./GoogleAuth";
 import { handleGithubAuth } from "./GitHubAuth";
-
+import { handleTelegramAuth } from "./TelegramAuth";
 interface LoginProps extends React.ComponentProps<"div"> {
   onToggle: () => void;
   onReset: () => void;
