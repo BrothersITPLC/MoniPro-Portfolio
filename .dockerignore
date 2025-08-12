@@ -4,3 +4,6 @@ dist
 .env
 
 temp.tsx
+
+conf
+.vscode

@@ -154,29 +154,53 @@ export const authApi = createApi({
         }
       },
     }),
-
+    githubExchange: builder.mutation({
+      query: (code) => ({
+        url: "/github-exchange/",
+        method: "POST",
+        body: code,
+      }),
+      invalidatesTags: ["Profile"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
+          ).unwrap();
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
+        }
+      },
+    }),
     telegram: builder.mutation({
       query: (telegramData) => ({
         url: "/telegram/",
         method: "POST",
-        body: telegramData,  // send the full Telegram login data object, including hash
+        body: telegramData, // send the full Telegram login data object, including hash
       }),
       invalidatesTags: ["Profile"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-    
+
           if (data.status !== "success") {
             throw new Error(data.message || "Telegram login failed");
           }
-    
+
           // Telegram login was successful, now refetch user profile
           const profileResponse = await dispatch(
             authApi.endpoints.getProfile.initiate(undefined, {
               forceRefetch: true,
             })
           ).unwrap();
-    
+
           // Update login state with fresh user data
           dispatch(loginState({ user: profileResponse.user_data }));
         } catch (error) {
@@ -189,7 +213,6 @@ export const authApi = createApi({
         }
       },
     }),
-    
 
     updateProfilePicter: builder.mutation({
       query: (formData) => ({
@@ -279,6 +302,7 @@ export const {
   useSetZabbixCredentialsFirstMutation,
   useSetZabbixUserMutation,
   useGoogleExchangeMutation,
+  useGithubExchangeMutation,
   useUpdateProfilePicterMutation,
   useChangePasswordMutation,
   useUpdateProfileMutation,
