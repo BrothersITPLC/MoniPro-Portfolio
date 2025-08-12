@@ -30,6 +30,7 @@ import { UpdateSubscription } from "./components/Home/company/components/Update"
 import { ResetPassword } from "./pages/ResetPassword";
 import { GoogleCallback } from "./components/Auth/components/GoogleCallback";
 import { GithubCallback } from "./components/Auth/components/GithubCallback";
+import { TelegramCallback } from "./components/Auth/components/TelegramCallback";
 // import  {PersonalInfoUpdate}  from "./components/Home/company/components/Infoupdate";
 import { PersonalInfoUpdate } from "@/components/Auth/components/PersonalInfoUpdate/PersonalInfoUpdate";
 import { Updatebillingcycle } from "./components/Home/company/components/UpdateBillingcycle";
@@ -54,6 +55,10 @@ function App() {
             <Route
               path="/social/auth/github/callback"
               element={<GithubCallback />}
+            />
+            <Route
+              path="/social/auth/telegram/callback"
+              element={<TelegramCallback />}
             />
             {/* Add the new payment verification route */}
           </Route>

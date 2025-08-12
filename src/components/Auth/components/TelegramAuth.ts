@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { TGREDIRECT_URL, BOT_ID } from "@/constant/social_auth";
 
-export const handleTelegramAuth = async () => {
+export const handleTelegramAuth  = async () => {
   try {
     const TELEGRAM_AUTH_URL =
       `https://oauth.telegram.org/auth` +
