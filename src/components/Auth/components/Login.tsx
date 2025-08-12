@@ -15,17 +15,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { House, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useLoginMutation} from "../api";
+import { useLoginMutation } from "../api";
 import { handleGoogleAuth } from "./GoogleAuth";
-import { handleTelegramAuth } from "./TelegramAuth";
-
+import { handleGithubAuth } from "./GitHubAuth";
 
 interface LoginProps extends React.ComponentProps<"div"> {
   onToggle: () => void;
   onReset: () => void;
 }
 export function Login({ onToggle, onReset }: LoginProps) {
-
   const navigate = useNavigate();
   const [login, { isLoading }] = useLoginMutation();
   const user = useSelector((state: any) => state.auth.user);
@@ -36,7 +34,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isGithubLoading, setIsGithubLoading] = useState(false);
   const [isTelegramLoading, setIsTelegramLoading] = useState(false);
-  
+
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
       if (event.data && event.data.action === "google-authentication-success") {
@@ -60,10 +58,12 @@ export function Login({ onToggle, onReset }: LoginProps) {
     return () => window.removeEventListener("message", messageHandler);
   }, [navigate]);
 
-
-    useEffect(() => {
+  useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
-      if (event.data && event.data.action === "telegram-authentication-success") {
+      if (
+        event.data &&
+        event.data.action === "telegram-authentication-success"
+      ) {
         toast.success("Telegram login successful!");
         setIsTelegramLoading(false);
         // Check if organization info is completed
@@ -118,12 +118,12 @@ export function Login({ onToggle, onReset }: LoginProps) {
     try {
       setIsGoogleLoading(true);
       await handleGoogleAuth();
+      setIsGoogleLoading(false);
     } catch (error: any) {
       setIsGoogleLoading(false);
       toast.error(error.message || "Google authentication failed");
     }
   };
-
 
   const handleTelegramLogin = async () => {
     try {
@@ -135,12 +135,16 @@ export function Login({ onToggle, onReset }: LoginProps) {
     }
   };
 
-  const handleGithubLogin = () => {
-    setIsGithubLoading(true);
-    toast.error("GitHub authentication not implemented yet");
-    setIsGithubLoading(false);
+  const handleGithubLogin = async () => {
+    try {
+      setIsGithubLoading(true);
+      await handleGithubAuth();
+      setIsGoogleLoading(false);
+    } catch (error: any) {
+      setIsGithubLoading(false);
+      toast.error(error.message || "GitHub authentication failed");
+    }
   };
-
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-[430px] mx-auto">
@@ -218,7 +222,7 @@ export function Login({ onToggle, onReset }: LoginProps) {
                   onClick={handleTelegramLogin}
                   disabled={isTelegramLoading}
                 >
-                  {isTelegramLoading ? (  
+                  {isTelegramLoading ? (
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                   ) : (
                     <svg
@@ -229,12 +233,11 @@ export function Login({ onToggle, onReset }: LoginProps) {
                       className="bi bi-telegram"
                       viewBox="0 0 16 16"
                     >
-                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.287 5.906q-1.168.486-4.666 2.01-.567.225-.595.442c-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294q.39.01.868-.32 3.269-2.206 3.374-2.23c.05-.012.12-.026.166.016s.042.12.037.141c-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8 8 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571c284 .194 .568 .387 .936 .629q .14 .092 .27 .187c .331 .236 .63 .448 .997 .414c .214 -.02 .435 -.22 .547 -.82c .265 -1.417 .786 -4.486 .906 -5.751a1,4,1,4,0,0,0,-0,13a34,34,0,0,0,-0,217a53,53,0,0,0,-114,-93"/>
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.287 5.906q-1.168.486-4.666 2.01-.567.225-.595.442c-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294q.39.01.868-.32 3.269-2.206 3.374-2.23c.05-.012.12-.026.166.016s.042.12.037.141c-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8 8 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571c284 .194 .568 .387 .936 .629q .14 .092 .27 .187c .331 .236 .63 .448 .997 .414c .214 -.02 .435 -.22 .547 -.82c .265 -1.417 .786 -4.486 .906 -5.751a1,4,1,4,0,0,0,-0,13a34,34,0,0,0,-0,217a53,53,0,0,0,-114,-93" />
                     </svg>
-                  )}      
+                  )}
                   {isTelegramLoading ? "Connecting..." : "Login with Telegram"}
                 </Button>
-                  
               </div>
               <div className="relative text-center">
                 <div className="absolute inset-0 flex items-center">

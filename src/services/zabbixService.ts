@@ -1,4 +1,4 @@
-import { BaseUrl } from "../BaseUrl";
+import { BaseUrl } from "../constant/BaseUrl";
 
 interface ZabbixInterface {
   ip: string;

@@ -1,2 +1,0 @@
-// export const BaseUrl = "http://localhost:8000/api"; 
-export const BaseUrl = "https://monipro.brothersit.dev/api";

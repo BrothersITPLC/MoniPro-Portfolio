@@ -1,5 +1,5 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { BaseUrl } from "@/BaseUrl";
+import { BaseUrl } from "@/constant/BaseUrl";
 import { handleUnauthorized } from "./handleUnauthorized";
 
 export const baseQuery = fetchBaseQuery({

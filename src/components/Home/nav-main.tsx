@@ -37,21 +37,23 @@ export function NavMain({
 }) {
   const organizationData = useSelector((state: RootState) => state.auth.user);
   const location = useLocation();
-  const [activeItems, setActiveItems] = useState<{[key: string]: boolean}>({});
+  const [activeItems, setActiveItems] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
   // Update active state based on current URL
   useEffect(() => {
-    const newActiveItems: {[key: string]: boolean} = {};
-    
-    items.forEach(item => {
+    const newActiveItems: { [key: string]: boolean } = {};
+
+    items.forEach((item) => {
       // Only mark as active if it's an exact URL match (not just startsWith)
       const mainItemActive = item.url === location.pathname;
-      
+
       newActiveItems[item.title] = mainItemActive || item.isActive || false;
-      
+
       // Check if any sub-items are active
       if (item.items) {
-        item.items.forEach(subItem => {
+        item.items.forEach((subItem) => {
           const subItemActive = subItem.url === location.pathname;
           if (subItemActive) {
             newActiveItems[item.title] = true; // Parent should be active if child is active
@@ -60,7 +62,7 @@ export function NavMain({
         });
       }
     });
-    
+
     setActiveItems(newActiveItems);
   }, [location.pathname, items]);
 
@@ -102,16 +104,16 @@ export function NavMain({
                   {item.icon && (
                     <item.icon
                       className={`size-6 ${
-                        activeItems[item.title] || item.isActive 
-                          ? "text-primary" 
+                        activeItems[item.title] || item.isActive
+                          ? "text-primary"
                           : "text-muted-foreground"
                       }`}
                     />
                   )}
                   <span
                     className={`font-medium text-[15px] ml-3 ${
-                      activeItems[item.title] || item.isActive 
-                        ? "text-[var(--primary)] dark:text-[var(--primary-dark)]" 
+                      activeItems[item.title] || item.isActive
+                        ? "text-[var(--primary)] dark:text-[var(--primary-dark)]"
                         : ""
                     }`}
                   >
@@ -138,7 +140,10 @@ export function NavMain({
                       >
                         <SidebarMenuSubButton
                           asChild
-                          isActive={activeItems[`${item.title}-${subItem.title}`] || subItem.isActive}
+                          isActive={
+                            activeItems[`${item.title}-${subItem.title}`] ||
+                            subItem.isActive
+                          }
                         >
                           <Link
                             to={subItem.url}

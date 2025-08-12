@@ -26,3 +26,6 @@ dist-ssr
 
 temp.tsx
 pnpm-lock.yaml
+
+conf
+.vscode
