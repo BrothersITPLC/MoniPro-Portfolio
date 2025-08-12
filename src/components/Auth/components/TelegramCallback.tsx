@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
-import { useTelegramMutation } from "../api"; // adjust import based on your setup
+import { useTelegramExchangeMutation } from "../api"; // adjust import based on your setup
 
-export function TelegramCallback() {
+export function TelegramCallback() { 
   const navigate = useNavigate();
   const location = useLocation();
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading"
   );
   const [errorMessage, setErrorMessage] = useState("");
-  const [telegramLogin] = useTelegramMutation();
+  const [telegramLogin] = useTelegramExchangeMutation();
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -34,6 +34,7 @@ export function TelegramCallback() {
         // Call RTK mutation to verify and login/signup
         const response = await telegramLogin(telegramData).unwrap();
 
+        // 
         if (response.status === "success") {
           setStatus("success");
 
@@ -150,3 +151,5 @@ export function TelegramCallback() {
     </div>
   );
 }
+
+
