@@ -245,7 +245,17 @@ export function Login({ onToggle, onReset }: LoginProps) {
                   {isTelegramLoading ? "Connecting..." : "Login with Telegram"}
                 </Button> */}
                 <button>
-                    <TelegramLoginButton />
+                            <TelegramLoginButton
+          botUsername="moniproauth_bot" // without @
+          widgetSize="large"
+          onSuccess={(data) => {
+            console.log("Telegram login success:", data);
+            // Save token / set auth state / redirect
+          }}
+          onError={(err) => {
+            console.error("Telegram login error:", err);
+          }}
+        />
                 </button>
 
               </div>
