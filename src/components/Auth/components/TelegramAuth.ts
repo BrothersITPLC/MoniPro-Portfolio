@@ -1,17 +1,14 @@
 import { toast } from "sonner";
-import { TGREDIRECT_URL } from "@/app/constant";
-
-const botId = import.meta.env.VITE_BOT_ID;
+import { TGREDIRECT_URL, BOT_ID } from "@/constant/social_auth";
 
 export const handleTelegramAuth = async () => {
   try {
-
     const TELEGRAM_AUTH_URL =
       `https://oauth.telegram.org/auth` +
-      `?bot_id=${botId}` +
+      `?bot_id=${BOT_ID}` +
       `&origin=${encodeURIComponent(new URL(TGREDIRECT_URL).origin)}` +
       `&request_access=write`;
-    
+
     // Flag for ongoing auth
     localStorage.setItem("telegramAuthInProgress", "true");
 
