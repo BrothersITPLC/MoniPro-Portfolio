@@ -7,6 +7,7 @@ export const handleTelegramAuth  = async () => {
       `https://oauth.telegram.org/auth` +
       `?bot_id=${BOT_ID}` +
       `&origin=${encodeURIComponent(new URL(TGREDIRECT_URL).origin)}` +
+      `&return_to=${encodeURIComponent(new URL(TGREDIRECT_URL).pathname)}` +
       `&request_access=write`;
 
     // Flag for ongoing auth
