@@ -17,6 +17,7 @@ import { House, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLoginMutation } from "../api";
 import { handleGoogleAuth } from "./GoogleAuth";
+import { handleGithubAuth } from "./GitHubAuth";
 import { handleTelegramAuth } from "./TelegramAuth";
 interface LoginProps extends React.ComponentProps<"div"> {
   onToggle: () => void;
@@ -134,10 +135,15 @@ export function Login({ onToggle, onReset }: LoginProps) {
     }
   };
 
-  const handleGithubLogin = () => {
-    setIsGithubLoading(true);
-    toast.error("GitHub authentication not implemented yet");
-    setIsGithubLoading(false);
+  const handleGithubLogin = async () => {
+    try {
+      setIsGithubLoading(true);
+      await handleGithubAuth();
+      setIsGoogleLoading(false);
+    } catch (error: any) {
+      setIsGithubLoading(false);
+      toast.error(error.message || "GitHub authentication failed");
+    }
   };
 
   return (
