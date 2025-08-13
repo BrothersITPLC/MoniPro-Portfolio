@@ -180,6 +180,27 @@ export const authApi = createApi({
       },
     }),
 
+    telegramExchange: builder.mutation({
+      query: (telegramData) => ({
+        url: "/telegram/",
+        method: "POST",
+        body: telegramData,
+      }),
+      invalidatesTags: ["Profile"],
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          const profileResponse = await dispatch(
+            authApi.endpoints.getProfile.initiate(undefined, { forceRefetch: true })
+          ).unwrap();
+          dispatch(loginState({ user: profileResponse.user_data }));
+        } catch (error) {
+          console.error("Telegram login failed", error);
+        }
+      },
+    }),
+    
+
     updateProfilePicter: builder.mutation({
       query: (formData) => ({
         url: "/update-profile-picture/",
@@ -269,6 +290,7 @@ export const {
   useSetZabbixUserMutation,
   useGoogleExchangeMutation,
   useGithubExchangeMutation,
+  useTelegramExchangeMutation,
   useUpdateProfilePicterMutation,
   useChangePasswordMutation,
   useUpdateProfileMutation,

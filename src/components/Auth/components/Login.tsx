@@ -18,10 +18,9 @@ import { Link } from "react-router-dom";
 import { useLoginMutation } from "../api";
 import { handleGoogleAuth } from "./GoogleAuth";
 import { handleGithubAuth } from "./GitHubAuth";
-
 import TelegramLoginButton from "./TelegramLoginButton";
 
-// import { handleTelegramAuth } from "./TelegramAuth";
+
 interface LoginProps extends React.ComponentProps<"div"> {
   onToggle: () => void;
   onReset: () => void;
@@ -197,10 +196,8 @@ export function Login({ onToggle, onReset }: LoginProps) {
               </div> */}
               <div className="w-full">
                <div className="border border-[var(--primary)] dark:border-gray-700 hover:bg-[var(--light)] dark:hover:bg-violet-900/30 transition-all duration-300 hover:scale-105 rounded-md flex justify-center py-2">
-                 <TelegramLoginButton
-                    botUsername="moniproauth_bot" // without @
-                    widgetSize="large"
-                 />
+                
+                  <TelegramLoginButton botUsername="moniproauth_bot" />
                </div>
               </div>
 

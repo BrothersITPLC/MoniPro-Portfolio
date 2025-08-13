@@ -77,96 +77,52 @@
 // components/TelegramLoginButton.tsx
 // components/TelegramLoginButton.tsx
 import React, { useEffect } from "react";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { loginState  } from "../AutSlice"; // adjust to your actual slice
+import { useDispatch } from "react-redux";
+import { loginState } from "../AutSlice";
+import { useTelegramExchangeMutation } from "../api";
 
 declare global {
   interface Window {
-    onTelegramAuth?: (user: TelegramAuthPayload) => void;
+    TelegramLoginWidget?: any;
   }
 }
 
-export type TelegramAuthPayload = {
-  id: number;
-  first_name?: string;
-  last_name?: string;
-  username?: string;
-  photo_url?: string;
-  auth_date: number;
-  hash: string;
-  [k: string]: any;
-};
-
-type Props = {
+interface TelegramLoginProps {
   botUsername: string;
-  widgetSize?: "large" | "medium" | "small";
-};
+}
 
-const TelegramLoginButton: React.FC<Props> = ({ botUsername, widgetSize = "large" }) => {
+const TelegramLoginButton: React.FC<TelegramLoginProps> = ({ botUsername }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state: any) => state.auth.user);
+  const [telegramExchange] = useTelegramExchangeMutation();
 
   useEffect(() => {
-    // Define handler BEFORE loading widget
-    window.onTelegramAuth = async (telegramUser: TelegramAuthPayload) => {
-      try {
-        const resp = await fetch("https://monipro.brothersit.dev/api/telegram/", {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(telegramUser),
-        });
-
-        const data = await resp.json();
-        console.log("Telegram raw API response:", data);
-
-        if (resp.ok) {
-          console.log("Telegram login success:", data);
-
-          // Update Redux user
-          dispatch(loginState (data.user));
-
-          // Navigate based on fresh user
-          const freshUser = data.user;
-          if (freshUser && !freshUser.organization_info_completed) {
-            navigate("/home/comp-info");
-          } else if (
-            freshUser?.organization_info_completed &&
-            freshUser?.user_have_completed_payment !== "success"
-          ) {
-            navigate("/home/payment");
-          } else {
-            navigate("/home/dashboard");
-          }
-        } else {
-          console.error("Telegram login error:", data);
-        }
-      } catch (err) {
-        console.error("Telegram login error:", err);
-      }
-    };
-
-    // Load Telegram script
-    const container = document.getElementById("telegram-login-widget");
-    if (!container) return;
-    container.innerHTML = "";
     const script = document.createElement("script");
-    script.src = "https://telegram.org/js/telegram-widget.js?15";
+    script.src = "https://telegram.org/js/telegram-widget.js?21";
     script.async = true;
     script.setAttribute("data-telegram-login", botUsername);
-    script.setAttribute("data-size", widgetSize);
-    script.setAttribute("data-onauth", "onTelegramAuth");
-    container.appendChild(script);
+    script.setAttribute("data-size", "large");
+    script.setAttribute("data-userpic", "false");
+    script.setAttribute("data-onauth", "onTelegramAuth(user)");
+    document.getElementById("telegram-button-container")?.appendChild(script);
 
-    return () => {
-      window.onTelegramAuth = undefined;
-      container.innerHTML = "";
+    // global callback
+    (window as any).onTelegramAuth = async (user: any) => {
+      try {
+        const res = await telegramExchange(user).unwrap();
+        dispatch(loginState({ user: res.user }));
+        toast.success("Telegram login successful!");
+        navigate("/home/comp-info");
+      } catch (err) {
+        toast.error("Telegram authentication failed");
+        console.error(err);
+      }
     };
-  }, [botUsername, widgetSize, navigate, dispatch]);
+  }, [botUsername, telegramExchange, dispatch, navigate]);
 
-  return <div id="telegram-login-widget" className="w-full flex justify-center" />;
+  return <div id="telegram-button-container"></div>;
 };
 
 export default TelegramLoginButton;
