@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { handleGoogleAuth } from "./GoogleAuth";
 import { toast } from "sonner";
 import { House, Loader2 } from "lucide-react";
-
+import TelegramLoginButton from "./TelegramLoginButton";
 
 interface SignupProps extends React.ComponentProps<"div"> {
   onToggle: () => void;
@@ -110,6 +110,12 @@ export function SignupWrapper(onToggle: SignupProps) {
                 </svg>
                 Signup with Github
               </Button>
+
+              <div className="w-full justify-center">
+
+                  <TelegramLoginButton botUsername="moniproauth_bot" label="Signup with Telegram" />
+               
+              </div>
 
             </div>
             <div className="relative text-center">

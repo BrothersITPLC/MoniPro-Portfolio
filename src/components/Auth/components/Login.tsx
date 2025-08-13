@@ -181,24 +181,11 @@ export function Login({ onToggle, onReset }: LoginProps) {
                   {isGithubLoading ? "Connecting..." : "Login with Github"}
                 </Button>
 
-                {/* <div className="w-full flex justify-center">
-                 <TelegramLoginButton
-                     botUsername="moniproauth_bot" // without @
-                     widgetSize="large"
-                     onSuccess={(data) => {
-                     console.log("Telegram login success:", data);
-                     // Save token / set auth state / redirect
-                  }}
-                  onError={(err) => {
-                  console.error("Telegram login error:", err);
-                  }}
-                />
-              </div> */}
-              <div className="w-full">
-               <div className="border border-[var(--primary)] dark:border-gray-700 hover:bg-[var(--light)] dark:hover:bg-violet-900/30 transition-all duration-300 hover:scale-105 rounded-md flex justify-center py-2">
-                
-                  <TelegramLoginButton botUsername="moniproauth_bot" />
-               </div>
+
+              <div className="w-full justify-center  ">
+            
+                  <TelegramLoginButton botUsername="moniproauth_bot" label="Login with Telegram" />
+               
               </div>
 
 
