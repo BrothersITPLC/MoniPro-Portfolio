@@ -70,9 +70,7 @@ export function Navbar() {
 
               <SheetContent side={"left"}>
                 <SheetHeader>
-                  <SheetTitle className="font-bold text-xl">
-                    Shadcn/React
-                  </SheetTitle>
+                  <SheetTitle className="font-bold text-xl">MoniPro</SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col justify-center items-center gap-2 mt-4">
                   {routeList.map(({ href, label }: RouteProps) => (
@@ -93,7 +91,7 @@ export function Navbar() {
                       variant: "secondary",
                     })}`}
                   >
-                    Get Started
+                    Lgin
                   </Link>
                 </nav>
               </SheetContent>
