@@ -179,26 +179,34 @@ export const authApi = createApi({
         }
       },
     }),
-
     telegramExchange: builder.mutation({
-      query: (telegramData) => ({
+      query: (code) => ({
         url: "/telegram/",
         method: "POST",
-        body: telegramData,
+        body: code,
       }),
       invalidatesTags: ["Profile"],
       async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           const profileResponse = await dispatch(
-            authApi.endpoints.getProfile.initiate(undefined, { forceRefetch: true })
+            authApi.endpoints.getProfile.initiate(undefined, {
+              forceRefetch: true,
+            })
           ).unwrap();
           dispatch(loginState({ user: profileResponse.user_data }));
         } catch (error) {
-          console.error("Telegram login failed", error);
+          const errorMessage =
+            (error as any)?.data?.message ||
+            "Login or profile fetch failed. Please try again.";
+          toast.error(errorMessage);
+          console.error("Login or profile fetch failed:", error);
         }
       },
     }),
+
+
+
     
 
     updateProfilePicter: builder.mutation({
