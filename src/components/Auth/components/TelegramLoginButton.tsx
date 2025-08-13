@@ -78,7 +78,8 @@
 // components/TelegramLoginButton.tsx
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { loginState  } from "../AutSlice"; // adjust to your actual slice
 
 declare global {
   interface Window {
@@ -104,9 +105,11 @@ type Props = {
 
 const TelegramLoginButton: React.FC<Props> = ({ botUsername, widgetSize = "large" }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state: any) => state.auth.user);
 
   useEffect(() => {
+    // Define handler BEFORE loading widget
     window.onTelegramAuth = async (telegramUser: TelegramAuthPayload) => {
       try {
         const resp = await fetch("https://monipro.brothersit.dev/api/telegram/", {
@@ -117,18 +120,21 @@ const TelegramLoginButton: React.FC<Props> = ({ botUsername, widgetSize = "large
         });
 
         const data = await resp.json();
+        console.log("Telegram raw API response:", data);
 
         if (resp.ok) {
           console.log("Telegram login success:", data);
 
-          // Update your Redux auth state here if needed (e.g., via dispatch)
+          // Update Redux user
+          dispatch(loginState (data.user));
 
-          // Navigation logic using latest user from Redux
-          if (user && !user.organization_info_completed) {
+          // Navigate based on fresh user
+          const freshUser = data.user;
+          if (freshUser && !freshUser.organization_info_completed) {
             navigate("/home/comp-info");
           } else if (
-            user?.organization_info_completed &&
-            user?.user_have_completed_payment !== "success"
+            freshUser?.organization_info_completed &&
+            freshUser?.user_have_completed_payment !== "success"
           ) {
             navigate("/home/payment");
           } else {
@@ -142,12 +148,13 @@ const TelegramLoginButton: React.FC<Props> = ({ botUsername, widgetSize = "large
       }
     };
 
+    // Load Telegram script
     const container = document.getElementById("telegram-login-widget");
     if (!container) return;
     container.innerHTML = "";
     const script = document.createElement("script");
-    script.setAttribute("src", "https://telegram.org/js/telegram-widget.js?15");
-    script.setAttribute("async", "true");
+    script.src = "https://telegram.org/js/telegram-widget.js?15";
+    script.async = true;
     script.setAttribute("data-telegram-login", botUsername);
     script.setAttribute("data-size", widgetSize);
     script.setAttribute("data-onauth", "onTelegramAuth");
@@ -157,9 +164,9 @@ const TelegramLoginButton: React.FC<Props> = ({ botUsername, widgetSize = "large
       window.onTelegramAuth = undefined;
       container.innerHTML = "";
     };
-  }, [botUsername, widgetSize, navigate, user]);
+  }, [botUsername, widgetSize, navigate, dispatch]);
 
-  return <div id="telegram-login-widget" />;
+  return <div id="telegram-login-widget" className="w-full flex justify-center" />;
 };
 
 export default TelegramLoginButton;
