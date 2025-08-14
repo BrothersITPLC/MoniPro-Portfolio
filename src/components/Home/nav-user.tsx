@@ -17,7 +17,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { DropdownMenuPortal } from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -87,8 +87,9 @@ export function NavUser() {
               <ChevronsUpDown className="ml-auto size-5 text-muted-foreground" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
+          <DropdownMenuPortal>
           <DropdownMenuContent
-            className="w-[280px] rounded-xl shadow-lg border border-border
+            className="w-[280px] rounded-xl shadow-lg border border-border bg-background
                       bg-background"
             side={isMobile ? "bottom" : "right"}
             align="end"
@@ -172,6 +173,7 @@ export function NavUser() {
               <span className="font-medium">Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
+          </DropdownMenuPortal>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
