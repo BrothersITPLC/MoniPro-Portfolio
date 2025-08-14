@@ -110,3 +110,5 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
     </Sidebar>
   );
 }
+
+
