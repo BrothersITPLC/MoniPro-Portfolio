@@ -36,6 +36,8 @@ export function NavUser() {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
 
+  console.log("this is loged in user data", user);
+
   const { isMobile } = useSidebar();
   const navigate = useNavigate();
   const [logout, { isLoading }] = useLogoutMutation();
