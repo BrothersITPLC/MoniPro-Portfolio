@@ -68,6 +68,7 @@ export function PersonalInfoStep({ onNext }: PlanSelectionProps) {
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
       ...data,
+      organization_phone: `+251${data.organization_phone}`,
     };
     dispatch(setOrganization(updatedData));
     onNext(selectedPlan === 0 ? 3 : 2); // If selectedPlan is 0, go to step 3, else go to step 2
@@ -133,6 +134,7 @@ export function PersonalInfoStep({ onNext }: PlanSelectionProps) {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+ 
                 <FormField
                   control={form.control}
                   name="organization_phone"
@@ -140,19 +142,32 @@ export function PersonalInfoStep({ onNext }: PlanSelectionProps) {
                     <FormItem>
                       <FormLabel className="flex items-center gap-2">
                         <Phone className="h-4 w-4 text-muted-foreground" />
-                        Phone Number
+                        Company Phone
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="e.g., 09123456789"
-                          {...field}
-                          className="border-border/60 focus-visible:ring-primary/20"
-                        />
+                        <div className="flex">
+                          {/* Fixed prefix */}
+                          <span className="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-border/60 rounded-l-md text-gray-500 h-11">
+                            +251
+                          </span>
+                          {/* Only allow 9 digits input */}
+                          <Input
+                            placeholder="987654352 or 787654352"
+                            {...field}
+                            onChange={(e) => {
+                              // Ensure only numbers and max 9 digits
+                              const value = e.target.value.replace(/\D/g, "").slice(0, 9);
+                              field.onChange(value);
+                            }}
+                            className="rounded-l-none border-border/60 focus-visible:ring-primary/20"
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="organization_website"

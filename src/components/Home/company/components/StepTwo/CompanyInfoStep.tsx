@@ -118,7 +118,7 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
                       <FormControl>
                         <div className="flex">
                           {/* Fixed prefix */}
-                          <span className="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-border/60 rounded-l-md text-gray-500">
+                          <span className="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-border/60 rounded-l-md text-gray-500 h-11">
                             +251
                           </span>
                           {/* Only allow 9 digits input */}
