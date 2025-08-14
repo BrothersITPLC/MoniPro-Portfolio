@@ -89,8 +89,7 @@ export function NavUser() {
           </DropdownMenuTrigger>
           <DropdownMenuPortal>
           <DropdownMenuContent
-            className="w-[280px] rounded-xl shadow-lg border border-border bg-background
-                      bg-background"
+            className="w-[280px] rounded-xl shadow-lg border border-border bg-background  z-[1000]"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={8}
