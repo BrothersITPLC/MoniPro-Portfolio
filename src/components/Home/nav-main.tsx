@@ -129,7 +129,7 @@ export function NavMain({
                   />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
-              <CollapsibleContent className="overflow-visible">
+              <CollapsibleContent>
                 <SidebarMenuSub className="ml-8 mt-2 border-l-2 border-[var(--accent)] dark:border-[var(--accent-dark)] pl-4">
                   {item.items
                     ?.filter((subItem) => shouldShowMenuItem(subItem.title))

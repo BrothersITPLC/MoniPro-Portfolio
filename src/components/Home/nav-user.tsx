@@ -7,6 +7,7 @@ import {
   Sparkles,
   UserRoundCheck,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -17,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DropdownMenuPortal } from "@/components/ui/dropdown-menu";
+
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -87,9 +88,9 @@ export function NavUser() {
               <ChevronsUpDown className="ml-auto size-5 text-muted-foreground" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuPortal>
           <DropdownMenuContent
-            className="w-[280px] rounded-xl shadow-lg border border-border bg-background  z-[1000]"
+            className="w-[280px] rounded-xl shadow-lg border border-border
+                      bg-background"
             side={isMobile ? "bottom" : "right"}
             align="end"
             sideOffset={8}
@@ -118,20 +119,20 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-[var(--accent)] dark:bg-[var(--border-light)]" />
             <DropdownMenuGroup>
-              <DropdownMenuItem
-                onClick={() => navigate("/home/subscription")}
-                className="py-2.5 px-3 text-[14px] cursor-pointer
-                          hover:bg-accent/50 focus:bg-accent/50
-                          rounded-lg mx-1 my-0.5"
-              >
-                <Sparkles className="mr-2 h-5 w-5 text-primary" />
-                <span className="font-medium">Update Subscription Plan</span>
-              </DropdownMenuItem>
+              <Link to="/home/subscription">
+                <DropdownMenuItem
+                  className="py-2.5 px-3 text-[14px] cursor-pointer
+                            hover:bg-accent/50 focus:bg-accent/50
+                            rounded-lg mx-1 my-0.5"
+                >
+                  <Sparkles className="mr-2 h-5 w-5 text-primary" />
+                  <span className="font-medium">Update Subscription Plan</span>
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator className="bg-[var(--accent)] dark:bg-[var(--border-light)]" />
             <DropdownMenuGroup className="p-1">
               <DropdownMenuItem
-                onClick={() => navigate("/home/account")}
                 className="py-2.5 px-3 text-[14px] cursor-pointer
                           hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] 
                           focus:bg-[var(--light)] dark:focus:bg-[var(--neutral-bg)]
@@ -141,7 +142,6 @@ export function NavUser() {
                 <span className="font-medium">Account</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => navigate("/home/billing")}
                 className="py-2.5 px-3 text-[14px] cursor-pointer
                           hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] 
                           focus:bg-[var(--light)] dark:focus:bg-[var(--neutral-bg)]
@@ -151,7 +151,6 @@ export function NavUser() {
                 <span className="font-medium">Billing</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => navigate("/home/notifications")}
                 className="py-2.5 px-3 text-[14px] cursor-pointer
                           hover:bg-[var(--light)] dark:hover:bg-[var(--neutral-bg)] 
                           focus:bg-[var(--light)] dark:focus:bg-[var(--neutral-bg)]
@@ -172,7 +171,6 @@ export function NavUser() {
               <span className="font-medium">Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
-          </DropdownMenuPortal>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>

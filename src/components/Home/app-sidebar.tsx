@@ -95,7 +95,6 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
   console.log(templateGroupData);
 
   return (
-    
     <Sidebar
       collapsible="icon"
       className="bg-background border-r border-border"
