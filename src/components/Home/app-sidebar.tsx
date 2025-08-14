@@ -7,6 +7,7 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarProvider,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { InfrastructerList } from "@/components/Home/types";
@@ -95,6 +96,7 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
   console.log(templateGroupData);
 
   return (
+   <SidebarProvider>
     <Sidebar
       collapsible="icon"
       className="bg-background border-r border-border"
@@ -108,5 +110,6 @@ export function AppSidebar({ deviceList, ...props }: AppSidebarProps) {
       </SidebarFooter>
       <SidebarRail className="bg-accent" />
     </Sidebar>
+   </SidebarProvider> 
   );
 }
