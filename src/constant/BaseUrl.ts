@@ -3,4 +3,4 @@
 
 /* STG */
 
- export const BaseUrl = "https://monipro.brothersit.dev/api";
+export const BaseUrl = "https://monipro.brothersit.dev/api";
