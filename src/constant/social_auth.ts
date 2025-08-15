@@ -13,6 +13,8 @@
 // export const TGREDIRECT_URL =
 //   "https://monipro.brothersit.dev/social/auth/telegram/callback";
 
+
+
 /* STG */
 
 
@@ -29,4 +31,3 @@ export const GITHUB_CLIENT_ID = "Ov23liLO8fupMX4DYz2L";
 export const TGREDIRECT_URL =
   "https://monipro.brothersit.dev/social/auth/telegram/callback";
 export const BOT_ID = 8255754850;
-

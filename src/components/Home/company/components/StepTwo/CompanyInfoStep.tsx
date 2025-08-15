@@ -32,11 +32,10 @@ interface PlanSelectionProps {
 const CompanyInfoSchema = z.object({
   organization_name: z.string().min(1, "Company name is required"),
   organization_phone: z
-    .string()
-    .regex(
-      /^0[79]\d{8}$/,
-      "Phone number must be 10 digits and start with 09 or 07"
-    ),
+  .string()
+  .regex(/^[79]\d{8}$/, {
+    message: "Phone number must be 9 digits and start with 9 (EthioTelecom) or 7 (Safaricom)",
+  }),
   organization_website: z.string().optional(),
   organization_description: z.string().optional(),
 });
@@ -66,6 +65,7 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
     const updatedData: OrganizationDataInfrence = {
       ...organizationData!,
       ...data,
+       organization_phone: `+251${data.organization_phone}`,
     };
     dispatch(setOrganization(updatedData));
     onNext(selectedPlan === 0 ? 3 : 2); // If selectedPlan is 0, go to step 3, else go to step 2
@@ -105,6 +105,7 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="organization_phone"
@@ -115,16 +116,29 @@ export function CompanyInfoStep({ onNext }: PlanSelectionProps) {
                         Company Phone
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="e.g., 09123456789"
-                          {...field}
-                          className="border-border/60 focus-visible:ring-primary/20"
-                        />
+                        <div className="flex">
+                          {/* Fixed prefix */}
+                          <span className="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-border/60 rounded-l-md text-gray-500 h-11">
+                            +251
+                          </span>
+                          {/* Only allow 9 digits input */}
+                          <Input
+                            placeholder="987654352 or 787654352"
+                            {...field}
+                            onChange={(e) => {
+                              // Ensure only numbers and max 9 digits
+                              const value = e.target.value.replace(/\D/g, "").slice(0, 9);
+                              field.onChange(value);
+                            }}
+                            className="rounded-l-none border-border/60 focus-visible:ring-primary/20"
+                          />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
               </div>
 
               <FormField

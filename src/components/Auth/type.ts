@@ -65,9 +65,12 @@ export const updateUserProfileSchema = z.object({
       message: "Organization name must be at least 10 characters long",
     }),
 
-  phone: z.string().regex(/^0[79]\d{8}$/, {
-    message: "Phone number must be 10 digits and start with 09 or 07",
+  phone: z
+  .string()
+  .regex(/^\d{9}$/, {
+    message: "Phone number must have exactly 9 digits",
   }),
+
   organization_website: z.string().optional(),
 
   organization_description: z

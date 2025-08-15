@@ -41,11 +41,10 @@ const personalInfoSchema = z.object({
   first_name: z.string().min(1, "First name is required"),
   last_name: z.string().min(1, "Last name is required"),
   organization_phone: z
-    .string()
-    .regex(
-      /^0[79]\d{8}$/,
-      "Phone number must be 10 digits and start with 09 or 07"
-    ),
+  .string()
+  .regex(/^\d{9}$/, {
+    message: "Phone number must be 9 digits after +251",
+  }),
   organization_website: z.string().optional(),
   organization_description: z.string().optional(),
   organization_name: z.string().optional(),

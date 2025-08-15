@@ -205,6 +205,10 @@ export const authApi = createApi({
       },
     }),
 
+
+
+    
+
     updateProfilePicter: builder.mutation({
       query: (formData) => ({
         url: "/update-profile-picture/",
@@ -294,8 +298,8 @@ export const {
   useSetZabbixUserMutation,
   useGoogleExchangeMutation,
   useGithubExchangeMutation,
+  useTelegramExchangeMutation,
   useUpdateProfilePicterMutation,
   useChangePasswordMutation,
   useUpdateProfileMutation,
-  useTelegramExchangeMutation,
 } = authApi;

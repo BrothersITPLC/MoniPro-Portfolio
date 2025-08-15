@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { handleGoogleAuth } from "./GoogleAuth";
 import { toast } from "sonner";
 import { House, Loader2 } from "lucide-react";
-import { handleTelegramAuth } from "./TelegramAuth";
+import TelegramLoginButton from "./TelegramLoginButton";
 
 interface SignupProps extends React.ComponentProps<"div"> {
   onToggle: () => void;
@@ -21,7 +21,6 @@ interface SignupProps extends React.ComponentProps<"div"> {
 export function SignupWrapper(onToggle: SignupProps) {
   const navigate = useNavigate();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isTelegramLoading, setIsTelegramLoading] = useState(false);
 
   useEffect(() => {
     const messageHandler = (event: MessageEvent) => {
@@ -29,25 +28,6 @@ export function SignupWrapper(onToggle: SignupProps) {
         toast.success("Google signup successful!");
         setIsGoogleLoading(false);
 
-        // Check if organization info is completed
-        if (event.data.user && !event.data.user.organization_info_completed) {
-          navigate("/home/comp-info");
-        } else {
-          navigate("/home/dashboard");
-        }
-      }
-    };
-
-    window.addEventListener("message", messageHandler);
-    return () => window.removeEventListener("message", messageHandler);
-  }, [navigate]);
-
-
-  useEffect(() => {
-    const messageHandler = (event: MessageEvent) => {
-      if (event.data && event.data.action === "telegram-authentication-success") {
-        toast.success("Telegram Signup successful!");
-        setIsTelegramLoading(false);
         // Check if organization info is completed
         if (event.data.user && !event.data.user.organization_info_completed) {
           navigate("/home/comp-info");
@@ -71,15 +51,6 @@ export function SignupWrapper(onToggle: SignupProps) {
     }
   };
 
-  const handleTelegramLogin = async () => {
-    try {
-      setIsTelegramLoading(true);
-      await handleTelegramAuth();
-    } catch (error: any) {
-      setIsTelegramLoading(false);
-      toast.error(error.message || "Telegram authentication failed");
-    }
-  };
 
   return (
     <div className="flex flex-col w-full max-w-[440px] gap-6">
@@ -140,30 +111,11 @@ export function SignupWrapper(onToggle: SignupProps) {
                 Signup with Github
               </Button>
 
+              <div className="w-full justify-center">
 
-              <Button
-                  variant="outline"
-                  className="w-full border-[var(--primary)] dark:border-gray-700 hover:bg-[var(--light)] dark:hover:bg-violet-900/30 transition-all duration-300 hover:scale-105"
-                  type="button"
-                  onClick={handleTelegramLogin}
-                  disabled={isTelegramLoading}
-                >
-                  {isTelegramLoading ? (  
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      className="bi bi-telegram"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.287 5.906q-1.168.486-4.666 2.01-.567.225-.595.442c-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294q.39.01.868-.32 3.269-2.206 3.374-2.23c.05-.012.12-.026.166.016s.042.12.037.141c-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8 8 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571c284 .194 .568 .387 .936 .629q .14 .092 .27 .187c .331 .236 .63 .448 .997 .414c .214 -.02 .435 -.22 .547 -.82c .265 -1.417 .786 -4.486 .906 -5.751a1,4,1,4,0,0,0,-0,13a34,34,0,0,0,-0,217a53,53,0,0,0,-114,-93"/>
-                    </svg>
-                  )}      
-                  {isTelegramLoading ? "Connecting..." : "Login with Telegram"}
-              </Button>
+                  <TelegramLoginButton botUsername="moniproauth_bot" label="Signup with Telegram" />
+               
+              </div>
 
             </div>
             <div className="relative text-center">
